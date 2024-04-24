@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -12,6 +12,7 @@ import IconButton from '@mui/material/IconButton';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { alpha, useTheme } from '@mui/material/styles';
 import InputAdornment from '@mui/material/InputAdornment';
+import axios from "axios";
 
 import { useRouter } from 'src/routes/hooks';
 
@@ -19,6 +20,8 @@ import { bgGradient } from 'src/theme/css';
 
 import Logo from 'src/components/logo';
 import Iconify from 'src/components/iconify';
+import { Container } from '@mui/material';
+import { OnRun } from 'src/api/OnRun';
 
 // ----------------------------------------------------------------------
 
@@ -27,38 +30,78 @@ export default function LoginView() {
 
   const router = useRouter();
 
-  const [showPassword, setShowPassword] = useState(false);
+  const [nationalCode, setNationalCode] = useState('');
+  const [captchaInput, setCaptchaInput] = useState('');
+  const [captchaImage, setCaptchaImage] = useState(null);
+  const [encrypted_response, setEncrypted_response] = useState(null);
+  const [otp, setOtp] = useState('');
+  const [step, setStep] = useState(1);
 
-  const handleClick = () => {
-    router.push('/dashboard');
+  const applyCptcha = () => {
+    // router.push('/dashboard');
+    setStep(2)
   };
+
+
+  const getCaptcha = () => {
+    axios
+      .post(`${OnRun}/captcha`)
+      .then((response) => {
+        setEncrypted_response(response.data.encrypted_response);
+        setCaptchaImage(response.data.image);
+      })
+      .catch((err) => {
+        console.log("error captcha", err);
+      });
+  };
+
+
+  const applyNationalCode = () => {
+    if (captchaInput.length === 0) {
+      setErrMsg("کد تصویر صحیح نیست");
+    } else if (UserInput.nationalCode.length !== 10) {
+      setErrMsg("مقدار کد ملی را به صورت صحیح وارد کنید");
+    } else {
+      axios({
+        method: "POST",
+        url: OnRun + "/dara/applynationalcode",
+        data: { UserInput: UserInput, captchaCode: CaptchaCode },
+      }).then((response) => {
+        if (response.data.replay) {
+          if (response.data.status === "NotFund") {
+            setErrMsg("متاسفانه کد ملی وارد شده یافت نشد");
+          } else if (response.data.status === "RegisterDara") {
+            Navigate("register", {
+              state: { nationalCode: UserInput["nationalCode"] },
+            });
+          } else {
+            setStatus(response.data.status);
+          }
+        } else {
+          setErrMsg(response.data.msg);
+        }
+      });
+    }
+  };
+
+  useEffect(getCaptcha,[])
 
   const renderForm = (
     <>
       <Stack spacing={3}>
-        <TextField name="email" label="Email address" />
+        <TextField value={nationalCode} onChange={(e) => setNationalCode(e.target.value)} label="شماره ملی" />
+        {
+          step === 1 ?
+            <Container>
 
-        <TextField
-          name="password"
-          label="Password"
-          type={showPassword ? 'text' : 'password'}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                  <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
+              <TextField value={captchaInput} onChange={(e) => setCaptchaInput(e.target.value)} label="کپچا" />
+            </Container>
+            :
+            <TextField value={otp} onChange={(e) => setOtp(e.target.value)} label="کد تایید" />
+        }
       </Stack>
 
-      <Stack direction="row" alignItems="center" justifyContent="flex-end" sx={{ my: 3 }}>
-        <Link variant="subtitle2" underline="hover">
-          Forgot password?
-        </Link>
-      </Stack>
+
 
       <LoadingButton
         fullWidth
@@ -66,9 +109,9 @@ export default function LoginView() {
         type="submit"
         variant="contained"
         color="inherit"
-        onClick={handleClick}
+        onClick={applyCptcha}
       >
-        Login
+        تایید
       </LoadingButton>
     </>
   );
@@ -83,6 +126,7 @@ export default function LoginView() {
         height: 1,
       }}
     >
+      <ToastContainer />
       <Logo
         sx={{
           position: 'fixed',
@@ -99,14 +143,9 @@ export default function LoginView() {
             maxWidth: 420,
           }}
         >
-          <Typography variant="h4">Sign in to Minimal</Typography>
+          <Typography variant="h4">درگاه سهامداران</Typography>
 
-          <Typography variant="body2" sx={{ mt: 2, mb: 5 }}>
-            Don’t have an account?
-            <Link variant="subtitle2" sx={{ ml: 0.5 }}>
-              Get started
-            </Link>
-          </Typography>
+
 
           <Stack direction="row" spacing={2}>
             <Button
@@ -142,7 +181,7 @@ export default function LoginView() {
 
           <Divider sx={{ my: 3 }}>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              OR
+              ورود
             </Typography>
           </Divider>
 
