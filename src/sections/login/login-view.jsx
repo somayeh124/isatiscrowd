@@ -1,34 +1,31 @@
 import { useEffect, useState } from 'react';
 
 import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { alpha, useTheme } from '@mui/material/styles';
-import InputAdornment from '@mui/material/InputAdornment';
 import axios from "axios";
 
-import { useRouter } from 'src/routes/hooks';
+// import { useRouter } from 'src/routes/hooks';
 
 import { bgGradient } from 'src/theme/css';
 
 import Logo from 'src/components/logo';
 import Iconify from 'src/components/iconify';
-import { Container } from '@mui/material';
 import { OnRun } from 'src/api/OnRun';
+import { ToastContainer, toast } from 'react-toastify';
 
 // ----------------------------------------------------------------------
 
 export default function LoginView() {
   const theme = useTheme();
 
-  const router = useRouter();
+  // const router = useRouter();
 
   const [nationalCode, setNationalCode] = useState('');
   const [captchaInput, setCaptchaInput] = useState('');
@@ -37,10 +34,10 @@ export default function LoginView() {
   const [otp, setOtp] = useState('');
   const [step, setStep] = useState(1);
 
-  const applyCptcha = () => {
-    // router.push('/dashboard');
-    setStep(2)
-  };
+  // const applyCptcha = () => {
+  //   // router.push('/dashboard');
+  //   setStep(2)
+  // };
 
 
   const getCaptcha = () => {
@@ -58,27 +55,26 @@ export default function LoginView() {
 
   const applyNationalCode = () => {
     if (captchaInput.length === 0) {
-      setErrMsg("کد تصویر صحیح نیست");
-    } else if (UserInput.nationalCode.length !== 10) {
-      setErrMsg("مقدار کد ملی را به صورت صحیح وارد کنید");
+      toast.warning("کد تصویر صحیح نیست");
+    } else if (nationalCode.length !== 10) {
+      toast.warning("مقدار کد ملی را به صورت صحیح وارد کنید");
     } else {
       axios({
         method: "POST",
-        url: OnRun + "/dara/applynationalcode",
-        data: { UserInput: UserInput, captchaCode: CaptchaCode },
+        url: `${OnRun}/dara/applynationalcode`,
+        data: { UserInput: {captcha:captchaInput, nationalCode}, captchaCode: encrypted_response },
       }).then((response) => {
         if (response.data.replay) {
           if (response.data.status === "NotFund") {
-            setErrMsg("متاسفانه کد ملی وارد شده یافت نشد");
+            toast.warning("متاسفانه کد ملی وارد شده یافت نشد");
           } else if (response.data.status === "RegisterDara") {
-            Navigate("register", {
-              state: { nationalCode: UserInput["nationalCode"] },
-            });
+
+            console.log(1)
           } else {
-            setStatus(response.data.status);
+            setStep(2);
           }
         } else {
-          setErrMsg(response.data.msg);
+          toast.warning(response.data.msg);
         }
       });
     }
@@ -92,10 +88,12 @@ export default function LoginView() {
         <TextField value={nationalCode} onChange={(e) => setNationalCode(e.target.value)} label="شماره ملی" />
         {
           step === 1 ?
-            <Container>
-
+          <>
               <TextField value={captchaInput} onChange={(e) => setCaptchaInput(e.target.value)} label="کپچا" />
-            </Container>
+              <Button onClick={getCaptcha}>
+                <img src={`data:image/png;base64,${captchaImage}`} alt='captcha' />
+              </Button>
+          </>
             :
             <TextField value={otp} onChange={(e) => setOtp(e.target.value)} label="کد تایید" />
         }
@@ -109,7 +107,7 @@ export default function LoginView() {
         type="submit"
         variant="contained"
         color="inherit"
-        onClick={applyCptcha}
+        onClick={applyNationalCode}
       >
         تایید
       </LoadingButton>
