@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import { Outlet, Navigate, useRoutes } from 'react-router-dom';
 
 import DashboardLayout from 'src/layouts/dashboard';
+import ComingSoon from 'src/pages/comingsoon';
 
 export const IndexPage = lazy(() => import('src/pages/app'));
 export const CompanyPage = lazy(() => import('src/pages/company'));
@@ -23,9 +24,12 @@ export default function Router() {
         </DashboardLayout>
       ),
       children: [
+        
         { element: <IndexPage />, index: true },
-        { path: 'user', element: <UserPage /> },
-        { path: 'products', element: <ProductsPage /> },
+        { path: 'getstock', element: <UserPage /> },
+        { path: 'trades', element: <ProductsPage /> },
+        { path: 'cominsoon', element: <ComingSoon /> },
+        { path: 'cominsoon', element: <ComingSoon /> },
       ],
     },
     { path: 'company', element: <CompanyPage /> },

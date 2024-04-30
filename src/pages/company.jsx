@@ -10,7 +10,6 @@ export default function CompanyPage() {
       <Helmet>
         <title> Blog | Minimal UI </title>
       </Helmet>
-
       <CompanyView />
     </>
   );

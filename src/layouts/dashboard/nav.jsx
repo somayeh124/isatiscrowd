@@ -1,41 +1,55 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Drawer from '@mui/material/Drawer';
-import Button from '@mui/material/Button';
-import Avatar from '@mui/material/Avatar';
 import { alpha } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import ListItemButton from '@mui/material/ListItemButton';
-
-import { usePathname } from 'src/routes/hooks';
+import { usePathname, useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
-
 import { useResponsive } from 'src/hooks/use-responsive';
-
 import { account } from 'src/_mock/account';
-
 import Logo from 'src/components/logo';
 import Scrollbar from 'src/components/scrollbar';
-
-import { NAV } from './config-layout';
+import { getCookie, setCookie } from 'src/api/cookie';
+import axios from 'axios';
+import { OnRun } from 'src/api/OnRun';
 import navConfig from './config-navigation';
+import { NAV } from './config-layout';
 
 // ----------------------------------------------------------------------
 
 export default function Nav({ openNav, onCloseNav }) {
+  const [personal, setPersonal] = useState(null);
+  const id = getCookie('phn');
+  const router = useRouter();
+
+  const AccessCheck = () => {
+    if (id) {
+      axios({
+        method: 'POST',
+        url: `${OnRun}/dara/access`,
+        data: { cookie: id },
+      }).then((response) => {
+        if (response.data.replay) {
+          setPersonal(response.data);
+        } else {
+          router.push('/login');
+          setCookie('phu', '', 0);
+        }
+      });
+    }
+  };
   const pathname = usePathname();
-
   const upLg = useResponsive('up', 'lg');
-
   useEffect(() => {
     if (openNav) {
       onCloseNav();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
+  useEffect(AccessCheck, [id, router]);
 
   const renderAccount = (
     <Box
@@ -50,10 +64,13 @@ export default function Nav({ openNav, onCloseNav }) {
         bgcolor: (theme) => alpha(theme.palette.grey[500], 0.12),
       }}
     >
-      <Avatar src={account.photoURL} alt="photoURL" />
+      {/* <Avatar src={account.photoURL} alt="photoURL" /> */}
 
       <Box sx={{ ml: 2 }}>
-        <Typography variant="subtitle2">{account.displayName}</Typography>
+        <Typography variant="subtitle2">
+          {' '}
+          {personal ? <Typography variant="h4">{personal['نام و نام خانوادگی']}</Typography> : null}
+        </Typography>
 
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
           {account.role}
@@ -70,34 +87,34 @@ export default function Nav({ openNav, onCloseNav }) {
     </Stack>
   );
 
-  const renderUpgrade = (
-    <Box sx={{ px: 2.5, pb: 3, mt: 10 }}>
-      <Stack alignItems="center" spacing={3} sx={{ pt: 5, borderRadius: 2, position: 'relative' }}>
-        <Box
-          component="img"
-          src="/assets/illustrations/illustration_avatar.png"
-          sx={{ width: 100, position: 'absolute', top: -50 }}
-        />
+  // const renderUpgrade = (
+  //   <Box sx={{ px: 2.5, pb: 3, mt: 10 }}>
+  //     <Stack alignItems="center" spacing={3} sx={{ pt: 5, borderRadius: 2, position: 'relative' }}>
+  //       <Box
+  //         component="img"
+  //         src="/assets/illustrations/illustration_avatar.png"
+  //         sx={{ width: 100, position: 'absolute', top: -50 }}
+  //       />
 
-        <Box sx={{ textAlign: 'center' }}>
-          <Typography variant="h6">Get more?</Typography>
+  //       <Box sx={{ textAlign: 'center' }}>
+  //         <Typography variant="h6">Get more?</Typography>
 
-          <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
-            From only $69
-          </Typography>
-        </Box>
+  //         <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
+  //           From only $69
+  //         </Typography>
+  //       </Box>
 
-        <Button
-          href="https://material-ui.com/store/items/minimal-dashboard/"
-          target="_blank"
-          variant="contained"
-          color="inherit"
-        >
-          Upgrade to Pro
-        </Button>
-      </Stack>
-    </Box>
-  );
+  //       <Button
+  //         href="https://material-ui.com/store/items/minimal-dashboard/"
+  //         target="_blank"
+  //         variant="contained"
+  //         color="inherit"
+  //       >
+  //         Upgrade to Pro
+  //       </Button>
+  //     </Stack>
+  //   </Box>
+  // );
 
   const renderContent = (
     <Scrollbar
@@ -118,7 +135,7 @@ export default function Nav({ openNav, onCloseNav }) {
 
       <Box sx={{ flexGrow: 1 }} />
 
-      {renderUpgrade}
+      {/* {renderUpgrade} */}
     </Scrollbar>
   );
 
