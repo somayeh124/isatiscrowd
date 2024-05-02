@@ -8,7 +8,7 @@ export default function CompanyPage() {
   return (
     <>
       <Helmet>
-        <title> Blog | Minimal UI </title>
+        <title>شرکت‌ها</title>
       </Helmet>
       <CompanyView />
     </>

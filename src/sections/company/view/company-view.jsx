@@ -4,7 +4,6 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import { useEffect, useState } from 'react';
-
 import { getCookie, setCookie } from 'src/api/cookie';
 import { useRouter } from 'src/routes/hooks';
 import { OnRun } from 'src/api/OnRun';
@@ -101,43 +100,43 @@ export default function CompanyView() {
           ))
         ) : (
           <>
-            <Grid xs={12} sm={6} md={4} lg={3} xl={2} sx={{ marginTop: 5 }}>
+            <Grid xs={12} sm={6} md={4} lg={3} xl={3} sx={{ marginTop: 5 }}>
               <CompanyCardSkeleton />
             </Grid>
-            <Grid xs={12} sm={6} md={4} lg={3} xl={2} sx={{ marginTop: 5 }}>
+            <Grid xs={12} sm={6} md={4} lg={3} xl={3} sx={{ marginTop: 5 }}>
               <CompanyCardSkeleton />
             </Grid>
-            <Grid xs={12} sm={6} md={4} lg={3} xl={2} sx={{ marginTop: 5 }}>
+            <Grid xs={12} sm={6} md={4} lg={3} xl={3} sx={{ marginTop: 5 }}>
               <CompanyCardSkeleton />
             </Grid>
-            <Grid xs={12} sm={6} md={4} lg={3} xl={2} sx={{ marginTop: 5 }}>
+            <Grid xs={12} sm={6} md={4} lg={3} xl={3} sx={{ marginTop: 5 }}>
               <CompanyCardSkeleton />
             </Grid>
-            <Grid xs={12} sm={6} md={4} lg={3} xl={2} sx={{ marginTop: 5 }}>
+            <Grid xs={12} sm={6} md={4} lg={3} xl={3} sx={{ marginTop: 5 }}>
               <CompanyCardSkeleton />
             </Grid>
-            <Grid xs={12} sm={6} md={4} lg={3} xl={2} sx={{ marginTop: 5 }}>
+            <Grid xs={12} sm={6} md={4} lg={3} xl={3} sx={{ marginTop: 5 }}>
               <CompanyCardSkeleton />
             </Grid>
-            <Grid xs={12} sm={6} md={4} lg={3} xl={2} sx={{ marginTop: 5 }}>
+            <Grid xs={12} sm={6} md={4} lg={3} xl={3} sx={{ marginTop: 5 }}>
               <CompanyCardSkeleton />
             </Grid>
-            <Grid xs={12} sm={6} md={4} lg={3} xl={2} sx={{ marginTop: 5 }}>
+            <Grid xs={12} sm={6} md={4} lg={3} xl={3} sx={{ marginTop: 5 }}>
               <CompanyCardSkeleton />
             </Grid>
-            <Grid xs={12} sm={6} md={4} lg={3} xl={2} sx={{ marginTop: 5 }}>
+            <Grid xs={12} sm={6} md={4} lg={3} xl={3} sx={{ marginTop: 5 }}>
               <CompanyCardSkeleton />
             </Grid>
-            <Grid xs={12} sm={6} md={4} lg={3} xl={2} sx={{ marginTop: 5 }}>
+            <Grid xs={12} sm={6} md={4} lg={3} xl={3} sx={{ marginTop: 5 }}>
               <CompanyCardSkeleton />
             </Grid>
-            <Grid xs={12} sm={6} md={4} lg={3} xl={2} sx={{ marginTop: 5 }}>
+            <Grid xs={12} sm={6} md={4} lg={3} xl={3} sx={{ marginTop: 5 }}>
               <CompanyCardSkeleton />
             </Grid>
-            <Grid xs={12} sm={6} md={4} lg={3} xl={2} sx={{ marginTop: 5 }}>
+            <Grid xs={12} sm={6} md={4} lg={3} xl={3} sx={{ marginTop: 5 }}>
               <CompanyCardSkeleton />
             </Grid>
-            <Grid xs={12} sm={6} md={4} lg={3} xl={2} sx={{ marginTop: 5 }}>
+            <Grid xs={12} sm={6} md={4} lg={3} xl={3} sx={{ marginTop: 5 }}>
               <CompanyCardSkeleton />
             </Grid>
           </>

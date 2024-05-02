@@ -22,6 +22,11 @@ const navConfig = [
     path: '/trades',
     icon: icon('ic_trade'),
   },
+  {
+    title: 'شرکت‌ها',
+    path: '/company',
+    icon: icon('ic_company'),
+  },
   // {
   //   title: 'پیشرفت پروژه',
   //   path: '/commingsoon',

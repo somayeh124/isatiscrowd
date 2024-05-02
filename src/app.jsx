@@ -13,7 +13,7 @@ export default function App() {
   useScrollToTop();
 
   return (
-    <ThemeProvider>
+    <ThemeProvider >
       <Router />
     </ThemeProvider>
   );

@@ -15,6 +15,7 @@ import { customShadows } from './custom-shadows';
 export default function ThemeProvider({ children }) {
   const memoizedValue = useMemo(
     () => ({
+      direction: 'rtl',
       palette: palette(),
       typography,
       shadows: shadows(),

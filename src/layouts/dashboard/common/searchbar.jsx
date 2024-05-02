@@ -51,7 +51,7 @@ export default function Searchbar() {
   };
 
   return (
-    <ClickAwayListener onClickAway={handleClose}>
+    <ClickAwayListener onClickAway={handleClose} >
       <div>
         {!open && (
           <IconButton onClick={handleOpen}>
@@ -65,7 +65,7 @@ export default function Searchbar() {
               autoFocus
               fullWidth
               disableUnderline
-              placeholder="Search…"
+              placeholder="جستجو..."
               startAdornment={
                 <InputAdornment position="start">
                   <Iconify
@@ -77,7 +77,7 @@ export default function Searchbar() {
               sx={{ mr: 1, fontWeight: 'fontWeightBold' }}
             />
             <Button variant="contained" onClick={handleClose}>
-              Search
+              جستجو
             </Button>
           </StyledSearchbar>
         </Slide>
