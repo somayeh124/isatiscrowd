@@ -7,8 +7,9 @@ import { createTheme, ThemeProvider as MUIThemeProvider } from '@mui/material/st
 import { palette } from './palette';
 import { shadows } from './shadows';
 import { overrides } from './overrides';
-import { typography } from './typography';
+// import { typography } from './typography';
 import { customShadows } from './custom-shadows';
+import IranSans from '../fonts/woff2/IRANSansXFaNum-Medium.woff2';
 
 // ----------------------------------------------------------------------
 
@@ -17,10 +18,27 @@ export default function ThemeProvider({ children }) {
     () => ({
       direction: 'rtl',
       palette: palette(),
-      typography,
+      // typography,
+      
       shadows: shadows(),
       customShadows: customShadows(),
       shape: { borderRadius: 8 },
+      typography: {
+        fontFamily: 'IranSans',
+      },
+      components: {
+        MuiCssBaseline: {
+          styleOverrides: `
+            @font-face {
+              font-family: 'IranSans';
+              src: local('IranSans'), url(${IranSans}) format('woff2');
+              font-style: normal;
+              font-weight: 500;
+              font-display: swap;
+            }
+          `,
+        },
+      },
     }),
     []
   );

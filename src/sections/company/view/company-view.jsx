@@ -70,34 +70,59 @@ export default function CompanyView() {
         alignItems="center"
         justifyContent="space-between"
         mb={5}
-        sx={{ marginTop: 5 }}
+        sx={{ marginTop: 5 ,fontFamily:'IranSans', maxWidth:'100%'}}
       >
-        {personal ? <Typography variant="h4">{personal['نام و نام خانوادگی']}</Typography> : null}
+        {personal ? (
+          <Typography sx={{ display: 'flex' }} variant="h4">
+            سهامدار محترم {'  '}
+            <Typography variant="h4" fontSize={35} fontStyle='bold'>
+              {'  '}
+              {personal['نام و نام خانوادگی']}
+            </Typography>
+            {'  '}
+            خوش‌آمدید.
+          </Typography>
+        ) : null}
 
         <Button onClick={exit} variant="contained" color="inherit">
           خروج
         </Button>
       </Stack>
       {company ? (
-        <Stack mb={5} direction="row" alignItems="center" justifyContent="space-between">
+        <Stack mb={3} direction="row" sx={{paddingX:10}} alignItems="center" justifyContent="space-between">
           <PostSearch setSearche={setSearche} />
         </Stack>
       ) : null}
 
-      <Grid container spacing={2} sx={{ marginTop: 7 }}>
+      <Grid container spacing={2} sx={{ marginTop: 4 }}>
         {companyFiltered ? (
-          companyFiltered.map(({ fullname, name, icon, allStockCompany, amount, symbol }) => (
-            <Grid key={fullname} xs={12} sm={6} md={4} lg={3} xl={2} sx={{ marginTop: 5 }}>
-              <CompanyCard
-                fullname={fullname}
-                name={name}
-                icon={icon}
-                allStockCompany={allStockCompany}
-                amount={amount}
-                symbol={symbol}
-              />
-            </Grid>
-          ))
+          companyFiltered.map(
+            ({
+              fullname,
+              name,
+              icon,
+              allStockCompany,
+              amount,
+              symbol,
+              allStockCompany_alpha,
+              amount_alpha,
+              type,
+            }) => (
+              <Grid key={fullname} xs={12} sm={6} md={4} lg={3} xl={3} sx={{ marginTop: 6,  width:'100%'}}>
+                <CompanyCard
+                  fullname={fullname}
+                  name={name}
+                  icon={icon}
+                  allStockCompany={allStockCompany}
+                  amount={amount}
+                  symbol={symbol}
+                  allStockCompany_alpha={allStockCompany_alpha}
+                  amount_alpha={amount_alpha}
+                  type={type}
+                />
+              </Grid>
+            )
+          )
         ) : (
           <>
             <Grid xs={12} sm={6} md={4} lg={3} xl={3} sx={{ marginTop: 5 }}>

@@ -24,7 +24,7 @@ const CompanyCardSkeleton = () => (
                     </ListItem>
                 </CardContent>
                 <CardActions>
-                    <Button disabled size="small">مشاهده</Button>
+                    <Button disabled size="small">ورود</Button>
                 </CardActions>
 
             </Card>

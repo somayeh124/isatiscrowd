@@ -42,7 +42,6 @@ export default function AppView() {
 
   const router = useRouter();
 
-
   const AccessCheck = () => {
     if (id) {
       axios({
@@ -57,12 +56,9 @@ export default function AppView() {
       });
     } else if (symbol) {
       router.push('/company');
-
-
     } else {
       router.push('/login');
       setCookie('phu', '', 0);
-
     }
   };
 
@@ -73,49 +69,45 @@ export default function AppView() {
       <Typography variant="h4" sx={{ mb: 5 }}>
         خوش آمدید 👋
       </Typography>
-      {
-        data ?
-          <Grid container spacing={3}>
-            <Grid xs={12} sm={6} md={3}>
-              <AppWidgetSummary
-                title="تعداد سهام"
-                total={data.amount}
-                color="success"
-                icon={<img alt="icon" src="/assets/icons/glass/ic_glass_bag.png" />}
-              />
-            </Grid>
-
-            <Grid xs={12} sm={6} md={3}>
-              <AppWidgetSummary
-                title="کل سهام شرکت"
-                total={data.number_shares}
-                color="info"
-                icon={<img alt="icon" src="/assets/icons/glass/ic_glass_users.png" />}
-              />
-            </Grid>
-
-            <Grid xs={12} sm={6} md={3}>
-              <AppWidgetSummary
-                title="سرمایه شرکت"
-                total={data.capital}
-                color="warning"
-                icon={<img alt="icon" src="/assets/icons/glass/ic_glass_buy.png" />}
-              />
-            </Grid>
-
-            <Grid xs={12} sm={6} md={3}>
-              <AppWidgetSummary
-                title="تعداد سهام‌داران"
-                total={data.Shareholders}
-                color="error"
-                icon={<img alt="icon" src="/assets/icons/glass/ic_glass_message.png" />}
-              />
-            </Grid>
-
-
+      {data ? (
+        <Grid container spacing={3}>
+          <Grid xs={12} sm={6} md={3}>
+            <AppWidgetSummary
+              title="تعداد سهام"
+              total={data.amount}
+              color="success"
+              icon={<img alt="icon" src="/assets/icons/glass/ic_glass_bag.png" />}
+            />
           </Grid>
-          : null
-      }
+
+          <Grid xs={12} sm={6} md={3}>
+            <AppWidgetSummary
+              title="کل سهام شرکت"
+              total={data.number_shares}
+              color="info"
+              icon={<img alt="icon" src="/assets/icons/glass/ic_glass_users.png" />}
+            />
+          </Grid>
+
+          <Grid xs={12} sm={6} md={3}>
+            <AppWidgetSummary
+              title="سرمایه شرکت"
+              total={data.capital}
+              color="warning"
+              icon={<img alt="icon" src="/assets/icons/glass/ic_glass_buy.png" />}
+            />
+          </Grid>
+
+          <Grid xs={12} sm={6} md={3}>
+            <AppWidgetSummary
+              title="تعداد سهام‌داران"
+              total={data.Shareholders}
+              color="error"
+              icon={<img alt="icon" src="/assets/icons/glass/ic_glass_message.png" />}
+            />
+          </Grid>
+        </Grid>
+      ) : null}
     </Container>
   );
 }

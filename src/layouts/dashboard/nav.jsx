@@ -15,6 +15,7 @@ import Scrollbar from 'src/components/scrollbar';
 import { getCookie, setCookie } from 'src/api/cookie';
 import axios from 'axios';
 import { OnRun } from 'src/api/OnRun';
+import SvgColor from 'src/components/svg-color';
 import navConfig from './config-navigation';
 import { NAV } from './config-layout';
 
@@ -41,6 +42,16 @@ export default function Nav({ openNav, onCloseNav }) {
       });
     }
   };
+
+  const exit = () => {
+    router.push('/login');
+    setCookie('phu', '', 0);
+  };
+
+  // const icon = (name) => (
+  //   <SvgColor src={`/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />
+  // );
+
   const pathname = usePathname();
   const upLg = useResponsive('up', 'lg');
   useEffect(() => {
@@ -84,6 +95,29 @@ export default function Nav({ openNav, onCloseNav }) {
       {navConfig.map((item) => (
         <NavItem key={item.title} item={item} />
       ))}
+      <ListItemButton
+        // component={RouterLink}
+        onClick={exit}
+        sx={{
+          minHeight: 44,
+          borderRadius: 0.75,
+          typography: 'body2',
+          color: 'text.secondary',
+          textTransform: 'capitalize',
+          fontWeight: 'fontWeightMedium',
+          // color: 'primary.main',
+          '&:hover': {
+            bgcolor: (theme) => alpha(theme.palette.primary.main, 0.05),
+            // bgcolor: (theme) => alpha(theme.palette.primary.main, 0.16),
+          },
+        }}
+      >
+        <Box component="span" sx={{ width: 24, height: 24, mr: 2 }}>
+          <SvgColor src="/assets/icons/navbar/ic_exit.svg" sx={{ width: 1, height: 1 }} />
+        </Box>
+
+        <Box component="span">خروج</Box>
+      </ListItemButton>
     </Stack>
   );
 
@@ -210,7 +244,6 @@ function NavItem({ item }) {
       <Box component="span" sx={{ width: 24, height: 24, mr: 2 }}>
         {item.icon}
       </Box>
-
       <Box component="span">{item.title} </Box>
     </ListItemButton>
   );

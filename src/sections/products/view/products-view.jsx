@@ -92,7 +92,7 @@ export default function ProductsView() {
   return (
     <Container>
       <Typography variant="h4" sx={{ mb: 5 }}>
-        معاملات
+        گردش معاملات
       </Typography>
       {/* table search */}
       {/* <UserTableToolbar

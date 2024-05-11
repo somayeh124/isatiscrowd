@@ -24,7 +24,6 @@ export default function Router() {
         </DashboardLayout>
       ),
       children: [
-        
         { element: <IndexPage />, index: true },
         { path: 'getstock', element: <UserPage /> },
         { path: 'trades', element: <ProductsPage /> },
@@ -32,11 +31,12 @@ export default function Router() {
         { path: 'cominsoon', element: <ComingSoon /> },
       ],
     },
-    { path: 'company', element: <CompanyPage /> },
     {
       path: 'login',
       element: <LoginPage />,
     },
+    { path: 'company', element: <CompanyPage /> },
+
     {
       path: '404',
       element: <Page404 />,

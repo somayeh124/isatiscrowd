@@ -18,7 +18,7 @@ const navConfig = [
     icon: icon('ic_sheet'),
   },
   {
-    title: 'معاملات',
+    title: 'گردش معاملات',
     path: '/trades',
     icon: icon('ic_trade'),
   },
@@ -37,11 +37,6 @@ const navConfig = [
   //   path: '/commingsoon',
   //   icon: icon('ic_visioneye'),
   // },
-  {
-    title: 'خروج',
-    path: '/login',
-    icon: icon('ic_exit'),
-  },
 ];
 
 export default navConfig;

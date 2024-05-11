@@ -9,20 +9,11 @@ import TextField from '@mui/material/TextField';
 // ----------------------------------------------------------------------
 
 PostSearch.propTypes = {
-
   setSearche: PropTypes.array.isRequired,
 };
 
-export default function PostSearch({setSearche}) {
+export default function PostSearch({ setSearche }) {
   return (
-
-        <TextField
-    onChange={(e)=>setSearche(e.target.value)}
-
-
-          placeholder="Search post..."
-
-        />
-
+    <TextField onChange={(e) => setSearche(e.target.value)} placeholder="جستوجو شرکت...." />
   );
 }
