@@ -64,8 +64,9 @@ const CompanyCard = ({
               : type.replace('Bourse', 'بورسی')}
           </Typography>
           <Divider sx={{ marginTop: 1, marginBottom: 1 }} />
-          <ListItem>
+          <ListItem sx={{ textAlign: 'start' }}>
             <ListItemText
+              sx={{ marginLeft: 0.5 }}
               primary={<Typography variant="subtitle1">تعداد سهم </Typography>}
               secondary={amount.toLocaleString()}
             />
@@ -79,17 +80,18 @@ const CompanyCard = ({
               secondary={type}
             /> */}
           </ListItem>
-          <ListItem sx={{ mt: -1 }}>
+          <ListItem sx={{ mt: -1 , textAlign: 'start' }}>
             <ListItemText
+            sx={{ ml:1 }}
               primary={
-                <Typography variant="subtitle1" dir="ltr" fontSize={10}>
+                <Typography variant="subtitle1" fontSize={11}>
                   {amount_alpha}
                 </Typography>
               }
             />
             <ListItemText
               primary={
-                <Typography variant="subtitle1" fontSize={10}>
+                <Typography variant="subtitle1" fontSize={11}>
                   {allStockCompany_alpha}
                 </Typography>
               }

@@ -70,12 +70,12 @@ export default function CompanyView() {
         alignItems="center"
         justifyContent="space-between"
         mb={5}
-        sx={{ marginTop: 5 ,fontFamily:'IranSans', maxWidth:'100%'}}
+        sx={{ marginTop: 5, fontFamily: 'IranSans', maxWidth: '100%' }}
       >
         {personal ? (
-          <Typography sx={{ display: 'flex' }} variant="h4">
+          <Typography sx={{ display: 'flex' }} color="#1a237e" variant="h4">
             سهامدار محترم {'  '}
-            <Typography variant="h4" fontSize={35} fontStyle='bold'>
+            <Typography variant="h4" color="#283593" fontSize={35} fontStyle="bold" sx={{ px: 1 }}>
               {'  '}
               {personal['نام و نام خانوادگی']}
             </Typography>
@@ -89,7 +89,13 @@ export default function CompanyView() {
         </Button>
       </Stack>
       {company ? (
-        <Stack mb={3} direction="row" sx={{paddingX:10}} alignItems="center" justifyContent="space-between">
+        <Stack
+          mb={3}
+          direction="row"
+          sx={{ paddingX: 10 }}
+          alignItems="center"
+          justifyContent="space-between"
+        >
           <PostSearch setSearche={setSearche} />
         </Stack>
       ) : null}
@@ -108,7 +114,15 @@ export default function CompanyView() {
               amount_alpha,
               type,
             }) => (
-              <Grid key={fullname} xs={12} sm={6} md={4} lg={3} xl={3} sx={{ marginTop: 6,  width:'100%'}}>
+              <Grid
+                key={fullname}
+                xs={12}
+                sm={6}
+                md={4}
+                lg={3}
+                xl={3}
+                sx={{ marginTop: 6, width: '100%' }}
+              >
                 <CompanyCard
                   fullname={fullname}
                   name={name}

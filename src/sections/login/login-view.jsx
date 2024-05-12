@@ -97,7 +97,7 @@ export default function LoginView() {
   };
 
 
-  const id = getCookie("phn");
+  const id = getCookie("phu");
   const AccessCheck = () => {
     if (id) {
       axios({
@@ -105,6 +105,7 @@ export default function LoginView() {
         url: `${OnRun}/dara/access`,
         data: { cookie:id },
       }).then((response) => {
+        console.log("idd",id);
         console.log(response.data)
         if (response.data.replay) {
           router.push("/company");

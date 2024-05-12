@@ -26,6 +26,24 @@ export default function Nav({ openNav, onCloseNav }) {
   const id = getCookie('phn');
   const router = useRouter();
 
+  // const AccessCheck = () => {
+  //   if (id) {
+  //     axios({
+  //       method: 'POST',
+  //       url: `${OnRun}/dara/access`,
+  //       data: { cookie: id },
+  //     }).then((response) => {
+  //       if (response.data.replay) {
+  //         setPersonal(response.data);
+  //       } else {
+  //         router.push('/login');
+  //         setCookie('phu', '', 0);
+  //       }
+  //     });
+  //   }
+  // };
+
+
   const AccessCheck = () => {
     if (id) {
       axios({
@@ -80,7 +98,7 @@ export default function Nav({ openNav, onCloseNav }) {
       <Box sx={{ ml: 2 }}>
         <Typography variant="subtitle2">
           {' '}
-          {personal ? <Typography variant="h4">{personal['نام و نام خانوادگی']}</Typography> : null}
+          {personal ? <Typography variant="h6">{personal['نام و نام خانوادگی']}</Typography> : null}
         </Typography>
 
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
