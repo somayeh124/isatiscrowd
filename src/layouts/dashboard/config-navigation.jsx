@@ -27,11 +27,11 @@ const navConfig = [
     path: '/company',
     icon: icon('ic_company'),
   },
-  // {
-  //   title: 'پیشرفت پروژه',
-  //   path: '/commingsoon',
-  //   icon: icon('ic_upgrade'),
-  // },
+  {
+    title: 'پیشرفت پروژه',
+    path: '/process',
+    icon: icon('ic_upgrade'),
+  },
   // {
   //   title: 'مشاهده آنلاین',
   //   path: '/commingsoon',
