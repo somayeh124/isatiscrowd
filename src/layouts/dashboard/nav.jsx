@@ -25,6 +25,7 @@ export default function Nav({ openNav, onCloseNav }) {
   const [personal, setPersonal] = useState(null);
   const id = getCookie('phn');
   const router = useRouter();
+  const cookie = getCookie('sym');
 
   // const AccessCheck = () => {
   //   if (id) {
@@ -42,7 +43,6 @@ export default function Nav({ openNav, onCloseNav }) {
   //     });
   //   }
   // };
-
 
   const AccessCheck = () => {
     if (id) {
@@ -110,9 +110,13 @@ export default function Nav({ openNav, onCloseNav }) {
 
   const renderMenu = (
     <Stack component="nav" spacing={0.5} sx={{ px: 2 }}>
-      {navConfig.map((item) => (
-        <NavItem key={item.title} item={item} />
-      ))}
+      {navConfig.map((item) =>
+        cookie === 'fevisa' ? (
+          <NavItem key={item.title} item={item} />
+        ) : (
+          item.title !== 'پیشرفت پروژه' && <NavItem key={item.title} item={item} />
+        )
+      )}
       <ListItemButton
         // component={RouterLink}
         onClick={exit}

@@ -86,7 +86,7 @@ export default function UserPage() {
 
 
   const getSheetpng = () => {
-    console.log({ cookie: id, symbol })
+    // console.log({ cookie: id, symbol })
     if (symbol === 'visa') {
       toast.warning('دریافت برگه سهام برای این سهم امکان پذیر نیست');
     } else {

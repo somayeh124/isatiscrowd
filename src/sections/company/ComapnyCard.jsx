@@ -26,7 +26,7 @@ const CompanyCard = ({
   type,
 }) => {
   const router = useRouter();
-  console.log('CompanyCard', CompanyCard);
+  // console.log('CompanyCard', CompanyCard);
 
   const ToDashboard = () => {
     if (amount >= 0) {
