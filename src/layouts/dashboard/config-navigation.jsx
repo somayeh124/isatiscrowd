@@ -8,6 +8,11 @@ const icon = (name) => (
 
 const navConfig = [
   {
+    title: 'خانه',
+    path: '/company',
+    icon: icon('ic_company'),
+  },
+  {
     title: 'میزکار',
     path: '/',
     icon: icon('ic_analytics'),
@@ -21,11 +26,6 @@ const navConfig = [
     title: 'گردش معاملات',
     path: '/trades',
     icon: icon('ic_trade'),
-  },
-  {
-    title: 'شرکت‌ها',
-    path: '/company',
-    icon: icon('ic_company'),
   },
   {
     title: 'پیشرفت پروژه',

@@ -73,13 +73,17 @@ export default function CompanyView() {
         sx={{ marginTop: 5, fontFamily: 'IranSans', maxWidth: '100%' }}
       >
         {personal ? (
-          <Typography sx={{ display: 'flex' }} color="#1a237e" variant="h4">
-            سهامدار محترم {'  '}
-            <Typography variant="h4" color="#283593" fontSize={35} fontStyle="bold" sx={{ px: 1 }}>
+          <Typography sx={{ display: 'flex' }} color="#1a237e" variant="h6">
+              سهامدار محترم {'  '}
+            <Typography variant="h6" color="#283593" fontSize={35} fontStyle="bold" sx={{ px: 1 }}>
               {'  '}
-              {personal['نام و نام خانوادگی']}
+              <Typography variant="h6">
+                {personal['نام و نام خانوادگی']}
+              </Typography>
+              
             </Typography>
             {'  '}
+            به پنل سهامداری خود
             خوش‌آمدید.
           </Typography>
         ) : null}

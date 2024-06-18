@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
@@ -11,31 +10,20 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { alpha, useTheme } from '@mui/material/styles';
 import axios from "axios";
 import { getCookie, setCookie } from 'src/api/cookie';
-
 import { useRouter } from 'src/routes/hooks';
-
 import { bgGradient } from 'src/theme/css';
-
-import Logo from 'src/components/logo';
 import { OnRun } from 'src/api/OnRun';
 import { ToastContainer, toast } from 'react-toastify';
 
-// ----------------------------------------------------------------------
-
 export default function LoginView() {
   const theme = useTheme();
-
-
   const router = useRouter();
-
   const [nationalCode, setNationalCode] = useState('');
   const [captchaInput, setCaptchaInput] = useState('');
   const [captchaImage, setCaptchaImage] = useState(null);
   const [encrypted_response, setEncrypted_response] = useState(null);
   const [otp, setOtp] = useState('');
   const [step, setStep] = useState(1);
-
-
 
   const getCaptcha = () => {
     axios
@@ -48,7 +36,6 @@ export default function LoginView() {
         console.log("error captcha", err);
       });
   };
-
 
   const applyNationalCode = () => {
     if (captchaInput.length === 0) {
@@ -76,7 +63,6 @@ export default function LoginView() {
     }
   };
 
-
   const handleCode = () => {
     if (otp.length !== 5) {
       toast.warning("کد صحیح نیست");
@@ -96,17 +82,14 @@ export default function LoginView() {
     }
   };
 
-
   const id = getCookie("phu");
   const AccessCheck = () => {
     if (id) {
       axios({
         method: "POST",
         url: `${OnRun}/dara/access`,
-        data: { cookie:id },
+        data: { cookie: id },
       }).then((response) => {
-        // console.log("idd",id);
-        // console.log(response.data)
         if (response.data.replay) {
           router.push("/company");
         }
@@ -114,13 +97,12 @@ export default function LoginView() {
     }
   };
 
-
-  useEffect(getCaptcha, [])
-  useEffect(AccessCheck, [id,router])
+  useEffect(getCaptcha, []);
+  useEffect(AccessCheck, [id, router]);
 
   const renderForm = (
     <>
-      <Stack spacing={3}>
+      <Stack spacing={3}  sx={{ mb: 3 }}>
         <TextField value={nationalCode} onChange={(e) => setNationalCode(e.target.value)} label="شماره ملی" />
         {
           step === 1 ?
@@ -129,12 +111,13 @@ export default function LoginView() {
               <Button onClick={getCaptcha}>
                 <img src={`data:image/png;base64,${captchaImage}`} alt='captcha' />
               </Button>
+              <Box sx={{ mb: 3 }} /> 
             </>
             :
             <TextField value={otp} onChange={(e) => setOtp(e.target.value)} label="کد تایید" />
         }
       </Stack>
-
+  
       {
         step === 1 ?
           <LoadingButton
@@ -158,7 +141,6 @@ export default function LoginView() {
           >
             تایید
           </LoadingButton>
-
       }
     </>
   );
@@ -174,14 +156,6 @@ export default function LoginView() {
       }}
     >
       <ToastContainer />
-      <Logo
-        sx={{
-          position: 'fixed',
-          top: { xs: 16, md: 24 },
-          left: { xs: 16, md: 24 },
-        }}
-      />
-
       <Stack alignItems="center" justifyContent="center" sx={{ height: 1 }}>
         <Card
           sx={{
@@ -190,12 +164,7 @@ export default function LoginView() {
             maxWidth: 420,
           }}
         >
-          <Typography variant="h4">درگاه سهامداران</Typography>
-
-
-
-          
-
+          <Typography variant="h6">درگاه سهامداران  گروه مالی و سرمایه گذاری ایساتیس پویا</Typography>
           <Divider sx={{ my: 3 }}>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
               ورود

@@ -34,8 +34,9 @@ const CompanyCard = ({
       router.push('/');
     }
   };
+
   return (
-    <Container sx={{ position: 'relative' }}>
+    <Container sx={{ position: 'relative', paddingBottom: 4 }}>
       <Avatar
         alt={name}
         src={`/img/${icon}`}
@@ -47,10 +48,11 @@ const CompanyCard = ({
           zIndex: 3,
           bgcolor: '#ffff',
           left: '50%',
+          transform: 'translateX(-50%)',
         }}
       />
-      <Card sx={{ minWidth: 280, height: 385 }}>
-        <CardContent sx={{ justifyContent: 'center', marginTop: 5 }}>
+      <Card sx={{ minWidth: 280, height: 420, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+        <CardContent sx={{ marginTop: 5 }}>
           <Typography variant="h4" component="h2">
             {name}
           </Typography>
@@ -67,22 +69,17 @@ const CompanyCard = ({
           <ListItem sx={{ textAlign: 'start' }}>
             <ListItemText
               sx={{ marginLeft: 0.5 }}
-              primary={<Typography variant="subtitle1">تعداد سهم </Typography>}
+              primary={<Typography variant="subtitle1">تعداد سهام شما </Typography>}
               secondary={amount.toLocaleString()}
             />
             <ListItemText
               primary={<Typography variant="subtitle1">تعداد کل‌ سهام شرکت</Typography>}
               secondary={Math.floor(allStockCompany).toLocaleString()}
             />
-
-            {/* <ListItemText
-              primary={<Typography variant="subtitle1">نوع شرکت</Typography>}
-              secondary={type}
-            /> */}
           </ListItem>
-          <ListItem sx={{ mt: -1 , textAlign: 'start' }}>
+          <ListItem sx={{ mt: -1, textAlign: 'start' }}>
             <ListItemText
-            sx={{ ml:1 }}
+              sx={{ ml: 1 }}
               primary={
                 <Typography variant="subtitle1" fontSize={11}>
                   {amount_alpha}
@@ -98,15 +95,24 @@ const CompanyCard = ({
             />
           </ListItem>
         </CardContent>
-        <CardActions>
+        <CardActions sx={{ p: 0 }}>
           <Button
             disabled={amount <= 0}
             onClick={ToDashboard}
             size="medium"
-            variant="text"
-            color="info"
+            variant="contained"
+            color="primary"
+            fullWidth
+            sx={{ 
+              borderRadius: '0 0 4px 4px', 
+              bgcolor: ' #1976d2',
+              '&:hover': {
+                bgcolor: '#2196f3', 
+              },
+            }}
           >
-            ورود
+ورود به میزکار {name}         
+             
           </Button>
         </CardActions>
       </Card>
@@ -115,7 +121,7 @@ const CompanyCard = ({
 };
 
 CompanyCard.propTypes = {
-  fullname: PropTypes.any.isRequired, // یا PropTypes.object یا هر نوع دیگری که مناسب است
+  fullname: PropTypes.any.isRequired, 
   name: PropTypes.any.isRequired,
   icon: PropTypes.any.isRequired,
   allStockCompany: PropTypes.any.isRequired,

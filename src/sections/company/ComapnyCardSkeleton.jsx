@@ -14,7 +14,7 @@ const CompanyCardSkeleton = () => (
                     <Divider sx={{ marginTop: 1, marginBottom: 1 }} />
                     <ListItem>
                         <ListItemText
-                            primary="تعداد سهم"
+                            primary="تعداد سهام شما"
                             secondary={<Skeleton variant="rectangular" width={100} height={10}/>}
                         />
                         <ListItemText

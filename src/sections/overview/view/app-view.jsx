@@ -73,7 +73,7 @@ export default function AppView() {
         <Grid container spacing={3}>
           <Grid xs={12} sm={6} md={3}>
             <AppWidgetSummary
-              title="تعداد سهام"
+              title="تعداد سهام شما"
               total={data.amount}
               color="success"
               icon={<img alt="icon" src="/assets/icons/glass/ic_glass_bag.png" />}
