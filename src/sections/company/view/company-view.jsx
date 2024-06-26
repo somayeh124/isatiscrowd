@@ -8,17 +8,19 @@ import { getCookie, setCookie } from 'src/api/cookie';
 import { useRouter } from 'src/routes/hooks';
 import { OnRun } from 'src/api/OnRun';
 import axios from 'axios';
+import { useQuery } from '@tanstack/react-query';
 import PostSearch from '../post-search';
 import CompanyCard from '../ComapnyCard';
 import CompanyCardSkeleton from '../ComapnyCardSkeleton';
+
 
 // ----------------------------------------------------------------------
 
 export default function CompanyView() {
   const [personal, setPersonal] = useState(null);
-  const [company, setCompany] = useState(null);
   const [Searche, setSearche] = useState('');
   const [companyFiltered, setCompanyFiltered] = useState('');
+
 
   const id = getCookie('phn');
   const router = useRouter();
@@ -45,26 +47,33 @@ export default function CompanyView() {
     setCookie('phu', '', 0);
   };
 
-  const get_conpany = () => {
-    axios.post(`${OnRun}/dara/getcompany`, { cookie: id }).then((response) => {
-      if (response.data.replay) {
-        setCompany(response.data.df);
-      }
+
+  
+  const newConpany=() => axios.post(`${OnRun}/dara/getcompany`, { cookie: id })
+
+  
+    const { data, error, isLoading } = useQuery({
+        queryKey: ['newConpany'],
+        queryFn: newConpany,
     });
-  };
+  console.log('====================================');
+  console.log(data, error, isLoading);
+  console.log('====================================');
 
   const Filter = () => {
-    if (company) {
-      setCompanyFiltered(company.filter((item) => item.fullname.includes(Searche)));
+    if (data) {
+      setCompanyFiltered(data.data.df.filter((item) => item.fullname.includes(Searche)));
     }
   };
 
   useEffect(AccessCheck, [id, router]);
-  useEffect(get_conpany, [id]);
-  useEffect(Filter, [Searche, company]);
+
+  useEffect(Filter, [Searche, data]);
 
   return (
-    <Container>
+    
+      <Container>
+
       <Stack
         direction="row"
         alignItems="center"
@@ -92,7 +101,7 @@ export default function CompanyView() {
           خروج
         </Button>
       </Stack>
-      {company ? (
+      {!isLoading ? (
         <Stack
           mb={3}
           direction="row"
@@ -186,5 +195,6 @@ export default function CompanyView() {
         )}
       </Grid>
     </Container>
+  
   );
 }

@@ -8,8 +8,9 @@ import Typography from '@mui/material/Typography';
 import { getCookie, setCookie } from 'src/api/cookie';
 import axios from 'axios';
 import { OnRun } from 'src/api/OnRun';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'src/routes/hooks';
+import { useQuery } from '@tanstack/react-query';
 import AppWidgetSummary from '../app-widget-summary';
 
 // import AppTasks from '../app-tasks';
@@ -26,20 +27,7 @@ import AppWidgetSummary from '../app-widget-summary';
 export default function AppView() {
   const id = getCookie('phn');
   const symbol = getCookie('sym');
-
-  const [data, setData] = useState(null);
-
-  const getCard = () => {
-    axios
-      .post(`${OnRun}/dara/static`, { cookie: id, symbol })
-      .then((response) => {
-        setData(response.data.dic);
-      })
-      .catch((error) => {
-        console.error('Error fetching image:', error);
-      });
-  };
-
+ 
   const router = useRouter();
 
   const AccessCheck = () => {
@@ -61,9 +49,18 @@ export default function AppView() {
       setCookie('phu', '', 0);
     }
   };
+  const newGetCard = () => axios.post(`${OnRun}/dara/static`, { cookie: id, symbol })
+  const { data, error, isLoading } = useQuery({
+        queryKey: ['newGetCard'],
+        queryFn: newGetCard,
+    });
+  console.log('====================================');
+  console.log(data, error, isLoading);
+  console.log('====================================');
 
   useEffect(AccessCheck, [id, router, symbol]);
-  useEffect(getCard, [id, symbol]);
+  useEffect(newGetCard, [id, symbol]);
+
   return (
     <Container maxWidth="xl">
       <Typography variant="h4" sx={{ mb: 5 }}>
@@ -74,7 +71,7 @@ export default function AppView() {
           <Grid xs={12} sm={6} md={3}>
             <AppWidgetSummary
               title="تعداد سهام شما"
-              total={data.amount}
+              total={data.data.dic.amount}
               color="success"
               icon={<img alt="icon" src="/assets/icons/glass/ic_glass_bag.png" />}
             />
@@ -83,7 +80,7 @@ export default function AppView() {
           <Grid xs={12} sm={6} md={3}>
             <AppWidgetSummary
               title="کل سهام شرکت"
-              total={data.number_shares}
+              total={data.data.dic.number_shares}
               color="info"
               icon={<img alt="icon" src="/assets/icons/glass/ic_glass_users.png" />}
             />
@@ -92,7 +89,7 @@ export default function AppView() {
           <Grid xs={12} sm={6} md={3}>
             <AppWidgetSummary
               title="سرمایه شرکت"
-              total={data.capital}
+              total={data.data.dic.capital}
               color="warning"
               icon={<img alt="icon" src="/assets/icons/glass/ic_glass_buy.png" />}
             />
@@ -101,7 +98,7 @@ export default function AppView() {
           <Grid xs={12} sm={6} md={3}>
             <AppWidgetSummary
               title="تعداد سهام‌داران"
-              total={data.Shareholders}
+              total={data.data.dic.Shareholders}
               color="error"
               icon={<img alt="icon" src="/assets/icons/glass/ic_glass_message.png" />}
             />
