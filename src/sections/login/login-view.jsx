@@ -164,7 +164,8 @@ export default function LoginView() {
             maxWidth: 420,
           }}
         >
-          <Typography variant="h6">درگاه سهامداران  گروه مالی و سرمایه گذاری ایساتیس پویا</Typography>
+        <Typography variant="h5" style={{textAlign:'center'}}>ایساتیس پویا</Typography>
+          <Typography variant="h6">درگاه سهامداران  گروه مالی و سرمایه گذاری </Typography>
           <Divider sx={{ my: 3 }}>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
               ورود
