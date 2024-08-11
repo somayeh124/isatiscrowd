@@ -8,7 +8,7 @@ export default function AppPage() {
   return (
     <>
       <Helmet>
-        <title> میزکار </title>
+        <title> ایساتیس کراد  </title>
       </Helmet>
 
       <AppView />

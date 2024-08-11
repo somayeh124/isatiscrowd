@@ -8,6 +8,8 @@ import Router from 'src/routes/sections';
 import ThemeProvider from 'src/theme';
 import { useState } from 'react';
 
+
+
 // ----------------------------------------------------------------------
 
 export default function App() {
@@ -20,5 +22,6 @@ export default function App() {
         <Router />
       </ThemeProvider>
     </QueryClientProvider>
+
   );
 }
