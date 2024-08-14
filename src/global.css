@@ -1,5 +1,8 @@
 /* scrollbar */
 @import 'simplebar-react/dist/simplebar.min.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @font-face {
     font-family: 'IRANSANS';

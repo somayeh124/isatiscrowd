@@ -1,1 +1,1 @@
-export { default as UserView } from './stock-view';
+export { default as UserView } from './request-view';

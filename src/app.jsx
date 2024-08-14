@@ -1,7 +1,7 @@
 /* eslint-disable perfectionist/sort-imports */
 import 'src/global.css';
 import 'react-toastify/dist/ReactToastify.css';
-
+import { createTheme } from '@mui/material/styles';
 import { useScrollToTop } from 'src/hooks/use-scroll-to-top';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Router from 'src/routes/sections';

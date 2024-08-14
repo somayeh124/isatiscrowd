@@ -8,7 +8,7 @@ export default function UserPage() {
   return (
     <>
       <Helmet>
-        <title> برگه سهام </title>
+        <title>  درخواست </title>
       </Helmet>
 
       <UserView />

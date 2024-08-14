@@ -1,16 +1,16 @@
 import { Helmet } from 'react-helmet-async';
+import { RequestView } from 'src/sections/request/view';
 
-import { CompanyView } from 'src/sections/company/view';
 
 // ----------------------------------------------------------------------
 
-export default function CompanyPage() {
+export default function RequestPage() {
   return (
     <>
       <Helmet>
-        <title>شرکت‌ها</title>
+        <title>ایجاددرخواست</title>
       </Helmet>
-      <CompanyView />
+      <RequestView />
     </>
   );
 }

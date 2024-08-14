@@ -7,31 +7,20 @@ const icon = (name) => (
 );
 
 const navConfig = [
+
   {
-    title: 'خانه',
-    path: '/company',
-    icon: icon('ic_company'),
-  },
-  {
-    title: 'میزکار',
+    title: 'ایجاد درخواست',
     path: '/',
     icon: icon('ic_analytics'),
   },
   {
-    title: 'برگه سهام',
-    path: '/getstock',
+    title: 'مشاهده درخواست',
+    path: '/request',
     icon: icon('ic_sheet'),
   },
-  {
-    title: 'گردش معاملات',
-    path: '/trades',
-    icon: icon('ic_trade'),
-  },
-  {
-    title: 'پیشرفت پروژه',
-    path: '/process',
-    icon: icon('ic_upgrade'),
-  },
+
+
+
   // {
   //   title: 'مشاهده آنلاین',
   //   path: '/commingsoon',

@@ -16,7 +16,7 @@ export default function AppView() {
 
   // const router = useRouter();
   const data = [
-    { name: 'محمدی' },
+    { name: ' آقای محمدی' },
 
   ];
 
@@ -39,8 +39,9 @@ export default function AppView() {
       <Grid container spacing={3}>
         {data.map((item, index) => (
           <Grid item xs={12} sm={6} md={3} key={index}>
-            <Typography variant="h6">        خوش آمدید 👋
+            <Typography variant="h6">        
             {item.name}</Typography>
+            خوش آمدید 👋
           </Grid>
          
         ))}

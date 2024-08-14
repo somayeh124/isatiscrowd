@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 import { lazy, Suspense } from 'react';
 import { Outlet, Navigate, useRoutes } from 'react-router-dom';
 
@@ -5,7 +6,7 @@ import DashboardLayout from 'src/layouts/dashboard';
 import ComingSoon from 'src/pages/comingsoon';
 
 export const IndexPage = lazy(() => import('src/pages/app'));
-export const CompanyPage = lazy(() => import('src/pages/company'));
+export const RequestPage = lazy(() => import('src/pages/request'));
 export const UserPage = lazy(() => import('src/pages/user'));
 export const LoginPage = lazy(() => import('src/pages/login'));
 export const ProductsPage = lazy(() => import('src/pages/products'));
@@ -26,8 +27,7 @@ export default function Router() {
       ),
       children: [
         { element: <IndexPage />, index: true },
-        { path: 'getstock', element: <UserPage /> },
-        { path: 'trades', element: <ProductsPage /> },
+        { path: 'request', element: <UserPage /> },
         { path: 'process', element: <ProcessProjectPage /> },
         { path: 'cominsoon', element: <ComingSoon /> },
       ],
@@ -36,7 +36,7 @@ export default function Router() {
       path: 'login',
       element: <LoginPage />,
     },
-    { path: 'company', element: <CompanyPage /> },
+    { path: 'request', element: <RequestPage /> },
 
     {
       path: '404',

@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { Stepper, Step, StepLabel, Button } from '@mui/material';
+import { toast, ToastContainer } from 'react-toastify';
 import AccordionUsage from "./accordion";
-
+import 'react-toastify/dist/ReactToastify.css';
+import TrackingCard from './code';
+import Form from './form';
 
 const Sterpercrowd = () => {
   const [activeStep, setActiveStep] = useState(0);
@@ -9,7 +12,22 @@ const Sterpercrowd = () => {
   const steps = ['مرحله اول', 'مرحله دوم', 'مرحله سوم'];
 
   const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    if (activeStep === 1) {
+      // چک کنید که تمام چک‌باکس‌ها تیک خورده‌اند
+      const checkedContracts = JSON.parse(localStorage.getItem('checkedContracts')) || {};
+      const allChecked = Object.values(checkedContracts).every(Boolean);
+      
+      if (!allChecked) {
+        toast.error('لطفاً همه قراردادها را مطالعه کنید.');
+        return;
+      }
+    }
+
+    if (activeStep === steps.length - 1) {
+      alert('اتمام');
+    } else {
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    }
   };
 
   const handleBack = () => {
@@ -19,11 +37,11 @@ const Sterpercrowd = () => {
   const renderStepContent = (step) => {
     switch (step) {
       case 0:
-        return <div>محتوای مرحله اول</div>;
+        return <div>  <Form/> </div>;
       case 1:
         return <AccordionUsage />;
       case 2:
-        return <div>محتوای مرحله سوم</div>;
+        return <div><TrackingCard/></div>;
       default:
         return <div>مرحله‌ای یافت نشد</div>;
     }
@@ -41,20 +59,30 @@ const Sterpercrowd = () => {
       <div>
         {renderStepContent(activeStep)}
       </div>
-      <div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
         <Button
           disabled={activeStep === 0}
           onClick={handleBack}
+          sx={{
+            '&:hover': {
+              backgroundColor: '#90caf9', // رنگ آبی ملایم هنگام هاور شدن
+            }
+          }}
         >
           قبلی
         </Button>
         <Button
-          disabled={activeStep === steps.length - 1}
           onClick={handleNext}
+          sx={{
+            '&:hover': {
+              backgroundColor: '#90caf9', // رنگ آبی ملایم هنگام هاور شدن
+            }
+          }}
         >
-          بعدی
+          {activeStep === steps.length - 1 ? 'اتمام' : 'بعدی'}
         </Button>
       </div>
+      <ToastContainer />
     </div>
   );
 };
