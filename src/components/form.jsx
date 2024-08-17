@@ -58,8 +58,10 @@ function AttachmentSection({ title, attachmentName, onNameChange, onFileChange, 
 function Form() {
   // state برای نگهداری اطلاعات فرم
   const [companyName, setCompanyName] = useState(''); // نام شرکت
+  const [companyType, setCompanyType] = useState(''); // نوع شرکت
   const [companyId, setCompanyId] = useState(''); // شناسه شرکت
   const [registrationNumber, setRegistrationNumber] = useState(''); // شماره ثبت شرکت
+  const [requestedAmount, setRequestedAmount] = useState(10000000000); // میزان منابع درخواستی
   const [recentAttachments, setRecentAttachments] = useState([]); // پیوست‌های صورت مالی سال‌های اخیر
   const [oldAttachments, setOldAttachments] = useState([]); // پیوست‌های صورت مالی سال‌های قبل
   const [documents, setDocuments] = useState([]); // مدارک
@@ -71,6 +73,8 @@ function Form() {
   const [documentFiles, setDocumentFiles] = useState([]); // فایل‌های مدارک
   const [submitted, setSubmitted] = useState(false); // وضعیت ارسال فرم
   const [errorMessage, setErrorMessage] = useState(''); // پیام خطا
+
+  const companyTypes = ['سهامی عام', 'سهامی خاص', 'مسئولیت محدود', 'تعاونی'];
 
   const handleFilesChange = (setFiles) => (e) => {
     setFiles(Array.from(e.target.files));
@@ -102,8 +106,10 @@ function Form() {
     setSubmitted(true);
 
     setCompanyName('');
+    setCompanyType('');
     setCompanyId('');
     setRegistrationNumber('');
+    setRequestedAmount(10000000000);
     setRecentAttachments([]);
     setOldAttachments([]);
     setDocuments([]);
@@ -137,6 +143,23 @@ function Form() {
       </div>
 
       <div className="mb-6">
+        <label className="block text-gray-700 text-sm font-semibold mb-2">نوع شرکت:</label>
+        <select
+          value={companyType}
+          onChange={(e) => setCompanyType(e.target.value)}
+          required
+          className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        >
+          <option value="">انتخاب کنید</option>
+          {companyTypes.map((type, index) => (
+            <option key={index} value={type}>
+              {type}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="mb-6">
         <label className="block text-gray-700 text-sm font-semibold mb-2">شماره شناسه:</label>
         <input
           type="number"
@@ -156,6 +179,21 @@ function Form() {
           required
           className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         />
+      </div>
+
+      <div className="mb-6">
+        <label className="block text-gray-700 text-sm font-semibold mb-2">میزان منابع درخواستی (ریال):</label>
+        <input
+          type="range"
+          min={10000000000} // 10 میلیارد ریال
+          max={250000000000} // 250 میلیارد ریال
+          value={requestedAmount}
+          onChange={(e) => setRequestedAmount(Number(e.target.value))}
+          className="w-full"
+        />
+        <span className="block text-gray-700 text-sm mt-2">
+          {requestedAmount.toLocaleString()} ریال
+        </span>
       </div>
 
       <AttachmentSection
@@ -198,7 +236,7 @@ function Form() {
           ارسال
         </button>
       </div>
-      
+
       {submitted && <div className="mt-6 text-green-500 text-center font-semibold">اطلاعات ارسال شد</div>}
     </form>
   );
