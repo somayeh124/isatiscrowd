@@ -1,5 +1,4 @@
 import React from 'react';
-import Login from './Loginpanle';
 
 const data = [{ code: "123565" }];         
 
