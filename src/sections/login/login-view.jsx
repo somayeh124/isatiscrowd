@@ -31,7 +31,6 @@ export default function LoginView() {
       .then((response) => {
         setEncrypted_response(response.data.captcha.encrypted_response);
         setCaptchaImage(response.data.captcha.image);
-        console.log("Fdhdghdh")
       })
       .catch((err) => {
         console.log('error captcha', err);
@@ -48,21 +47,20 @@ export default function LoginView() {
         method: 'POST',
         url: `${OnRun}/api/otp/`,
         data: {
-          UserInput: { captcha: captchaInput, nationalCode },
-          captchaCode: encrypted_response,
+          national_code: nationalCode,
+          encrypted_response,
+          captcha: captchaInput,
         },
-      }).then((response) => {
-        if (response.data.replay) {
-          if (response.data.status === 'NotFund') {
-            toast.warning('متاسفانه کد ملی وارد شده یافت نشد');
-          } else if (response.data.status === 'RegisterDara') {
-            toast.warning('متاسفانه کد ملی وارد شده یافت نشد');
-          } else {
-            setStep(2);
-          }
-        } else {
-          toast.warning(response.data.msg);
-        }
+      })
+      .then((response) => {
+ 
+            toast.success('کد ملی با موفقیت ارسال شد');
+            setStep(2); 
+
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        toast.error('خطا در ارسال درخواست به سرور.');
       });
     }
   };
@@ -73,15 +71,15 @@ export default function LoginView() {
     } else {
       axios({
         method: 'POST',
-        url: `${OnRun}/api/otp/`,
-        data: { nationalCode, Code: otp },
+        url: `${OnRun}/api/login/`,
+        data: {national_code: nationalCode, code: otp },
       }).then((response) => {
-        if (response.data.replay) {
+     
           setCookie('phn', response.data.cookie, 1);
-          router.push('/');
-        } else {
+          toast.success('ورود با موفقیت انجام شد');
+          router.push('/');  
           toast.warning(response.data.msg);
-        }
+        
       });
     }
   };
@@ -91,12 +89,13 @@ export default function LoginView() {
     if (id) {
       axios({
         method: 'POST',
-        url: `${OnRun}/dara/access`,
+        url: `${OnRun}/api/login/`,
         data: { cookie: id },
       }).then((response) => {
-        if (response.data.replay) {
+        
+          toast.success('دسترسی تایید شد');
           router.push('/');
-        }
+        
       });
     }
   };
@@ -106,12 +105,12 @@ export default function LoginView() {
 
   const renderForm = (
     <>
+    <ToastContainer autoClose={3000} />
       <Stack spacing={3} sx={{ mb: 3 }}>
         <TextField
           value={nationalCode}
           onChange={(e) => setNationalCode(e.target.value)}
           label="شماره ملی"
-          
         />
 
         {step === 1 ? (
@@ -119,7 +118,7 @@ export default function LoginView() {
             <TextField
               onChange={(e) => setCaptchaInput(e.target.value)}
               label="کپچا"
-            value={captchaInput}
+              value={captchaInput}
             />
             <Button onClick={getCaptcha}>
               <img src={`data:image/png;base64,${captchaImage}`} alt="captcha" />
