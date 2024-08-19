@@ -31,8 +31,8 @@ export default function Nav({ openNav, onCloseNav }) {
   //   if (id) {
   //     axios({
   //       method: 'POST',
-  //       url: `${OnRun}/dara/access`,
-  //       data: { cookie: id },
+  //       url: `${OnRun}/api/login/`,
+  //       data: { cookie: id }, 
   //     }).then((response) => {
   //       if (response.data.replay) {
   //         setPersonal(response.data);
@@ -44,23 +44,7 @@ export default function Nav({ openNav, onCloseNav }) {
   //   }
   // };
 
-  const AccessCheck = () => {
-    if (id) {
-      axios({
-        method: 'POST',
-        url: `${OnRun}/dara/access`,
-        data: { cookie: id },
-      }).then((response) => {
-        if (response.data.replay) {
-          setPersonal(response.data);
-        } else {
-          router.push('/login');
-          setCookie('phu', '', 0);
-        }
-      });
-    }
-  };
-
+ 
   const exit = () => {
     router.push('/login');
     setCookie('phu', '', 0);
@@ -78,7 +62,7 @@ export default function Nav({ openNav, onCloseNav }) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
-  useEffect(AccessCheck, [id, router]);
+  // useEffect(AccessCheck, [id, router]);
 
   const renderAccount = (
     <Box
