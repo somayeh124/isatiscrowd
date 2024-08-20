@@ -1,3 +1,5 @@
+/* eslint-disable no-dupe-keys */
+
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
@@ -16,9 +18,12 @@ import { getCookie, setCookie } from 'src/api/cookie';
 import axios from 'axios';
 import { OnRun } from 'src/api/OnRun';
 import SvgColor from 'src/components/svg-color';
+import { Avatar } from '@mui/material';
 import navConfig from './config-navigation';
 import { NAV } from './config-layout';
 
+// ----------------------------------------------------------------------
+// 🌟 Navigation Component 🌟
 // ----------------------------------------------------------------------
 
 export default function Nav({ openNav, onCloseNav }) {
@@ -27,6 +32,9 @@ export default function Nav({ openNav, onCloseNav }) {
   const router = useRouter();
   const cookie = getCookie('sym');
 
+  // 🌐 Check User Access 🌐
+  // This function checks if the user has the proper access by verifying the cookie.
+  // If not, it redirects to the login page.
   // const AccessCheck = () => {
   //   if (id) {
   //     axios({
@@ -44,56 +52,38 @@ export default function Nav({ openNav, onCloseNav }) {
   //   }
   // };
 
- 
+  // 🚪 Exit Function 🚪
+  // Handles user logout by clearing the cookie and redirecting to the login page.
   const exit = () => {
     router.push('/login');
     setCookie('phu', '', 0);
   };
 
+  // 🖼️ Icon Function 🖼️
+  // Generates an icon using SvgColor component.
   // const icon = (name) => (
   //   <SvgColor src={`/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />
   // );
 
   const pathname = usePathname();
   const upLg = useResponsive('up', 'lg');
+
+  // 🎯 Close Navigation on Pathname Change 🎯
   useEffect(() => {
     if (openNav) {
       onCloseNav();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
-  // useEffect(AccessCheck, [id, router]);
 
+  // 📜 Account Rendering 📜
   const renderAccount = (
-    <Box
-      sx={{
-        my: 3,
-        mx: 2.5,
-        py: 2,
-        px: 2.5,
-        display: 'flex',
-        borderRadius: 1.5,
-        alignItems: 'center',
-        bgcolor: (theme) => alpha(theme.palette.grey[500], 0.12),
-      }}
-    >
-      {/* <Avatar src={account.photoURL} alt="photoURL" /> */}
-
-      <Box sx={{ ml: 2 }}>
-        <Typography variant="subtitle2">
-          {' '}
-          {personal ? <Typography variant="h6">{personal['نام و نام خانوادگی']}</Typography> : null}
-        </Typography>
-
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          {account.role}
-        </Typography>
-      </Box>
-    </Box>
+   <div />
   );
 
+  // 📋 Menu Rendering 📋
   const renderMenu = (
-    <Stack component="nav" spacing={0.5} sx={{ px: 2 }}>
+    <Stack component="nav" spacing={0.5} sx={{ px: 2, color:"green"}}>
       {navConfig.map((item) =>
         cookie === 'fevisa' ? (
           <NavItem key={item.title} item={item} />
@@ -102,31 +92,32 @@ export default function Nav({ openNav, onCloseNav }) {
         )
       )}
       <ListItemButton
+        // 🛑 Logout Button 🛑
         // component={RouterLink}
         onClick={exit}
         sx={{
           minHeight: 44,
           borderRadius: 0.75,
           typography: 'body2',
-          color: 'text.secondary',
+          color: 'error.main',
           textTransform: 'capitalize',
-          fontWeight: 'fontWeightMedium',
+          fontWeight: 'bold',
           // color: 'primary.main',
           '&:hover': {
-            bgcolor: (theme) => alpha(theme.palette.primary.main, 0.05),
-            // bgcolor: (theme) => alpha(theme.palette.primary.main, 0.16),
+            bgcolor: (theme) => alpha(theme.palette.error.main, 0.08),
           },
         }}
       >
         <Box component="span" sx={{ width: 24, height: 24, mr: 2 }}>
           <SvgColor src="/assets/icons/navbar/ic_exit.svg" sx={{ width: 1, height: 1 }} />
         </Box>
-
         <Box component="span">خروج</Box>
       </ListItemButton>
     </Stack>
   );
 
+  // 💡 Upgrade Section 💡
+  // Optional section for promoting the pro version of the app.
   // const renderUpgrade = (
   //   <Box sx={{ px: 2.5, pb: 3, mt: 10 }}>
   //     <Stack alignItems="center" spacing={3} sx={{ pt: 5, borderRadius: 2, position: 'relative' }}>
@@ -135,15 +126,12 @@ export default function Nav({ openNav, onCloseNav }) {
   //         src="/assets/illustrations/illustration_avatar.png"
   //         sx={{ width: 100, position: 'absolute', top: -50 }}
   //       />
-
   //       <Box sx={{ textAlign: 'center' }}>
   //         <Typography variant="h6">Get more?</Typography>
-
   //         <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
   //           From only $69
   //         </Typography>
   //       </Box>
-
   //       <Button
   //         href="https://material-ui.com/store/items/minimal-dashboard/"
   //         target="_blank"
@@ -156,6 +144,7 @@ export default function Nav({ openNav, onCloseNav }) {
   //   </Box>
   // );
 
+  // 🎨 Main Content Rendering 🎨
   const renderContent = (
     <Scrollbar
       sx={{
@@ -184,6 +173,9 @@ export default function Nav({ openNav, onCloseNav }) {
       sx={{
         flexShrink: { lg: 0 },
         width: { lg: NAV.WIDTH },
+        bgcolor: 'background.default',
+        boxShadow: 2,
+        borderRadius: 2,
       }}
     >
       {upLg ? (
@@ -193,6 +185,8 @@ export default function Nav({ openNav, onCloseNav }) {
             position: 'fixed',
             width: NAV.WIDTH,
             borderRight: (theme) => `dashed 1px ${theme.palette.divider}`,
+            bgcolor: 'background.paper',
+            boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
           }}
         >
           {renderContent}
@@ -204,6 +198,8 @@ export default function Nav({ openNav, onCloseNav }) {
           PaperProps={{
             sx: {
               width: NAV.WIDTH,
+              bgcolor: 'background.paper',
+              boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
             },
           }}
         >
@@ -220,6 +216,8 @@ Nav.propTypes = {
 };
 
 // ----------------------------------------------------------------------
+// 🗂️ Navigation Item Component 🗂️
+// ----------------------------------------------------------------------
 
 function NavItem({ item }) {
   const pathname = usePathname();
@@ -234,23 +232,20 @@ function NavItem({ item }) {
         minHeight: 44,
         borderRadius: 0.75,
         typography: 'body2',
-        color: 'text.secondary',
+        color: active ? 'primary.main' : 'text.secondary',
         textTransform: 'capitalize',
-        fontWeight: 'fontWeightMedium',
-        ...(active && {
-          color: 'primary.main',
-          fontWeight: 'fontWeightSemiBold',
-          bgcolor: (theme) => alpha(theme.palette.primary.main, 0.08),
-          '&:hover': {
-            bgcolor: (theme) => alpha(theme.palette.primary.main, 0.16),
-          },
-        }),
+        fontWeight: active ? 'bold' : 'medium',
+        bgcolor: active ? (theme) => alpha(theme.palette.primary.main, 0.08) : 'transparent',
+        '&:hover': {
+          bgcolor: (theme) => alpha(theme.palette.primary.main, 0.12),
+        },
+        transition: 'background-color 0.3s, color 0.3s',
       }}
     >
       <Box component="span" sx={{ width: 24, height: 24, mr: 2 }}>
         {item.icon}
       </Box>
-      <Box component="span">{item.title} </Box>
+      <Box component="span">{item.title}</Box>
     </ListItemButton>
   );
 }

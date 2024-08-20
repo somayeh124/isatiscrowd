@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { Stepper, Step, StepLabel, Button } from '@mui/material';
 import { toast, ToastContainer } from 'react-toastify';
-import AccordionUsage from "./accordion";
 import 'react-toastify/dist/ReactToastify.css';
-import TrackingCard from './code';
 import Form from './form';
 
 const Sterpercrowd = () => {
@@ -38,12 +36,12 @@ const Sterpercrowd = () => {
     switch (step) {
       case 0:
         return <div>  <Form/> </div>;
-      case 1:
-        return <AccordionUsage />;
-      case 2:
-        return <div><TrackingCard/></div>;
+      // case 1:
+      //   return <AccordionUsage />;
+      // case 2:
+      //   return <div><TrackingCard/></div>;
       default:
-        return <div>مرحله‌ای یافت نشد</div>;
+        return <div className='flex items-center justify-center self-center mt-8 text-lg'>  منتظر بررسی اطلاعات باشید</div>;
     }
   };
 
@@ -65,7 +63,7 @@ const Sterpercrowd = () => {
           onClick={handleBack}
           sx={{
             '&:hover': {
-              backgroundColor: '#90caf9', // رنگ آبی ملایم هنگام هاور شدن
+              backgroundColor: '#90caf9',     
             }
           }}
         >
@@ -75,7 +73,7 @@ const Sterpercrowd = () => {
           onClick={handleNext}
           sx={{
             '&:hover': {
-              backgroundColor: '#90caf9', // رنگ آبی ملایم هنگام هاور شدن
+              backgroundColor: '#90caf9',   
             }
           }}
         >

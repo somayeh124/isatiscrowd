@@ -13,21 +13,17 @@ export default function DashboardLayout({ children }) {
   const [openNav, setOpenNav] = useState(false);
 
   return (
-    <>
-      <Header onOpenNav={() => setOpenNav(true)} />
-
-      <Box
+    <Box
         sx={{
           minHeight: 1,
           display: 'flex',
           flexDirection: { xs: 'column', lg: 'row' },
         }}
       >
-        <Nav openNav={openNav} onCloseNav={() => setOpenNav(false)} />
+        <Nav  openNav={openNav} onCloseNav={() => setOpenNav(false)} />
 
-        <Main>{children}</Main>
+        <Main >{children}</Main>
       </Box>
-    </>
   );
 }
 

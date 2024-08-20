@@ -1,4 +1,6 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import SvgColor from 'src/components/svg-color';
+import { CgProfile } from "react-icons/cg";
 
 // ----------------------------------------------------------------------
 
@@ -6,8 +8,14 @@ const icon = (name) => (
   <SvgColor src={`/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />
 );
 
-const navConfig = [
 
+
+const navConfig = [
+  {
+    title: 'پروفایل',
+    path: '/ProfilePage',
+    icon:icon('ic_blog'),
+  },
   {
     title: 'ایجاد درخواست',
     path: '/',
@@ -18,14 +26,6 @@ const navConfig = [
     path: '/request',
     icon: icon('ic_sheet'),
   },
-
-
-
-  // {
-  //   title: 'مشاهده آنلاین',
-  //   path: '/commingsoon',
-  //   icon: icon('ic_visioneye'),
-  // },
 ];
 
 export default navConfig;
