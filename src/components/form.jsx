@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { OnRun } from 'src/api/OnRun';
 
-
 function Attachment({
   title,
   onFileChange,
@@ -16,7 +15,7 @@ function Attachment({
     const newFiles = Array.from(e.target.files);
     const newAttachments = newFiles.map((file) => ({
       file,
-      name: `${type}_file_${index + 1}`, // استفاده از عنوان به جای نام مدرک
+      name: `${type}_file_${index + 1}`,
     }));
     onAttach(type, newAttachments);
     onFileChange(e);
@@ -63,13 +62,13 @@ function Attachment({
 
   return (
     <div className="flex flex-col items-center justify-center mb-4">
-    <label className="block text-gray-700 text-sm font-semibold mb-2 mt-4 text-center">{title}</label>
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full ">
-      {renderAttachmentSection('first', 'گزارشات و مستندات منتهی به سال 1402')}
-      {renderAttachmentSection('second', 'گزارشات و مستندات منتهی به سال 1401')}
-      {renderAttachmentSection('third', 'گزارشات و مستندات به روز')}
+      <label className="block text-gray-700 text-sm font-semibold mb-2 mt-4 text-center">{title}</label>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+        {renderAttachmentSection('first', 'گزارشات و مستندات منتهی به سال 1402')}
+        {renderAttachmentSection('second', 'گزارشات و مستندات منتهی به سال 1401')}
+        {renderAttachmentSection('third', 'گزارشات و مستندات به روز')}
+      </div>
     </div>
-  </div>
   );
 }
 
@@ -92,14 +91,25 @@ function Form() {
     second: [],
     third: []
   });
-  
+
   const [submitted, setSubmitted] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
   const companyTypes = ['سهامی عام', 'سهامی خاص', 'مسئولیت محدود', 'تعاونی'];
 
+  const formatNumber = (value) => value.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    if (name === 'company_name') {
+      const lettersOnly = value.replace(/[^a-zA-Z\s\u0600-\u06FF]/g, '');
+      setFormData({ ...formData, [name]: lettersOnly });
+    } else {
+      // حذف جداکننده‌های هزارگان و محدود کردن به 10 رقم
+      const numericValue = value.replace(/\D/g, '').slice(0, 10);
+      setFormData({ ...formData, [name]: numericValue });
+    }
   };
 
   const handleAttach = (type, newAttachments) => {
@@ -210,9 +220,9 @@ function Form() {
         <div className="mb-6">
           <label className="block text-gray-700 text-sm font-semibold mb-2">شماره شناسه:</label>
           <input
-            type="number"
+            type="text"
             name="nationalid"
-            value={formData.nationalid.toLocaleString()}
+            value={formatNumber(formData.nationalid)}
             onChange={handleChange}
             maxLength={10}
             className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -232,13 +242,11 @@ function Form() {
         </div>
 
         <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-semibold mb-2">
-            سرمایه ثبتی (ریال):
-          </label>
+          <label className="block text-gray-700 text-sm font-semibold mb-2">سرمایه ثبتی (ریال):</label>
           <input
-            type="number"
+            type="text"
             name="registered_capital"
-            value={formData.registered_capital.toLocaleString('en-US')}
+            value={formatNumber(formData.registered_capital)}
             onChange={handleChange}
             className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
@@ -277,7 +285,7 @@ function Form() {
           />
         </div>
 
-        <div className="mb-6 ">
+        <div className="mb-6">
           <label className="block text-gray-700 text-sm font-semibold mb-2">موضوع فعالیت شرکت:</label>
           <input
             name="activity_industry"
@@ -309,7 +317,7 @@ function Form() {
 
       <Attachment
         title="افزودن پیوست‌ها"
-        onFileChange={() => {}}
+        onFileChange={() => { }}
         onAttach={handleAttach}
         attachments={attachments}
         onRemove={handleRemove}
