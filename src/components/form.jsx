@@ -232,10 +232,9 @@ function Form() {
         <div className="mb-6">
           <label className="block text-gray-700 text-sm font-semibold mb-2">شماره ثبت:</label>
           <input
-            type="number"
-            maxLength={10}
+            type="text"
             name="registration_number"
-            value={formData.registration_number.toLocaleString()}
+            value={formatNumber(formData.registration_number)}
             onChange={handleChange}
             className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
