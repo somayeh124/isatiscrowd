@@ -212,8 +212,9 @@ function Form() {
           <input
             type="number"
             name="nationalid"
-            value={formData.nationalid}
+            value={formData.nationalid.toLocaleString()}
             onChange={handleChange}
+            maxLength={10}
             className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>
@@ -222,8 +223,9 @@ function Form() {
           <label className="block text-gray-700 text-sm font-semibold mb-2">شماره ثبت:</label>
           <input
             type="number"
+            maxLength={10}
             name="registration_number"
-            value={formData.registration_number}
+            value={formData.registration_number.toLocaleString()}
             onChange={handleChange}
             className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
@@ -236,7 +238,7 @@ function Form() {
           <input
             type="number"
             name="registered_capital"
-            value={formData.registered_capital}
+            value={formData.registered_capital.toLocaleString('en-US')}
             onChange={handleChange}
             className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
