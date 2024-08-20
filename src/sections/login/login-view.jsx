@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -16,6 +17,8 @@ import { OnRun } from 'src/api/OnRun';
 import { ToastContainer, toast } from 'react-toastify';
 
 export default function LoginView() {
+  // eslint-disable-next-line no-unused-vars
+  const access = getCookie('UID');
   const theme = useTheme();
   const router = useRouter();
   const [nationalCode, setNationalCode] = useState('');
@@ -38,6 +41,8 @@ export default function LoginView() {
   };
 
   const applyNationalCode = () => {
+    const message = "این یک پیام نمونه است"; // این خط را اضافه کنید و مقدار مناسب برای message قرار دهید
+  
     if (captchaInput.length === 0) {
       toast.warning('کد تصویر صحیح نیست');
     } else if (nationalCode.length !== 10) {
@@ -47,23 +52,24 @@ export default function LoginView() {
         method: 'POST',
         url: `${OnRun}/api/otp/`,
         data: {
-          national_code: nationalCode,
+          uniqueIdentifier: nationalCode,
           encrypted_response,
           captcha: captchaInput,
+          message, // حالا message مقدار دارد و  رفع می‌شود
         },
       })
       .then((response) => {
- 
-            toast.success('کد ملی با موفقیت ارسال شد');
+            toast.success(response.data.message);
             setStep(2); 
-
+            console.log("re",response);
       })
       .catch((error) => {
-        console.error('Error:', error);
+        console.error('خطا:', error);
         toast.error('خطا در ارسال درخواست به سرور.');
       });
     }
   };
+  
 
   const handleCode = () => {
     if (otp.length !== 5) {
@@ -72,13 +78,14 @@ export default function LoginView() {
       axios({
         method: 'POST',
         url: `${OnRun}/api/login/`,
-        data: {national_code: nationalCode, code: otp },
+        data: {uniqueIdentifier: nationalCode, code: otp },
+       
       }).then((response) => {
-     
-          setCookie('phn', response.data.cookie, 1);
+        consol.log("access",response.data.access)
+          setCookie('phn', response.data.access, 1);
           toast.success('ورود با موفقیت انجام شد');
           router.push('/');  
-          toast.warning(response.data.msg);
+          toast.warning(response.data.message);
         
       });
     }
@@ -90,7 +97,7 @@ export default function LoginView() {
       axios({
         method: 'POST',
         url: `${OnRun}/api/login/`,
-        data: { cookie: id },
+        data: { access: id },
       }).then((response) => {
         
           toast.success('دسترسی تایید شد');

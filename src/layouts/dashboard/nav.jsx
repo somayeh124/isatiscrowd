@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable no-dupe-keys */
 
 import { useEffect, useState } from 'react';
@@ -32,15 +33,13 @@ export default function Nav({ openNav, onCloseNav }) {
   const router = useRouter();
   const cookie = getCookie('sym');
 
-  // 🌐 Check User Access 🌐
-  // This function checks if the user has the proper access by verifying the cookie.
-  // If not, it redirects to the login page.
+ 
   // const AccessCheck = () => {
   //   if (id) {
   //     axios({
   //       method: 'POST',
   //       url: `${OnRun}/api/login/`,
-  //       data: { cookie: id }, 
+  //       data: { access }, 
   //     }).then((response) => {
   //       if (response.data.replay) {
   //         setPersonal(response.data);
