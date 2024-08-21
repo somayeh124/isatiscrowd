@@ -8,50 +8,40 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function Attachment({ title, onFileChange, onAttach, attachments, onRemove }) {
-  const handleFilesChange = (type, index) => (e) => {
-    const newFiles = Array.from(e.target.files);
-    const newAttachments = newFiles.map((file) => ({
-      file,
-      name: `${type}_file_${index + 1}`,
-    }));
-    onAttach(type, newAttachments);
-    onFileChange(e);
+  const handleFileChange = (type, e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const newAttachment = { file, name: file.name };
+      onAttach(type, newAttachment);
+      onFileChange(e);
+    }
   };
 
-  const handleRemove = (type, index) => () => onRemove(type, index);
+  const handleRemove = (type) => onRemove(type);
 
-  const renderAttachmentSection = (type, label) => (
+  const renderAttachmentSection = (type, label, attachment) => (
     <div className="p-4 bg-white shadow-lg rounded-lg">
       <h3 className="text-lg font-bold text-gray-800 mb-4">{label}</h3>
-      {['صورت مالی حسابرسی شده', 'گزارش حسابرسی', 'گزارش بازرس'].map((fileLabel, index) => (
-        <div key={index} className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">{fileLabel}:</label>
-          <input
-            type="file"
-            onChange={handleFilesChange(type, index)}
-            className="block w-full text-sm text-gray-600 border border-gray-300 rounded-lg cursor-pointer focus:outline-none focus:ring focus:ring-indigo-200 mt-2"
-          />
-        </div>
-      ))}
-      {Array.isArray(attachments[type]) && attachments[type].length > 0 && (
-        <ul className="mt-4 space-y-2">
-          {attachments[type].map((attachment, index) => (
-            <li
-              key={index}
-              className="flex justify-between items-center py-2 px-4 bg-gray-50 rounded-md shadow-sm"
+      <div className="mb-4">
+        <input
+          type="file"
+          onChange={(e) => handleFileChange(type, e)}
+          className="block w-full text-sm text-gray-600 border border-gray-300 rounded-lg cursor-pointer focus:outline-none focus:ring focus:ring-indigo-200 mt-2"
+        />
+      </div>
+      {attachment && (
+        <div className="mt-4 space-y-2">
+          <div className="flex justify-between items-center py-2 px-4 bg-gray-50 rounded-md shadow-sm">
+            <span className="text-gray-700">{attachment.name}</span>
+            <button
+              type="button"
+              onClick={() => handleRemove(type)}
+              className="text-red-600 hover:text-red-800 text-sm font-medium"
             >
-              <span className="text-gray-700">{attachment.name}</span>
-              <span className="text-gray-500">{attachment.file.name}</span>
-              <button
-                type="button"
-                onClick={handleRemove(type, index)}
-                className="text-red-600 hover:text-red-800 text-sm font-medium"
-              >
-                حذف
-              </button>
-            </li>
-          ))}
-        </ul>
+              حذف
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );
@@ -60,9 +50,15 @@ function Attachment({ title, onFileChange, onAttach, attachments, onRemove }) {
     <div className="flex flex-col items-center justify-center mb-8">
       <label className="block text-gray-700 text-xl font-bold mb-4 text-center">{title}</label>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-        {renderAttachmentSection('first', 'گزارشات و مستندات منتهی به سال 1402')}
-        {renderAttachmentSection('second', 'گزارشات و مستندات منتهی به سال 1401')}
-        {renderAttachmentSection('third', 'گزارشات و مستندات به روز')}
+        {renderAttachmentSection('financial_report_thisyear', 'صورت مالی امسال', attachments.financial_report_thisyear)}
+        {renderAttachmentSection('financial_report_lastyear', 'صورت مالی پارسال', attachments.financial_report_lastyear)}
+        {renderAttachmentSection('financial_report_yearold', 'صورت مالی سال‌های قبل', attachments.financial_report_yearold)}
+        {renderAttachmentSection('audit_report_thisyear', 'گزارش حسابرسی امسال', attachments.audit_report_thisyear)}
+        {renderAttachmentSection('audit_report_lastyear', 'گزارش حسابرسی پارسال', attachments.audit_report_lastyear)}
+        {renderAttachmentSection('audit_report_yearold', 'گزارش حسابرسی سال‌های قبل', attachments.audit_report_yearold)}
+        {renderAttachmentSection('report_thisyear', 'گزارش امسال', attachments.report_thisyear)}
+        {renderAttachmentSection('report_lastyear', 'گزارش پارسال', attachments.report_lastyear)}
+        {renderAttachmentSection('report_yearold', 'گزارش سال‌های قبل', attachments.report_yearold)}
       </div>
     </div>
   );
@@ -85,9 +81,15 @@ function Form() {
   });
 
   const [attachments, setAttachments] = useState({
-    first: [],
-    second: [],
-    third: [],
+    financial_report_thisyear: null,
+    financial_report_lastyear: null,
+    financial_report_yearold: null,
+    audit_report_thisyear: null,
+    audit_report_lastyear: null,
+    audit_report_yearold: null,
+    report_thisyear: null,
+    report_lastyear: null,
+    report_yearold: null,
   });
 
   const [submitted, setSubmitted] = useState(false);
@@ -131,17 +133,17 @@ function Form() {
     }
   };
 
-  const handleAttach = (type, newAttachments) => {
+  const handleAttach = (type, newAttachment) => {
     setAttachments((prevAttachments) => ({
       ...prevAttachments,
-      [type]: [...prevAttachments[type], ...newAttachments],
+      [type]: newAttachment,
     }));
   };
 
-  const handleRemove = (type, index) => {
+  const handleRemove = (type) => {
     setAttachments((prevAttachments) => ({
       ...prevAttachments,
-      [type]: prevAttachments[type].filter((_, i) => i !== index),
+      [type]: null,
     }));
   };
 
@@ -173,34 +175,27 @@ function Form() {
     dataToPost.append('address', formData.company_address);
     dataToPost.append('email', formData.company_email);
 
-    attachments.first.forEach((file, index) => {
-      dataToPost.append(`financial_report1_${index}`, file.file);
-    });
-
-    attachments.second.forEach((file, index) => {
-      dataToPost.append(`financial_report2_${index}`, file.file);
-    });
-
-    attachments.third.forEach((file, index) => {
-      dataToPost.append(`update_report_${index}`, file.file);
+    // اضافه کردن فایل‌های پیوست به FormData
+    Object.keys(attachments).forEach((key) => {
+      if (attachments[key] && attachments[key].file) {
+        dataToPost.append(key, attachments[key].file);
+      }
     });
 
     try {
       const response = await axios.post(`${OnRun}/api/cart/`, dataToPost, {
-     
-          headers: {
-            'Contant_Type':"multipart-form-data",
-            Authorization: `Bearer ${access}`,
-          },
-        
+        headers: {
+          'Content-Type': "multipart/form-data",
+          Authorization: `Bearer ${access}`,
+        },
       });
 
       if (response.status === 200) {
         setSubmitted(true);
-        console.log('اطلاعات با موفقیت ارسال شد:', formData);
         toast.success('اطلاعات با موفقیت ارسال شد.');
       } else {
         console.error('ارسال اطلاعات با خطا مواجه شد:', response.statusText);
+        toast.error('ارسال اطلاعات با خطا مواجه شد.');
       }
     } catch (error) {
       if (error.response && error.response.data && error.response.data.error) {
