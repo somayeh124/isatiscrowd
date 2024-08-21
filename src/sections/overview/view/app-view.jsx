@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
@@ -9,26 +10,41 @@ import axios from 'axios';
 import { getCookie } from 'src/api/cookie';
 
 export default function AppView() {
-    const access = getCookie('access');
-  
-    const getProfile = () => {
-      axios.get(`${OnRun}/profile`,{"Content-Type": "application/json", "Accept": "application/json","Authorization": `Bearer ${access}`})
-      .then(response=>{
-        setProfileData(response.data);
-      })
+  const access = getCookie('access');
+
+  const [profileData, setProfileData] = useState(null);
+
+  const getProfile = async () => {
+    try {
+      const response = await axios.get(`${OnRun}/api/information/`, {
+        headers: {
+          Authorization: `Bearer ${access}`,
+        },
+      });
+      setProfileData(response.data);
+    } catch (error) {
+      console.error('Error fetching profile data:', error);
     }
-  
-    const [profileData, setProfileData] = useState(null);
-  
-    useEffect(getProfile, [access]);
+  };
+
+  useEffect(() => {
+    if (access) {
+      getProfile();
+    }
+  }, [access]);
 
   return (
     <Container maxWidth="xl">
       <Grid container spacing={3}>
-        <Grid item xs={12} sm={6} md={3}>
-          <Typography variant="h6">{profileData.name} </Typography>
-          خوش آمدید 👋
-        </Grid>
+        {profileData && profileData.acc && profileData.acc.private_person && (
+          <Grid item xs={12} sm={6} md={3}>
+            <div className="flex">
+              <Typography variant="h6">{profileData.acc.private_person[0].firstName}</Typography>
+              <Typography variant="h6" sx={{ ml: 1 }}>{profileData.acc.private_person[0].lastName}</Typography>
+            </div>
+            خوش آمدید 👋
+          </Grid>
+        )}
       </Grid>
       <Sterpercrowd />
     </Container>

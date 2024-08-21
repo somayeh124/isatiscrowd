@@ -59,6 +59,7 @@ export default function LoginView() {
         .then((response) => {
           toast.success(response.data.message);
           setRegisterd(response.data.registered);
+          
 
           setStep(2);
         })
@@ -79,6 +80,7 @@ export default function LoginView() {
         url: url_,
         data: { uniqueIdentifier: nationalCode, otp },
       }).then((response) => {
+        console.log(response.data)
         setCookie('access', response.data.access,5);
         toast.success('ورود با موفقیت انجام شد');
         if (registerd) {

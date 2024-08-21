@@ -3,14 +3,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { OnRun } from 'src/api/OnRun';
+import { getCookie } from 'src/api/cookie';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-function Attachment({
-  title,
-  onFileChange,
-  onAttach,
-  attachments = { first: [], second: [], third: [] },
-  onRemove,
-}) {
+function Attachment({ title, onFileChange, onAttach, attachments, onRemove }) {
   const handleFilesChange = (type, index) => (e) => {
     const newFiles = Array.from(e.target.files);
     const newAttachments = newFiles.map((file) => ({
@@ -28,9 +25,7 @@ function Attachment({
       <h3 className="text-lg font-bold text-gray-800 mb-4">{label}</h3>
       {['صورت مالی حسابرسی شده', 'گزارش حسابرسی', 'گزارش بازرس'].map((fileLabel, index) => (
         <div key={index} className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            {fileLabel}:
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">{fileLabel}:</label>
           <input
             type="file"
             onChange={handleFilesChange(type, index)}
@@ -63,9 +58,7 @@ function Attachment({
 
   return (
     <div className="flex flex-col items-center justify-center mb-8">
-      <label className="block text-gray-700 text-xl font-bold mb-4 text-center">
-        {title}
-      </label>
+      <label className="block text-gray-700 text-xl font-bold mb-4 text-center">{title}</label>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
         {renderAttachmentSection('first', 'گزارشات و مستندات منتهی به سال 1402')}
         {renderAttachmentSection('second', 'گزارشات و مستندات منتهی به سال 1401')}
@@ -76,6 +69,7 @@ function Attachment({
 }
 
 function Form() {
+  const access = getCookie('access');
   const [formData, setFormData] = useState({
     company_name: '',
     company_kind: '',
@@ -87,34 +81,53 @@ function Form() {
     company_address: '',
     company_email: '',
     amount_of_request: 10000000000,
+    status: '',
   });
 
   const [attachments, setAttachments] = useState({
     first: [],
     second: [],
-    third: []
+    third: [],
   });
 
   const [submitted, setSubmitted] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const companyTypes = ['سهامی عام', 'سهامی خاص', 'مسئولیت محدود', 'تعاونی'];
+  const companyTypes = [
+    { type: 'special stock', title: 'خاص سهامی' },
+    { type: 'common stock', title: 'عام سهامی' },
+  ];
 
-  const formatNumber = (value) => value.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  const statuses = [
+    { type: 'waiting', title: 'در انتظار تایید' },
+    { type: 'editing', title: 'نیاز به تکمیل' },
+    { type: 'okay', title: 'تایید شده' },
+  ];
+
+  const formatNumber = (value) => String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+  const cleanNumber = (value) => String(value).replace(/,/g, '');
 
   const handleInputChange = (e) => {
-    const { name, value, type } = e.target;
+    const { name, value } = e.target;
+    const cleanedValue = cleanNumber(value);
+    setFormData({ ...formData, [name]: cleanedValue });
+  };
 
-    if (name === 'company_name') {
-      const lettersOnly = value.replace(/[^a-zA-Z\s\u0600-\u06FF]/g, '');
-      setFormData({ ...formData, [name]: lettersOnly });
-    } else if (type === 'number') {
-      const numericValue = value.replace(/\D/g, '').slice(0, 10);
-      setFormData({ ...formData, [name]: numericValue });
-    } else if (type === 'range') {
-      setFormData({ ...formData, [name]: Number(value) });
-    } else {
-      setFormData({ ...formData, [name]: value });
+  const handleFormattedInputChange = (e) => {
+    const { name, value } = e.target;
+    const cleanedValue = cleanNumber(value);
+    setFormData({ ...formData, [name]: cleanedValue });
+  };
+
+  const validateCompanyName = (name) => {
+    const lettersOnly = /^[A-Za-z\u0600-\u06FF\s]+$/;
+    return lettersOnly.test(name);
+  };
+
+  const handleCompanyNameKeyDown = (e) => {
+    if (!/^[A-Za-z\u0600-\u06FF\s]*$/.test(e.key)) {
+      e.preventDefault();
     }
   };
 
@@ -140,6 +153,11 @@ function Form() {
       return;
     }
 
+    if (!validateCompanyName(formData.company_name)) {
+      setErrorMessage('نام شرکت باید فقط شامل حروف باشد.');
+      return;
+    }
+
     setErrorMessage('');
 
     const dataToPost = new FormData();
@@ -151,36 +169,49 @@ function Form() {
     dataToPost.append('personnel', formData.personnel);
     dataToPost.append('company_kind', formData.company_kind);
     dataToPost.append('amount_of_request', formData.amount_of_request);
-    dataToPost.append('code', '');
+    dataToPost.append('status', formData.status);
+    dataToPost.append('address', formData.company_address);
+    dataToPost.append('email', formData.company_email);
 
-    // اضافه کردن فایل‌های پیوست به FormData
     attachments.first.forEach((file, index) => {
-      dataToPost.append(`first_attachment_${index}`, file.file);
+      dataToPost.append(`financial_report1_${index}`, file.file);
     });
 
     attachments.second.forEach((file, index) => {
-      dataToPost.append(`second_attachment_${index}`, file.file);
+      dataToPost.append(`financial_report2_${index}`, file.file);
     });
 
     attachments.third.forEach((file, index) => {
-      dataToPost.append(`third_attachment_${index}`, file.file);
+      dataToPost.append(`update_report_${index}`, file.file);
     });
 
     try {
       const response = await axios.post(`${OnRun}/api/cart/`, dataToPost, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        }
+     
+          headers: {
+            'Contant_Type':"multipart-form-data",
+            Authorization: `Bearer ${access}`,
+          },
+        
       });
 
       if (response.status === 200) {
         setSubmitted(true);
         console.log('اطلاعات با موفقیت ارسال شد:', formData);
+        toast.success('اطلاعات با موفقیت ارسال شد.');
       } else {
         console.error('ارسال اطلاعات با خطا مواجه شد:', response.statusText);
       }
     } catch (error) {
-      console.error('خطا در ارتباط با سرور:', error);
+      if (error.response && error.response.data && error.response.data.error) {
+        const errors = error.response.data.error;
+        Object.keys(errors).forEach((key) => {
+          toast.error(`${key}: ${errors[key].join(', ')}`);
+        });
+      } else {
+        console.error('خطا در ارتباط با سرور:', error);
+        toast.error('خطا در ارتباط با سرور.');
+      }
     }
   };
 
@@ -190,6 +221,7 @@ function Form() {
       onSubmit={handleSubmit}
       className="max-w-4xl mx-auto p-8 mt-8 bg-white rounded-lg shadow-lg"
     >
+      <ToastContainer />
       <div className="flex justify-center mb-8">
         <h1 className="text-4xl font-bold text-gray-900">اطلاعات شرکت</h1>
       </div>
@@ -201,6 +233,7 @@ function Form() {
             name="company_name"
             value={formData.company_name}
             onChange={handleInputChange}
+            onKeyDown={handleCompanyNameKeyDown}
             required
             className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
           />
@@ -215,9 +248,26 @@ function Form() {
             className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
           >
             <option value="">انتخاب کنید</option>
-            {companyTypes.map((type, index) => (
-              <option key={index} value={type}>
-                {type}
+            {companyTypes.map((typeObj, index) => (
+              <option key={index} value={typeObj.type}>
+                {typeObj.title}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="mb-6">
+          <label className="block text-gray-700 text-sm font-medium mb-2">وضعیت:</label>
+          <select
+            name="status"
+            value={formData.status}
+            onChange={handleInputChange}
+            className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
+          >
+            <option value="">انتخاب کنید</option>
+            {statuses.map((statusObj, index) => (
+              <option key={index} value={statusObj.type}>
+                {statusObj.title}
               </option>
             ))}
           </select>
@@ -229,7 +279,7 @@ function Form() {
             type="text"
             name="nationalid"
             value={formatNumber(formData.nationalid)}
-            onChange={handleInputChange}
+            onChange={handleFormattedInputChange}
             maxLength={14}
             className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
           />
@@ -241,19 +291,21 @@ function Form() {
             type="text"
             name="registration_number"
             value={formatNumber(formData.registration_number)}
-            onChange={handleInputChange}
+            onChange={handleFormattedInputChange}
             maxLength={12}
             className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
           />
         </div>
 
         <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-medium mb-2">سرمایه ثبتی (ریال):</label>
+          <label className="block text-gray-700 text-sm font-medium mb-2">
+            سرمایه ثبتی (ریال):
+          </label>
           <input
             type="text"
             name="registered_capital"
             value={formatNumber(formData.registered_capital)}
-            onChange={handleInputChange}
+            onChange={handleFormattedInputChange}
             className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
           />
         </div>
@@ -317,7 +369,7 @@ function Form() {
           className="w-full"
         />
         <span className="block text-gray-700 text-sm mt-4 text-center">
-          {formData.amount_of_request.toLocaleString()} ریال
+          {formatNumber(formData.amount_of_request)} ریال
         </span>
       </div>
 
