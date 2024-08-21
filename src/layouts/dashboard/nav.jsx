@@ -1,25 +1,20 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-dupe-keys */
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Drawer from '@mui/material/Drawer';
 import { alpha } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
 import ListItemButton from '@mui/material/ListItemButton';
 import { usePathname, useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 import { useResponsive } from 'src/hooks/use-responsive';
-import { account } from 'src/_mock/account';
 import Logo from 'src/components/logo';
 import Scrollbar from 'src/components/scrollbar';
 import { getCookie, setCookie } from 'src/api/cookie';
-import axios from 'axios';
-import { OnRun } from 'src/api/OnRun';
 import SvgColor from 'src/components/svg-color';
-import { Avatar } from '@mui/material';
 import navConfig from './config-navigation';
 import { NAV } from './config-layout';
 
@@ -28,41 +23,16 @@ import { NAV } from './config-layout';
 // ----------------------------------------------------------------------
 
 export default function Nav({ openNav, onCloseNav }) {
-  const [personal, setPersonal] = useState(null);
-  const id = getCookie('phn');
   const router = useRouter();
   const cookie = getCookie('sym');
 
  
-  // const AccessCheck = () => {
-  //   if (id) {
-  //     axios({
-  //       method: 'POST',
-  //       url: `${OnRun}/api/login/`,
-  //       data: { access }, 
-  //     }).then((response) => {
-  //       if (response.data.replay) {
-  //         setPersonal(response.data);
-  //       } else {
-  //         router.push('/login');
-  //         setCookie('phu', '', 0);
-  //       }
-  //     });
-  //   }
-  // };
-
-  // 🚪 Exit Function 🚪
-  // Handles user logout by clearing the cookie and redirecting to the login page.
   const exit = () => {
     router.push('/login');
     setCookie('phu', '', 0);
   };
 
-  // 🖼️ Icon Function 🖼️
-  // Generates an icon using SvgColor component.
-  // const icon = (name) => (
-  //   <SvgColor src={`/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />
-  // );
+
 
   const pathname = usePathname();
   const upLg = useResponsive('up', 'lg');

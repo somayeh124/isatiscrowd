@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { alpha, useTheme } from '@mui/material/styles';
 import axios from 'axios';
-import { getCookie, setCookie } from 'src/api/cookie';
+import { setCookie } from 'src/api/cookie';
 import { useRouter } from 'src/routes/hooks';
 import { bgGradient } from 'src/theme/css';
 import { OnRun } from 'src/api/OnRun';
@@ -18,7 +18,7 @@ import { ToastContainer, toast } from 'react-toastify';
 
 export default function LoginView() {
   // eslint-disable-next-line no-unused-vars
-  const access = getCookie('UID');
+
   const theme = useTheme();
   const router = useRouter();
   const [nationalCode, setNationalCode] = useState('');
@@ -27,6 +27,7 @@ export default function LoginView() {
   const [encrypted_response, setEncrypted_response] = useState(null);
   const [otp, setOtp] = useState('');
   const [step, setStep] = useState(1);
+  const [registerd, setRegisterd] = useState(false);
 
   const getCaptcha = () => {
     axios
@@ -41,8 +42,6 @@ export default function LoginView() {
   };
 
   const applyNationalCode = () => {
-    const message = "این یک پیام نمونه است"; // این خط را اضافه کنید و مقدار مناسب برای message قرار دهید
-  
     if (captchaInput.length === 0) {
       toast.warning('کد تصویر صحیح نیست');
     } else if (nationalCode.length !== 10) {
@@ -55,64 +54,49 @@ export default function LoginView() {
           uniqueIdentifier: nationalCode,
           encrypted_response,
           captcha: captchaInput,
-          message, // حالا message مقدار دارد و  رفع می‌شود
         },
       })
-      .then((response) => {
-            toast.success(response.data.message);
-            setStep(2); 
-            console.log("re",response);
-      })
-      .catch((error) => {
-        console.error('خطا:', error);
-        toast.error('خطا در ارسال درخواست به سرور.');
-      });
+        .then((response) => {
+          toast.success(response.data.message);
+          setRegisterd(response.data.registered);
+
+          setStep(2);
+        })
+        .catch((error) => {
+          console.error('خطا:', error);
+          toast.error('خطا در ارسال درخواست به سرور.');
+        });
     }
   };
-  
 
   const handleCode = () => {
     if (otp.length !== 5) {
       toast.warning('کد صحیح نیست');
     } else {
+      const url_ = registerd ? `${OnRun}/api/login/` : `${OnRun}/api/signup/`;
       axios({
         method: 'POST',
-        url: `${OnRun}/api/login/`,
-        data: {uniqueIdentifier: nationalCode, code: otp },
-       
+        url: url_,
+        data: { uniqueIdentifier: nationalCode, otp },
       }).then((response) => {
-        consol.log("access",response.data.access)
-          setCookie('phn', response.data.access, 1);
-          toast.success('ورود با موفقیت انجام شد');
-          router.push('/');  
-          toast.warning(response.data.message);
-        
-      });
-    }
-  };
-
-  const id = getCookie('phu');
-  const AccessCheck = () => {
-    if (id) {
-      axios({
-        method: 'POST',
-        url: `${OnRun}/api/login/`,
-        data: { access: id },
-      }).then((response) => {
-        
-          toast.success('دسترسی تایید شد');
+        setCookie('access', response.data.access,5);
+        toast.success('ورود با موفقیت انجام شد');
+        if (registerd) {
           router.push('/');
-        
+        }
+        else{
+          router.push('/ProfilePage');
+        }
+        toast.warning(response.data.message);
       });
     }
   };
 
   useEffect(getCaptcha, []);
-  useEffect(AccessCheck, [id, router]);
 
   const renderForm = (
     <>
-    <ToastContainer autoClose={3000} />
+      <ToastContainer autoClose={3000} />
       <Stack spacing={3} sx={{ mb: 3 }}>
         <TextField
           value={nationalCode}

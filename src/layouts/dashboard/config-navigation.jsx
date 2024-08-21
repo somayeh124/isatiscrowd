@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import SvgColor from 'src/components/svg-color';
-import { CgProfile } from "react-icons/cg";
+
 
 // ----------------------------------------------------------------------
 
