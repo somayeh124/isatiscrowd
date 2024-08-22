@@ -8,7 +8,7 @@ import { getCookie } from 'src/api/cookie';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-function Attachment({ title, onFileChange, onAttach, attachments, onRemove }) {
+function Attachment({ title, onFileChange, onAttach, attachments, onRemove , id }) {
   const handleFileChange = (type, e) => {
     const file = e.target.files[0];
     if (file) {
@@ -77,7 +77,7 @@ function Attachment({ title, onFileChange, onAttach, attachments, onRemove }) {
   );
 }
 
-function Form() {
+function Form({cardSelected}) {
   const access = getCookie('access');
   const [formData, setFormData] = useState({
     company_name: '',
@@ -110,6 +110,7 @@ function Form() {
 
   const [submitted, setSubmitted] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+
 
   const companyTypes = [
     { type: 'special stock', title: 'خاص سهامی' },
