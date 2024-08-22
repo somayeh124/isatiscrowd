@@ -8,9 +8,7 @@ import { FaCheckCircle, FaClock, FaPlus } from 'react-icons/fa'; // اضافه �
 
 import PropTypes from 'prop-types';
 
-
-
-const CardList = ({setCardSelected, handleNext}) => {
+const CardList = ({ setCardSelected, handleNext }) => {
   const [cards, setCards] = useState([]);
   const access = getCookie('access');
 
@@ -19,7 +17,7 @@ const CardList = ({setCardSelected, handleNext}) => {
       try {
         const response = await axios.get(`${OnRun}/api/cart/`, {
           headers: {
-            'Content-Type': 'application/json', 
+            'Content-Type': 'application/json',
             Authorization: `Bearer ${access}`,
           },
         });
@@ -39,8 +37,13 @@ const CardList = ({setCardSelected, handleNext}) => {
   }, [access]);
 
   const handleCardClick = (id) => {
-    setCardSelected(id)
-    handleNext()
+    setCardSelected(id);
+    handleNext();
+  };
+
+  const handleNewCardClick = () => {
+    setCardSelected(null);
+    handleNext();
   };
 
   return (
@@ -48,7 +51,10 @@ const CardList = ({setCardSelected, handleNext}) => {
       <h1 className="text-2xl font-bold mb-4">لیست کارت‌ها</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {/* کارت جدید به عنوان اولین کارت */}
-        <div className="p-4 gap-8  shadow rounded-lg cursor-pointer hover:shadow-lg transition flex items-center justify-center">
+        <div
+          className="p-4 gap-8  shadow rounded-lg cursor-pointer hover:shadow-lg transition flex items-center justify-center"
+          onClick={handleCardClick}
+        >
           <FaPlus className="text-2xl mr-2" />
           <h2 className="text-xl font-bold">کارت جدید</h2>
         </div>

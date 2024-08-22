@@ -1,14 +1,16 @@
+/* eslint-disable no-undef */
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-constant-condition */
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { OnRun } from 'src/api/OnRun';
 import { getCookie } from 'src/api/cookie';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-function Attachment({ title, onFileChange, onAttach, attachments, onRemove , id }) {
+function Attachment({ title, onFileChange, onAttach, attachments, onRemove, id }) {
   const handleFileChange = (type, e) => {
     const file = e.target.files[0];
     if (file) {
@@ -52,32 +54,82 @@ function Attachment({ title, onFileChange, onAttach, attachments, onRemove , id 
       <label className="block text-gray-700 text-xl font-bold mb-8 mt-4 text-center">{title}</label>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
         <div className="bg-white shadow-lg rounded-lg mt-4">
-          <h2 className="flex flex-col text-center mt-2 text-gray-700 text-xl font-bold">گزارشات و مستندات به روز</h2>
-          {renderAttachmentSection('financial_report_thisyear', 'صورت مالی', attachments.financial_report_thisyear)}
-          {renderAttachmentSection('audit_report_thisyear', 'گزارش حسابرسی', attachments.audit_report_thisyear)}
-          {renderAttachmentSection('statement_thisyear', 'اظهارنامه', attachments.statement_thisyear)}
-          {renderAttachmentSection('alignment_6columns_thisyear', 'تراز 6ستونی', attachments.alignment_6columns_thisyear)}
+          <h2 className="flex flex-col text-center mt-2 text-gray-700 text-xl font-bold">
+            گزارشات و مستندات به روز
+          </h2>
+          {renderAttachmentSection(
+            'financial_report_thisyear',
+            'صورت مالی',
+            attachments.financial_report_thisyear
+          )}
+          {renderAttachmentSection(
+            'audit_report_thisyear',
+            'گزارش حسابرسی',
+            attachments.audit_report_thisyear
+          )}
+          {renderAttachmentSection(
+            'statement_thisyear',
+            'اظهارنامه',
+            attachments.statement_thisyear
+          )}
+          {renderAttachmentSection(
+            'alignment_6columns_thisyear',
+            'تراز 6ستونی',
+            attachments.alignment_6columns_thisyear
+          )}
         </div>
         <div className="bg-white shadow-lg rounded-lg mt-4">
-          <h2 className="flex flex-col text-center mt-2 text-gray-700 text-xl font-bold">گزارشات و مستندات منتهی به سال 1401</h2>
-          {renderAttachmentSection('financial_report_lastyear', 'صورت مالی', attachments.financial_report_lastyear)}
-          {renderAttachmentSection('audit_report_lastyear', 'گزارش حسابرسی', attachments.audit_report_lastyear)}
-          {renderAttachmentSection('statement_lastyear', 'اظهارنامه', attachments.statement_lastyear)}
-          {renderAttachmentSection('alignment_6columns_lastyear', 'تراز 6ستونی', attachments.alignment_6columns_lastyear)}
+          <h2 className="flex flex-col text-center mt-2 text-gray-700 text-xl font-bold">
+            گزارشات و مستندات منتهی به سال 1401
+          </h2>
+          {renderAttachmentSection(
+            'financial_report_lastyear',
+            'صورت مالی',
+            attachments.financial_report_lastyear
+          )}
+          {renderAttachmentSection(
+            'audit_report_lastyear',
+            'گزارش حسابرسی',
+            attachments.audit_report_lastyear
+          )}
+          {renderAttachmentSection(
+            'statement_lastyear',
+            'اظهارنامه',
+            attachments.statement_lastyear
+          )}
+          {renderAttachmentSection(
+            'alignment_6columns_lastyear',
+            'تراز 6ستونی',
+            attachments.alignment_6columns_lastyear
+          )}
         </div>
         <div className="bg-white shadow-lg rounded-lg mt-4">
-          <h2 className="flex flex-col text-center mt-2 text-gray-700 text-xl font-bold">گزارشات و مستندات منتهی به سال 1402</h2>
-          {renderAttachmentSection('financial_report_yearold', 'صورت مالی', attachments.financial_report_yearold)}
-          {renderAttachmentSection('audit_report_yearold', 'گزارش حسابرسی', attachments.audit_report_yearold)}
+          <h2 className="flex flex-col text-center mt-2 text-gray-700 text-xl font-bold">
+            گزارشات و مستندات منتهی به سال 1402
+          </h2>
+          {renderAttachmentSection(
+            'financial_report_yearold',
+            'صورت مالی',
+            attachments.financial_report_yearold
+          )}
+          {renderAttachmentSection(
+            'audit_report_yearold',
+            'گزارش حسابرسی',
+            attachments.audit_report_yearold
+          )}
           {renderAttachmentSection('statement_yearold', 'اظهارنامه', attachments.statement_yearold)}
-          {renderAttachmentSection('alignment_6columns_yearold', 'تراز 6ستونی', attachments.alignment_6columns_yearold)}
+          {renderAttachmentSection(
+            'alignment_6columns_yearold',
+            'تراز 6ستونی',
+            attachments.alignment_6columns_yearold
+          )}
         </div>
       </div>
     </div>
   );
 }
 
-function Form({cardSelected}) {
+function Form({ cardSelected }) {
   const access = getCookie('access');
   const [formData, setFormData] = useState({
     company_name: '',
@@ -111,7 +163,6 @@ function Form({cardSelected}) {
   const [submitted, setSubmitted] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-
   const companyTypes = [
     { type: 'special stock', title: 'خاص سهامی' },
     { type: 'common stock', title: 'عام سهامی' },
@@ -123,8 +174,8 @@ function Form({cardSelected}) {
     { type: 'okay', title: 'تایید شده' },
   ];
 
-  const formatNumber = (value) => String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  const NumberFormat = (value) => String(value).replace(/\D/g, "");
+  const formatNumber = (value) => String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  const NumberFormat = (value) => String(value).replace(/\D/g, '');
   const cleanNumber = (value) => String(value).replace(/,/g, '');
 
   const handleInputChange = (e) => {
@@ -192,7 +243,6 @@ function Form({cardSelected}) {
     dataToPost.append('address', formData.company_address);
     dataToPost.append('email', formData.company_email);
 
-   
     Object.keys(attachments).forEach((key) => {
       if (attachments[key] && attachments[key].file) {
         dataToPost.append(key, attachments[key].file);
@@ -211,7 +261,6 @@ function Form({cardSelected}) {
         setSubmitted(true);
         toast.success('اطلاعات با موفقیت ارسال شد.');
 
- 
         setFormData({
           company_name: '',
           company_kind: '',
@@ -240,7 +289,6 @@ function Form({cardSelected}) {
           alignment_6columns_lastyear: null,
           alignment_6columns_yearold: null,
         });
-
       } else {
         console.error('ارسال اطلاعات با خطا مواجه شد:', response.statusText);
         toast.error('ارسال اطلاعات با خطا مواجه شد.');
@@ -257,7 +305,31 @@ function Form({cardSelected}) {
       }
     }
   };
+  useEffect(() => {
+    const fetchCards = async () => {
+      try {
+        if (cardSelected) {
+          const response = await axios.get(`${OnRun}/api/cart/detail/${cardSelected}/`, {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${access}`,
+            },
+          });
+          
+        setFormData(response.data)
+          if (response.data.cart) {
+            setCards(response.data.cart);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching cards:', error);
+      }
+    };
 
+    if (access) {
+      fetchCards();
+    }
+  }, [cardSelected]);
   return (
     <form
       dir="rtl"
@@ -341,7 +413,9 @@ function Form({cardSelected}) {
         </div>
 
         <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-medium mb-2">سرمایه ثبتی (ریال):</label>
+          <label className="block text-gray-700 text-sm font-medium mb-2">
+            سرمایه ثبتی (ریال):
+          </label>
           <input
             type="text"
             name="registered_capital"
@@ -396,7 +470,9 @@ function Form({cardSelected}) {
       </div>
 
       <div className="mt-8 w-1/2 flex flex-col justify-center items-center mx-auto">
-        <label className="block text-gray-700 text-sm font-medium mb-4 text-center">میزان منابع درخواستی (ریال):</label>
+        <label className="block text-gray-700 text-sm font-medium mb-4 text-center">
+          میزان منابع درخواستی (ریال):
+        </label>
         <input
           type="range"
           name="amount_of_request"
