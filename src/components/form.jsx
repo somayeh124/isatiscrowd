@@ -191,7 +191,7 @@ function Form() {
     dataToPost.append('address', formData.company_address);
     dataToPost.append('email', formData.company_email);
 
-    // اضافه کردن فایل‌های پیوست به FormData
+   
     Object.keys(attachments).forEach((key) => {
       if (attachments[key] && attachments[key].file) {
         dataToPost.append(key, attachments[key].file);
@@ -210,7 +210,7 @@ function Form() {
         setSubmitted(true);
         toast.success('اطلاعات با موفقیت ارسال شد.');
 
-        // پاک کردن داده‌های فرم پس از ارسال موفقیت‌آمیز
+ 
         setFormData({
           company_name: '',
           company_kind: '',

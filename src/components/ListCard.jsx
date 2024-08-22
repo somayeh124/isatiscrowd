@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -23,6 +24,7 @@ const CardList = () => {
         if (response.data.cart) {
           setCards(response.data.cart);
         }
+        console.log(response.data.cart);
       } catch (error) {
         console.error('Error fetching cards:', error);
       }

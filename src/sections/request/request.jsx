@@ -9,7 +9,7 @@ export default function RequestPage() {
   return (
     <>
       <Helmet>
-        <title>مشاهده درخواست</title>
+        <title>مشاهده طرح ها</title>
       </Helmet>
       <RequestView />
     </>

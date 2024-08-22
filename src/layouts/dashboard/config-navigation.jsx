@@ -22,7 +22,7 @@ const navConfig = [
     icon: icon('ic_analytics'),
   },
   {
-    title: 'مشاهده درخواست',
+    title: 'مشاهده طرح ها',
     path: '/request',
     icon: icon('ic_sheet'),
   },
