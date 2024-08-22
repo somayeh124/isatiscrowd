@@ -2,13 +2,15 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import { OnRun } from 'src/api/OnRun';
 import { getCookie } from 'src/api/cookie';
 
-const CardList = () => {
+import PropTypes from 'prop-types';
+
+
+
+const CardList = ({setCardSelected, handleNext}) => {
   const [cards, setCards] = useState([]);
-  const navigate = useNavigate();
   const access = getCookie('access');
 
   useEffect(() => {
@@ -16,7 +18,7 @@ const CardList = () => {
       try {
         const response = await axios.get(`${OnRun}/api/cart/`, {
           headers: {
-            'Content-Type': 'application/json', // Correct Content-Type
+            'Content-Type': 'application/json', 
             Authorization: `Bearer ${access}`,
           },
         });
@@ -36,7 +38,8 @@ const CardList = () => {
   }, [access]);
 
   const handleCardClick = (id) => {
-    navigate(`/api/cart/detail/${id}`);
+    setCardSelected(id)
+    handleNext()
   };
 
   return (
@@ -68,3 +71,8 @@ const CardList = () => {
 };
 
 export default CardList;
+
+CardList.propTypes = {
+  setCardSelected: PropTypes.func.isRequired,
+  handleNext: PropTypes.func.isRequired,
+};

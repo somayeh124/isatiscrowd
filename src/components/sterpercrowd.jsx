@@ -7,6 +7,7 @@ import CardList from './ListCard';
 
 const Sterpercrowd = () => {
   const [activeStep, setActiveStep] = useState(0);
+  const [cardSelected,setCardSelected] = useState(null);
 
   const steps = ['مرحله اول', 'مرحله دوم', 'مرحله سوم'];
 
@@ -36,9 +37,9 @@ const Sterpercrowd = () => {
   const renderStepContent = (step) => {
     switch (step) {
       case 0:
-        return <div> <CardList/> </div>;
+        return <div> <CardList setCardSelected={setCardSelected} handleNext={handleNext}/> </div>;
       case 1:
-        return <div><Form/></div>  ;
+        return <div><Form cardSelected={cardSelected}/></div>  ;
       // case 2:
       //   return <div><TrackingCard/></div>;
       default:
