@@ -17,8 +17,6 @@ import { OnRun } from 'src/api/OnRun';
 import { ToastContainer, toast } from 'react-toastify';
 
 export default function LoginView() {
-  // eslint-disable-next-line no-unused-vars
-
   const theme = useTheme();
   const router = useRouter();
   const [nationalCode, setNationalCode] = useState('');
@@ -28,6 +26,7 @@ export default function LoginView() {
   const [otp, setOtp] = useState('');
   const [step, setStep] = useState(1);
   const [registerd, setRegisterd] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const getCaptcha = () => {
     axios
@@ -47,6 +46,7 @@ export default function LoginView() {
     } else if (nationalCode.length !== 10) {
       toast.warning('مقدار کد ملی را به صورت صحیح وارد کنید');
     } else {
+      setLoading(true); // فعال کردن لودینگ
       axios({
         method: 'POST',
         url: `${OnRun}/api/otp/`,
@@ -59,13 +59,14 @@ export default function LoginView() {
         .then((response) => {
           toast.success(response.data.message);
           setRegisterd(response.data.registered);
-          
-
           setStep(2);
         })
         .catch((error) => {
           console.error('خطا:', error);
           toast.error('خطا در ارسال درخواست به سرور.');
+        })
+        .finally(() => {
+          setLoading(false); // غیرفعال کردن لودینگ پس از دریافت پاسخ
         });
     }
   };
@@ -74,23 +75,30 @@ export default function LoginView() {
     if (otp.length !== 5) {
       toast.warning('کد صحیح نیست');
     } else {
+      setLoading(true); // فعال کردن لودینگ
       const url_ = registerd ? `${OnRun}/api/login/` : `${OnRun}/api/signup/`;
       axios({
         method: 'POST',
         url: url_,
         data: { uniqueIdentifier: nationalCode, otp },
-      }).then((response) => {
-        console.log(response.data)
-        setCookie('access', response.data.access,5);
-        toast.success('ورود با موفقیت انجام شد');
-        if (registerd) {
-          router.push('/');
-        }
-        else{
-          router.push('/ProfilePage');
-        }
-        toast.warning(response.data.message);
-      });
+      })
+        .then((response) => {
+          setCookie('access', response.data.access, 5);
+          toast.success('ورود با موفقیت انجام شد');
+          if (registerd) {
+            router.push('/');
+          } else {
+            router.push('/ProfilePage');
+          }
+          toast.warning(response.data.message);
+        })
+        .catch((error) => {
+          console.error('خطا:', error);
+          toast.error('خطا در ارسال درخواست به سرور.');
+        })
+        .finally(() => {
+          setLoading(false); // غیرفعال کردن لودینگ پس از دریافت پاسخ
+        });
     }
   };
 
@@ -137,6 +145,7 @@ export default function LoginView() {
             },
           }}
           onClick={applyNationalCode}
+          loading={loading} // اضافه کردن پروپ لودینگ
         >
           تایید
         </LoadingButton>
@@ -148,6 +157,7 @@ export default function LoginView() {
           variant="contained"
           color="inherit"
           onClick={handleCode}
+          loading={loading} // اضافه کردن پروپ لودینگ
         >
           تایید
         </LoadingButton>

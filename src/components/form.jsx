@@ -1,3 +1,4 @@
+/* eslint-disable no-constant-condition */
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState } from 'react';
@@ -20,8 +21,8 @@ function Attachment({ title, onFileChange, onAttach, attachments, onRemove }) {
   const handleRemove = (type) => onRemove(type);
 
   const renderAttachmentSection = (type, label, attachment) => (
-    <div className="p-4 bg-white shadow-lg rounded-lg">
-      <h3 className="text-lg font-bold text-gray-800 mb-4">{label}</h3>
+    <div className="p-4 bg-white rounded-lg">
+      <h3 className="text-base font-semibold text-gray-800 mb-4">{label}</h3>
       <div className="mb-4">
         <input
           type="file"
@@ -48,17 +49,29 @@ function Attachment({ title, onFileChange, onAttach, attachments, onRemove }) {
 
   return (
     <div className="flex flex-col items-center justify-center mb-8">
-      <label className="block text-gray-700 text-xl font-bold mb-4 text-center">{title}</label>
+      <label className="block text-gray-700 text-xl font-bold mb-8 mt-4 text-center">{title}</label>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-        {renderAttachmentSection('financial_report_thisyear', 'صورت مالی امسال', attachments.financial_report_thisyear)}
-        {renderAttachmentSection('financial_report_lastyear', 'صورت مالی پارسال', attachments.financial_report_lastyear)}
-        {renderAttachmentSection('financial_report_yearold', 'صورت مالی سال‌های قبل', attachments.financial_report_yearold)}
-        {renderAttachmentSection('audit_report_thisyear', 'گزارش حسابرسی امسال', attachments.audit_report_thisyear)}
-        {renderAttachmentSection('audit_report_lastyear', 'گزارش حسابرسی پارسال', attachments.audit_report_lastyear)}
-        {renderAttachmentSection('audit_report_yearold', 'گزارش حسابرسی سال‌های قبل', attachments.audit_report_yearold)}
-        {renderAttachmentSection('report_thisyear', 'گزارش امسال', attachments.report_thisyear)}
-        {renderAttachmentSection('report_lastyear', 'گزارش پارسال', attachments.report_lastyear)}
-        {renderAttachmentSection('report_yearold', 'گزارش سال‌های قبل', attachments.report_yearold)}
+        <div className="bg-white shadow-lg rounded-lg mt-4">
+          <h2 className="flex flex-col text-center mt-2 text-gray-700 text-xl font-bold">گزارشات و مستندات به روز</h2>
+          {renderAttachmentSection('financial_report_thisyear', 'صورت مالی', attachments.financial_report_thisyear)}
+          {renderAttachmentSection('audit_report_thisyear', 'گزارش حسابرسی', attachments.audit_report_thisyear)}
+          {renderAttachmentSection('statement_thisyear', 'اظهارنامه', attachments.statement_thisyear)}
+          {renderAttachmentSection('alignment_6columns_thisyear', 'تراز 6ستونی', attachments.alignment_6columns_thisyear)}
+        </div>
+        <div className="bg-white shadow-lg rounded-lg mt-4">
+          <h2 className="flex flex-col text-center mt-2 text-gray-700 text-xl font-bold">گزارشات و مستندات منتهی به سال 1401</h2>
+          {renderAttachmentSection('financial_report_lastyear', 'صورت مالی', attachments.financial_report_lastyear)}
+          {renderAttachmentSection('audit_report_lastyear', 'گزارش حسابرسی', attachments.audit_report_lastyear)}
+          {renderAttachmentSection('statement_lastyear', 'اظهارنامه', attachments.statement_lastyear)}
+          {renderAttachmentSection('alignment_6columns_lastyear', 'تراز 6ستونی', attachments.alignment_6columns_lastyear)}
+        </div>
+        <div className="bg-white shadow-lg rounded-lg mt-4">
+          <h2 className="flex flex-col text-center mt-2 text-gray-700 text-xl font-bold">گزارشات و مستندات منتهی به سال 1402</h2>
+          {renderAttachmentSection('financial_report_yearold', 'صورت مالی', attachments.financial_report_yearold)}
+          {renderAttachmentSection('audit_report_yearold', 'گزارش حسابرسی', attachments.audit_report_yearold)}
+          {renderAttachmentSection('statement_yearold', 'اظهارنامه', attachments.statement_yearold)}
+          {renderAttachmentSection('alignment_6columns_yearold', 'تراز 6ستونی', attachments.alignment_6columns_yearold)}
+        </div>
       </div>
     </div>
   );
@@ -87,9 +100,12 @@ function Form() {
     audit_report_thisyear: null,
     audit_report_lastyear: null,
     audit_report_yearold: null,
-    report_thisyear: null,
-    report_lastyear: null,
-    report_yearold: null,
+    statement_thisyear: null,
+    statement_lastyear: null,
+    statement_yearold: null,
+    alignment_6columns_thisyear: null,
+    alignment_6columns_lastyear: null,
+    alignment_6columns_yearold: null,
   });
 
   const [submitted, setSubmitted] = useState(false);
@@ -107,7 +123,7 @@ function Form() {
   ];
 
   const formatNumber = (value) => String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
+  const NumberFormat = (value) => String(value).replace(/\D/g, "");
   const cleanNumber = (value) => String(value).replace(/,/g, '');
 
   const handleInputChange = (e) => {
@@ -185,14 +201,45 @@ function Form() {
     try {
       const response = await axios.post(`${OnRun}/api/cart/`, dataToPost, {
         headers: {
-          'Content-Type': "multipart/form-data",
+          'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${access}`,
         },
       });
 
-      if (response.status === 200) {
+      if (response.status === 200 || response.status === 201) {
         setSubmitted(true);
         toast.success('اطلاعات با موفقیت ارسال شد.');
+
+        // پاک کردن داده‌های فرم پس از ارسال موفقیت‌آمیز
+        setFormData({
+          company_name: '',
+          company_kind: '',
+          nationalid: '',
+          registration_number: '',
+          registered_capital: '',
+          personnel: '',
+          activity_industry: '',
+          company_address: '',
+          company_email: '',
+          amount_of_request: 10000000000,
+          status: '',
+        });
+
+        setAttachments({
+          financial_report_thisyear: null,
+          financial_report_lastyear: null,
+          financial_report_yearold: null,
+          audit_report_thisyear: null,
+          audit_report_lastyear: null,
+          audit_report_yearold: null,
+          statement_thisyear: null,
+          statement_lastyear: null,
+          statement_yearold: null,
+          alignment_6columns_thisyear: null,
+          alignment_6columns_lastyear: null,
+          alignment_6columns_yearold: null,
+        });
+
       } else {
         console.error('ارسال اطلاعات با خطا مواجه شد:', response.statusText);
         toast.error('ارسال اطلاعات با خطا مواجه شد.');
@@ -273,7 +320,7 @@ function Form() {
           <input
             type="text"
             name="nationalid"
-            value={formatNumber(formData.nationalid)}
+            value={NumberFormat(formData.nationalid)}
             onChange={handleFormattedInputChange}
             maxLength={14}
             className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
@@ -285,7 +332,7 @@ function Form() {
           <input
             type="text"
             name="registration_number"
-            value={formatNumber(formData.registration_number)}
+            value={NumberFormat(formData.registration_number)}
             onChange={handleFormattedInputChange}
             maxLength={12}
             className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
@@ -293,9 +340,7 @@ function Form() {
         </div>
 
         <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-medium mb-2">
-            سرمایه ثبتی (ریال):
-          </label>
+          <label className="block text-gray-700 text-sm font-medium mb-2">سرمایه ثبتی (ریال):</label>
           <input
             type="text"
             name="registered_capital"
@@ -349,10 +394,8 @@ function Form() {
         </div>
       </div>
 
-      <div className="mt-8 w-1/2  flex flex-col justify-center items-center mx-auto">
-        <label className="block text-gray-700 text-sm font-medium mb-4 text-center">
-          میزان منابع درخواستی (ریال):
-        </label>
+      <div className="mt-8 w-1/2 flex flex-col justify-center items-center mx-auto">
+        <label className="block text-gray-700 text-sm font-medium mb-4 text-center">میزان منابع درخواستی (ریال):</label>
         <input
           type="range"
           name="amount_of_request"

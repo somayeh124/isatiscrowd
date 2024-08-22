@@ -3,6 +3,7 @@ import { Stepper, Step, StepLabel, Button } from '@mui/material';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Form from './form';
+import CardList from './ListCard';
 
 const Sterpercrowd = () => {
   const [activeStep, setActiveStep] = useState(0);
@@ -35,9 +36,9 @@ const Sterpercrowd = () => {
   const renderStepContent = (step) => {
     switch (step) {
       case 0:
-        return <div>  <Form/> </div>;
-      // case 1:
-      //   return <AccordionUsage />;
+        return <div> <CardList/> </div>;
+      case 1:
+        return <div><Form/></div>  ;
       // case 2:
       //   return <div><TrackingCard/></div>;
       default:

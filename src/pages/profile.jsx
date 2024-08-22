@@ -33,17 +33,43 @@ const Profile = () => {
     <div className="max-w-4xl mx-auto p-8 mt-10 bg-white rounded-lg shadow-lg">
       <h1 className="text-3xl font-extrabold text-gray-900 mb-8 text-center">پروفایل کاربر</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <ProfileField label="نام" value={profileData.acc.private_person[0].firstName} />
-        <ProfileField label="نام خانوادگی" value={profileData.acc.private_person[0].lastName} />
-        <ProfileField label="نام پدر" value={profileData.acc.private_person[0].fatherName} />
-        <ProfileField label="کد ملی" value={profileData.acc.private_person[0].shNumber} />
-        <ProfileField label="شماره شبا" value={profileData.acc.accounts[0].sheba} />
-        <ProfileField label="نام شعبه بانک" value={profileData.acc.accounts[0].bank} />
-        <ProfileField label="شغل" value={profileData.acc.job_info[0].job} />
-        <ProfileField label="جنسیت" value={profileData.acc.private_person[0].gender === 'Male' ? 'مرد' : profileData.acc.private_person[0].gender === 'Female' ? 'زن' : ''} />
-        {/* <ProfileField label="محل تولد" value={profileData.acc.private_person[0].placeOfBirth} /> */}
-        <ProfileField label="شماره موبایل" value={profileData.acc.mobile} />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6"><div className="col-span-1 md:col-span-3">
+          <h2 className="text-lg font-semibold text-gray-700 mb-4">اطلاعات فردی</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <ProfileField label="نام" value={profileData?.acc?.private_person?.[0]?.firstName || ''} />
+<ProfileField label="نام خانوادگی" value={profileData?.acc?.private_person?.[0]?.lastName || ''} />
+<ProfileField label="نام پدر" value={profileData?.acc?.private_person?.[0]?.fatherName || ''} />
+<ProfileField label="جنسیت" value={profileData?.acc?.private_person?.[0]?.gender === 'Male' ? 'مرد' : profileData?.acc?.private_person?.[0]?.gender === 'Female' ? 'زن' : ''} />
+<ProfileField label="کد ملی" value={profileData?.acc?.private_person?.[0]?.shNumber || ''} />
+<ProfileField label="سریال شناسنامه" value={profileData?.acc?.private_person?.[0]?.serial || ''} />
+<ProfileField label="محل تولد " value={profileData?.acc?.private_person?.[0]?.placeOfBirth || ''} />
+<ProfileField label="محل صدور " value={profileData?.acc?.private_person?.[0]?.placeOfIssue || ''} />
+<ProfileField label=" ایمیل" value={profileData?.acc?.addresses?.[0]?.email || ''} />
+<ProfileField label=" فکس" value={profileData?.acc?.addresses?.[0]?.fax || ''} />
+<ProfileField label="شماره موبایل" value={profileData?.acc?.mobile || ''} />
+
+          </div>
+        </div>
+      
+        <div className="col-span-1 md:col-span-3">
+          <h2 className="text-lg font-semibold text-gray-700 mb-4">اطلاعات بانکی</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <ProfileField label="  بانک" value={profileData.acc.accounts[0].bank||""} />
+        <ProfileField label="  شعبه بانک" value={profileData.acc.accounts[0].branchName||""} />
+        <ProfileField label="شماره شبا" value={profileData.acc.accounts[0].sheba||""} />
+          </div>
+        </div>
+        <div className="col-span-1 md:col-span-3">
+          <h2 className="text-lg font-semibold text-gray-700 mb-4">اطلاعات شغلی</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <ProfileField label="شغل" value={profileData.acc.job_info[0].job||""} />
+          <ProfileField label="نوع شغل" value={profileData.acc.job_info[0].position||""} />
+            <ProfileField label="محل کار" value={profileData.acc.job_info[0].companyAddress||""} />
+            <ProfileField label="شماره تلفن محل کار" value={profileData.acc.job_info[0].companyPhone||""} />
+            <ProfileField label="ایمیل محل کار " value={profileData.acc.job_info[0].companyEmail||""} />
+            <ProfileField label="کدپستی محل کار " value={profileData.acc.job_info[0].companyPostalCode||""} />
+          </div>
+        </div>
 
         <div className="col-span-1 md:col-span-3">
           <h2 className="text-lg font-semibold text-gray-700 mb-4">آدرس</h2>
@@ -51,6 +77,9 @@ const Profile = () => {
             <ProfileField label="استان" value={profileData.acc.addresses[0].province} />
             <ProfileField label="شهر" value={profileData.acc.addresses[0].city} />
             <ProfileField label="خیابان " value={profileData.acc.addresses[0].remnantAddress} />
+            <ProfileField label="کوچه " value={profileData.acc.addresses[0].alley} />
+            <ProfileField label="کدپستی " value={profileData.acc.addresses[0].postalCode} />
+
           </div>
         </div>
       </div>
