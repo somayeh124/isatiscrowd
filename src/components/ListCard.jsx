@@ -1,55 +1,63 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { OnRun } from 'src/api/OnRun';
+import { getCookie } from 'src/api/cookie';
 
 const CardList = () => {
   const [cards, setCards] = useState([]);
   const navigate = useNavigate();
+  const access = getCookie('access');
 
   useEffect(() => {
     const fetchCards = async () => {
       try {
-        const response = await axios.get("/api/cart/");  
-        if (response.data.message) {
+        const response = await axios.get(`${OnRun}/api/cart/`, {
+          headers: {
+            'Content-Type': 'application/json', // Correct Content-Type
+            Authorization: `Bearer ${access}`,
+          },
+        });
+        
+        if (response.data.cart) {
           setCards(response.data.cart);
         }
       } catch (error) {
-        console.error("Error fetching cards:", error);
+        console.error('Error fetching cards:', error);
       }
     };
-
-    fetchCards();
-  }, []);
+  
+    if (access) {
+      fetchCards();
+    }
+  }, [access]);
 
   const handleCardClick = (id) => {
-    navigate(`api/cart/detail/${id}`);
+    navigate(`/api/cart/detail/${id}`);
   };
-
-  // const handleNewCard = () => {
-  //   navigate("/api/cart/");
-  // };
 
   return (
     <div className="p-8">
       <h1 className="text-2xl font-bold mb-4">لیست کارت‌ها</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {cards.map((card) => (
-          <div
-            key={card.id}
-            className="p-4 bg-white shadow rounded-lg cursor-pointer hover:shadow-lg transition"
-            onClick={() => handleCardClick(card.id)}
-          >
-            <h2 className="text-xl font-bold">{card.company_name}</h2>
-            <p>{card.company_name || ""}</p>
-            <p>وضعیت: {card.status === "waiting" ? "در انتظار" : "مشخص شده"}</p>
-          </div>
-        ))}
-        <div
-          className="p-4 bg-blue-200 text-white shadow rounded-lg cursor-pointer hover:shadow-lg transition"
-          // onClick={handleNewCard}
-        >
+        {cards.length > 0 ? (
+          cards.map((card) => (
+            // eslint-disable-next-line jsx-a11y/click-events-have-key-events
+            <div
+              key={card.id}
+              className="p-4 bg-white shadow rounded-lg cursor-pointer hover:shadow-lg transition"
+              onClick={() => handleCardClick(card.id)}
+            >
+              <h2 className="text-xl font-bold">{card.company_name}</h2>
+              <p>{card.company_name || ''}</p>
+              <p>وضعیت: {card.status === 'waiting' ? 'در انتظار' : 'مشخص شده'}</p>
+            </div>
+          ))
+        ) : (
+          <p className="text-center text-gray-500">هیچ کارتی موجود نیست</p>
+        )}
+        <div className="p-4 bg-blue-200 text-white shadow rounded-lg cursor-pointer hover:shadow-lg transition">
           <h2 className="text-xl font-bold">کارت جدید</h2>
         </div>
       </div>
