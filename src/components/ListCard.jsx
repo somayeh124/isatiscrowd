@@ -1,31 +1,42 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
+import { OnRun } from "src/api/OnRun";
+import { getCookie } from "src/api/cookie";
 
 const CardList = () => {
   const [cards, setCards] = useState([]);
-  const navigate = useNavigate();
+  const access = getCookie('access');
+  // const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCards = async () => {
       try {
-        const response = await axios.get("/api/cart/");  
+        const response = await axios.get(`${OnRun}/api/cart/`, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${access}`,
+          },
+        });  
+        
         if (response.data.message) {
           setCards(response.data.cart);
         }
+        console.log(response.data.cart);
       } catch (error) {
         console.error("Error fetching cards:", error);
       }
     };
-
+  
     fetchCards();
   }, []);
 
-  const handleCardClick = (id) => {
-    navigate(`api/cart/detail/${id}`);
-  };
+  // const handleCardClick = (id) => {
+  //   navigate(`api/cart/detail/${id}`);
+  // };
 
   // const handleNewCard = () => {
   //   navigate("/api/cart/");
@@ -39,7 +50,7 @@ const CardList = () => {
           <div
             key={card.id}
             className="p-4 bg-white shadow rounded-lg cursor-pointer hover:shadow-lg transition"
-            onClick={() => handleCardClick(card.id)}
+            // onClick={() => handleCardClick(card.id)}
           >
             <h2 className="text-xl font-bold">{card.company_name}</h2>
             <p>{card.company_name || ""}</p>
