@@ -316,7 +316,7 @@ function Form({ cardSelected }) {
             },
           });
           
-        setFormData(response.data)
+        
           if (response.data.cart) {
             setCards(response.data.cart);
           }
