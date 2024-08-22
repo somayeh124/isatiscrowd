@@ -10,7 +10,7 @@ import { getCookie } from "src/api/cookie";
 const CardList = () => {
   const [cards, setCards] = useState([]);
   const access = getCookie('access');
-  // const navigate = useNavigate();
+ 
 
   useEffect(() => {
     const fetchCards = async () => {
