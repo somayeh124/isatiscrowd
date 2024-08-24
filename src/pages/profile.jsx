@@ -1,3 +1,4 @@
+/* eslint-disable react/button-has-type */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable react-hooks/exhaustive-deps */
@@ -31,9 +32,12 @@ const Profile = () => {
 
   return profileData ? (
     <div className="max-w-4xl mx-auto p-8 mt-10 bg-white rounded-lg shadow-lg">
-      <h1 className="text-3xl font-extrabold text-gray-900 mb-8 text-center">پروفایل کاربر</h1>
+     <div className='flex justify-between'>
+     <h1 className="text-3xl font-extrabold text-gray-900 mb-8 text-center">پروفایل کاربر</h1>
+      <button className='bg-[#662f90] p-4 text-white rounded-md'> به روزرسانی اطلاعات</button>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6"><div className="col-span-1 md:col-span-3">
+     </div>
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-6"><div className="col-span-1 md:col-span-3">
           <h2 className="text-lg font-semibold text-gray-700 mb-4">اطلاعات فردی</h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <ProfileField label="نام" value={profileData?.acc?.private_person?.[0]?.firstName || ''} />
@@ -73,7 +77,7 @@ const Profile = () => {
 
         <div className="col-span-1 md:col-span-4">
           <h2 className="text-lg font-semibold text-gray-700 mb-4">آدرس</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <ProfileField label="استان" value={profileData.acc.addresses[0].province} />
             <ProfileField label="شهر" value={profileData.acc.addresses[0].city} />
             <ProfileField label="خیابان " value={profileData.acc.addresses[0].remnantAddress} />

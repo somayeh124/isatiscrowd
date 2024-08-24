@@ -27,6 +27,7 @@ export default function LoginView() {
   const [step, setStep] = useState(1);
   const [registerd, setRegisterd] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [timer, setTimer] = useState(60);
 
   const getCaptcha = () => {
     axios
@@ -46,7 +47,7 @@ export default function LoginView() {
     } else if (nationalCode.length !== 10) {
       toast.warning('مقدار کد ملی را به صورت صحیح وارد کنید');
     } else {
-      setLoading(true); // فعال کردن لودینگ
+      setLoading(true);
       axios({
         method: 'POST',
         url: `${OnRun}/api/otp/`,
@@ -60,13 +61,14 @@ export default function LoginView() {
           toast.success(response.data.message);
           setRegisterd(response.data.registered);
           setStep(2);
+          setTimer(60);
         })
         .catch((error) => {
           console.error('خطا:', error);
           toast.error('خطا در ارسال درخواست به سرور.');
         })
         .finally(() => {
-          setLoading(false); // غیرفعال کردن لودینگ پس از دریافت پاسخ
+          setLoading(false);
         });
     }
   };
@@ -75,7 +77,7 @@ export default function LoginView() {
     if (otp.length !== 5) {
       toast.warning('کد صحیح نیست');
     } else {
-      setLoading(true); // فعال کردن لودینگ
+      setLoading(true);
       const url_ = registerd ? `${OnRun}/api/login/` : `${OnRun}/api/signup/`;
       axios({
         method: 'POST',
@@ -97,12 +99,35 @@ export default function LoginView() {
           toast.error('خطا در ارسال درخواست به سرور.');
         })
         .finally(() => {
-          setLoading(false); // غیرفعال کردن لودینگ پس از دریافت پاسخ
+          setLoading(false);
         });
     }
   };
 
-  useEffect(getCaptcha, []);
+  useEffect(() => {
+    getCaptcha();
+  }, []);
+
+  useEffect(() => {
+    let countdown;
+    if (step === 2) {
+      countdown = setInterval(() => {
+        setTimer((prevTimer) => {
+          if (prevTimer <= 1) {
+            clearInterval(countdown);
+            setStep(1);
+            setOtp('');
+            setTimer(60);
+            toast.info('زمان وارد کردن کد تایید به پایان رسید. لطفاً دوباره تلاش کنید.');
+            return 60;
+          }
+          return prevTimer - 1;
+        });
+      }, 1000);
+    }
+
+    return () => clearInterval(countdown);
+  }, [step]);
 
   const renderForm = (
     <>
@@ -145,7 +170,7 @@ export default function LoginView() {
             },
           }}
           onClick={applyNationalCode}
-          loading={loading} // اضافه کردن پروپ لودینگ
+          loading={loading}
         >
           تایید
         </LoadingButton>
@@ -157,9 +182,9 @@ export default function LoginView() {
           variant="contained"
           color="inherit"
           onClick={handleCode}
-          loading={loading} // اضافه کردن پروپ لودینگ
+          loading={loading}
         >
-          تایید
+          تایید ({timer})
         </LoadingButton>
       )}
     </>

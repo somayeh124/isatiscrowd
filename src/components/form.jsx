@@ -52,6 +52,8 @@ function Attachment({ title, onFileChange, onAttach, attachments, onRemove }) {
   return (
     <div className="flex flex-col items-center justify-center mb-8">
       <label className="block text-gray-700 text-xl font-bold mb-8 mt-4 text-center">{title}</label>
+      <p>حداکثر حجم فایل می تواند 20مگابایت باشد</p>
+      
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
         <div className="bg-white shadow-lg rounded-lg mt-4">
           <h2 className="flex flex-col text-center mt-2 text-gray-700 text-xl font-bold">
@@ -168,11 +170,11 @@ function Form({ cardSelected }) {
     { type: 'common stock', title: 'عام سهامی' },
   ];
 
-  const statuses = [
-    { type: 'waiting', title: 'در انتظار تایید' },
-    { type: 'editing', title: 'نیاز به تکمیل' },
-    { type: 'okay', title: 'تایید شده' },
-  ];
+  // const statuses = [
+  //   { type: 'waiting', title: 'در انتظار تایید' },
+  //   { type: 'editing', title: 'نیاز به تکمیل' },
+  //   { type: 'okay', title: 'تایید شده' },
+  // ];
 
   const formatNumber = (value) => String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   const NumberFormat = (value) => String(value).replace(/\D/g, '');
@@ -219,7 +221,15 @@ function Form({ cardSelected }) {
     e.preventDefault();
 
     if (!formData.company_name) {
-      setErrorMessage('لطفاً نام شرکت را وارد کنید.');
+      setErrorMessage('لطفاً  فیلد را وارد کنید.');
+      return;
+    }
+    if (!formData.nationalid) {
+      toast('لطفاً شماره شناسه را وارد کنیدو یکتا باشد.');
+      return;
+    }
+    if (!formData.registration_number) {
+      toast('لطفاًشماره ثبت را وارد کنیدویکتا باشد');
       return;
     }
 
@@ -315,7 +325,8 @@ function Form({ cardSelected }) {
               Authorization: `Bearer ${access}`,
             },
           });
-          setFormData(response.data)
+          setFormData(response.data.cart)
+          setAttachments(response.data.cart)
           console.log(response.data)
           if (response.data.cart) {
             setCards(response.data.cart);
@@ -330,6 +341,7 @@ function Form({ cardSelected }) {
       fetchCards();
     }
   }, [cardSelected]);
+
   return (
     <form
       dir="rtl"
@@ -371,7 +383,7 @@ function Form({ cardSelected }) {
           </select>
         </div>
 
-        <div className="mb-6">
+        {/* <div className="mb-6">
           <label className="block text-gray-700 text-sm font-medium mb-2">وضعیت:</label>
           <select
             name="status"
@@ -386,7 +398,7 @@ function Form({ cardSelected }) {
               </option>
             ))}
           </select>
-        </div>
+        </div> */}
 
         <div className="mb-6">
           <label className="block text-gray-700 text-sm font-medium mb-2">شماره شناسه:</label>

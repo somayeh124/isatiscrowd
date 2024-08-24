@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -9,10 +9,12 @@ import ListItemButton from '@mui/material/ListItemButton';
 import { usePathname, useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 import { useResponsive } from 'src/hooks/use-responsive';
-import Logo from 'src/components/logo';
 import Scrollbar from 'src/components/scrollbar';
 import { getCookie, setCookie } from 'src/api/cookie';
 import SvgColor from 'src/components/svg-color';
+import { OnRun } from 'src/api/OnRun';
+import axios from 'axios';
+import { Grid, Typography } from '@mui/material';
 import navConfig from './config-navigation';
 import { NAV } from './config-layout';
 
@@ -24,6 +26,28 @@ export default function Nav({ openNav, onCloseNav }) {
     router.push('/login');
     setCookie('phu', '', 0);
   };
+  const access = getCookie('access');
+
+  const [profileData, setProfileData] = useState(null);
+
+  const getProfile = async () => {
+    try {
+      const response = await axios.get(`${OnRun}/api/information/`, {
+        headers: {
+          Authorization: `Bearer ${access}`,
+        },
+      });
+      setProfileData(response.data);
+    } catch (error) {
+      console.error('Error fetching profile data:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (access) {
+      getProfile();
+    }
+  }, [access]);
 
   const pathname = usePathname();
   const upLg = useResponsive('up', 'lg');
@@ -78,7 +102,21 @@ export default function Nav({ openNav, onCloseNav }) {
         },
       }}
     >
-      <Logo sx={{ mt: 3, ml: 4 }} />
+      <img className='w-28 h-28' src="/assets/crowdlogo.png" alt="Logo" />
+
+      <div className='bg-white text-black p-4 m-4 rounded-md'>
+        <Grid item xs={12} sm={6} md={3}>
+          {profileData && profileData.acc && profileData.acc.private_person && profileData.acc.private_person.length > 0 ? (
+            <div className="flex">
+              <Typography variant="h6">{profileData.acc.private_person[0].firstName}</Typography>
+              <Typography variant="h6" sx={{ ml: 1 }}>{profileData.acc.private_person[0].lastName}</Typography>
+            </div>
+          ) : (
+            <Typography variant="h6">Loading...</Typography>
+          )}
+          خوش آمدید 👋
+        </Grid>
+      </div>
 
       {renderAccount}
 
@@ -105,7 +143,7 @@ export default function Nav({ openNav, onCloseNav }) {
             position: 'fixed',
             width: NAV.WIDTH,
             borderRight: (theme) => `dashed 1px ${theme.palette.divider}`,
-            bgcolor: '#1f2937', // تغییر رنگ پس‌زمینه به رنگ تیره
+            bgcolor: '#4B5563', // تغییر رنگ پس‌زمینه به رنگ تیره
             color: 'white', // تنظیم رنگ متن به سفید
             boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
           }}
@@ -119,7 +157,7 @@ export default function Nav({ openNav, onCloseNav }) {
           PaperProps={{
             sx: {
               width: NAV.WIDTH,
-              bgcolor: '#1f2937', // تغییر رنگ پس‌زمینه به رنگ تیره
+              bgcolor: '#4B5563', // تغییر رنگ پس‌زمینه به رنگ تیره
               color: 'white', // تنظیم رنگ متن به سفید
               boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
             },
