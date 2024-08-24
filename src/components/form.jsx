@@ -10,7 +10,7 @@ import { getCookie } from 'src/api/cookie';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-function Attachment({ title, onFileChange, onAttach, attachments, onRemove, id }) {
+function Attachment({ title, onFileChange, onAttach, attachments, onRemove }) {
   const handleFileChange = (type, e) => {
     const file = e.target.files[0];
     if (file) {
@@ -315,8 +315,8 @@ function Form({ cardSelected }) {
               Authorization: `Bearer ${access}`,
             },
           });
-          
-        
+          setFormData(response.data)
+          console.log(response.data)
           if (response.data.cart) {
             setCards(response.data.cart);
           }
