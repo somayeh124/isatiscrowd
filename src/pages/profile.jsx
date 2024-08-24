@@ -33,9 +33,9 @@ const Profile = () => {
     <div className="max-w-4xl mx-auto p-8 mt-10 bg-white rounded-lg shadow-lg">
       <h1 className="text-3xl font-extrabold text-gray-900 mb-8 text-center">پروفایل کاربر</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6"><div className="col-span-1 md:col-span-3">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-6"><div className="col-span-1 md:col-span-3">
           <h2 className="text-lg font-semibold text-gray-700 mb-4">اطلاعات فردی</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <ProfileField label="نام" value={profileData?.acc?.private_person?.[0]?.firstName || ''} />
 <ProfileField label="نام خانوادگی" value={profileData?.acc?.private_person?.[0]?.lastName || ''} />
 <ProfileField label="نام پدر" value={profileData?.acc?.private_person?.[0]?.fatherName || ''} />
@@ -51,17 +51,17 @@ const Profile = () => {
           </div>
         </div>
       
-        <div className="col-span-1 md:col-span-3">
+        <div className="col-span-1 md:col-span-4">
           <h2 className="text-lg font-semibold text-gray-700 mb-4">اطلاعات بانکی</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <ProfileField label="  بانک" value={profileData.acc.accounts[0].bank||""} />
         <ProfileField label="  شعبه بانک" value={profileData.acc.accounts[0].branchName||""} />
         <ProfileField label="شماره شبا" value={profileData.acc.accounts[0].sheba||""} />
           </div>
         </div>
-        <div className="col-span-1 md:col-span-3">
+        <div className="col-span-1 md:col-span-4">
           <h2 className="text-lg font-semibold text-gray-700 mb-4">اطلاعات شغلی</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <ProfileField label="شغل" value={profileData.acc.job_info[0].job||""} />
           <ProfileField label="نوع شغل" value={profileData.acc.job_info[0].position||""} />
             <ProfileField label="محل کار" value={profileData.acc.job_info[0].companyAddress||""} />
@@ -71,7 +71,7 @@ const Profile = () => {
           </div>
         </div>
 
-        <div className="col-span-1 md:col-span-3">
+        <div className="col-span-1 md:col-span-4">
           <h2 className="text-lg font-semibold text-gray-700 mb-4">آدرس</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <ProfileField label="استان" value={profileData.acc.addresses[0].province} />

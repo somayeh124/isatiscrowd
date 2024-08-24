@@ -340,7 +340,7 @@ function Form({ cardSelected }) {
       <div className="flex justify-center mb-8">
         <h1 className="text-4xl font-bold text-gray-900">اطلاعات شرکت</h1>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
         <div className="mb-6">
           <label className="block text-gray-700 text-sm font-medium mb-2">نام شرکت:</label>
           <input
