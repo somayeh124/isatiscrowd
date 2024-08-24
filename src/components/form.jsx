@@ -1,7 +1,6 @@
 /* eslint-disable no-undef */
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-constant-condition */
 /* eslint-disable react/prop-types */
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -10,11 +9,16 @@ import { getCookie } from 'src/api/cookie';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+// تابع Attachment
 function Attachment({ title, onFileChange, onAttach, attachments, onRemove }) {
   const handleFileChange = (type, e) => {
     const file = e.target.files[0];
     if (file) {
-      const newAttachment = { file, name: file.name };
+      const newAttachment = { 
+        file, 
+        name: file.name, 
+        url: `${OnRun}/attachments/${attachments.name}` 
+      };
       onAttach(type, newAttachment);
       onFileChange(e);
     }
@@ -36,13 +40,23 @@ function Attachment({ title, onFileChange, onAttach, attachments, onRemove }) {
         <div className="mt-4 space-y-2">
           <div className="flex justify-between items-center py-2 px-4 bg-gray-50 rounded-md shadow-sm">
             <span className="text-gray-700">{attachment.name}</span>
-            <button
-              type="button"
-              onClick={() => handleRemove(type)}
-              className="text-red-600 hover:text-red-800 text-sm font-medium"
-            >
-              حذف
-            </button>
+            <div className="flex space-x-4">
+              <button
+                type="button"
+                onClick={() => handleRemove(type)}
+                className="text-red-600 hover:text-red-800 text-sm font-medium"
+              >
+                حذف
+              </button>
+              <a
+                href={attachment.url} 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-green-600 hover:text-green-800 text-sm font-medium"
+              >
+                مشاهده
+              </a>
+            </div>
           </div>
         </div>
       )}
@@ -52,34 +66,9 @@ function Attachment({ title, onFileChange, onAttach, attachments, onRemove }) {
   return (
     <div className="flex flex-col items-center justify-center mb-8">
       <label className="block text-gray-700 text-xl font-bold mb-8 mt-4 text-center">{title}</label>
-      <p>حداکثر حجم فایل می تواند 20مگابایت باشد</p>
+      <p>حداکثر حجم فایل می تواند 20 مگابایت باشد</p>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-        <div className="bg-white shadow-lg rounded-lg mt-4">
-          <h2 className="flex flex-col text-center mt-2 text-gray-700 text-xl font-bold">
-            گزارشات و مستندات به روز
-          </h2>
-          {renderAttachmentSection(
-            'financial_report_thisyear',
-            'صورت مالی',
-            attachments.financial_report_thisyear
-          )}
-          {renderAttachmentSection(
-            'audit_report_thisyear',
-            'گزارش حسابرسی',
-            attachments.audit_report_thisyear
-          )}
-          {renderAttachmentSection(
-            'statement_thisyear',
-            'اظهارنامه',
-            attachments.statement_thisyear
-          )}
-          {renderAttachmentSection(
-            'alignment_6columns_thisyear',
-            'تراز 6ستونی',
-            attachments.alignment_6columns_thisyear
-          )}
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">    
         <div className="bg-white shadow-lg rounded-lg mt-4">
           <h2 className="flex flex-col text-center mt-2 text-gray-700 text-xl font-bold">
             گزارشات و مستندات منتهی به سال 1401
@@ -99,11 +88,7 @@ function Attachment({ title, onFileChange, onAttach, attachments, onRemove }) {
             'اظهارنامه',
             attachments.statement_lastyear
           )}
-          {renderAttachmentSection(
-            'alignment_6columns_lastyear',
-            'تراز 6ستونی',
-            attachments.alignment_6columns_lastyear
-          )}
+         
         </div>
         <div className="bg-white shadow-lg rounded-lg mt-4">
           <h2 className="flex flex-col text-center mt-2 text-gray-700 text-xl font-bold">
@@ -120,13 +105,18 @@ function Attachment({ title, onFileChange, onAttach, attachments, onRemove }) {
             attachments.audit_report_yearold
           )}
           {renderAttachmentSection('statement_yearold', 'اظهارنامه', attachments.statement_yearold)}
-          {renderAttachmentSection(
-            'alignment_6columns_yearold',
-            'تراز 6ستونی',
-            attachments.alignment_6columns_yearold
-          )}
         </div>
       </div>
+      <div className="bg-white shadow-lg rounded-lg mt-4">
+          <h2 className="flex flex-col text-center mt-2 text-gray-700 text-xl font-bold">
+            گزارشات و مستندات به روز
+          </h2>
+          {renderAttachmentSection(
+            'alignment_6columns_thisyear',
+            'تراز 6ستونی',
+            attachments.alignment_6columns_thisyear
+          )}
+        </div>
     </div>
   );
 }
@@ -148,33 +138,25 @@ function Form({ cardSelected }) {
   });
 
   const [attachments, setAttachments] = useState({
-    financial_report_thisyear: null,
     financial_report_lastyear: null,
     financial_report_yearold: null,
     audit_report_thisyear: null,
     audit_report_lastyear: null,
     audit_report_yearold: null,
-    statement_thisyear: null,
     statement_lastyear: null,
     statement_yearold: null,
     alignment_6columns_thisyear: null,
-    alignment_6columns_lastyear: null,
-    alignment_6columns_yearold: null,
+ 
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);  
   const [errorMessage, setErrorMessage] = useState('');
 
   const companyTypes = [
     { type: 'special stock', title: 'خاص سهامی' },
     { type: 'common stock', title: 'عام سهامی' },
   ];
-
-  // const statuses = [
-  //   { type: 'waiting', title: 'در انتظار تایید' },
-  //   { type: 'editing', title: 'نیاز به تکمیل' },
-  //   { type: 'okay', title: 'تایید شده' },
-  // ];
 
   const formatNumber = (value) => String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   const NumberFormat = (value) => String(value).replace(/\D/g, '');
@@ -219,22 +201,27 @@ function Form({ cardSelected }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); 
 
     if (!formData.company_name) {
       setErrorMessage('لطفاً  فیلد را وارد کنید.');
+      setLoading(false); 
       return;
     }
     if (!formData.nationalid) {
-      toast('لطفاً شماره شناسه را وارد کنیدو یکتا باشد.');
+      toast('لطفاً شماره شناسه را وارد کنید و یکتا باشد.');
+      setLoading(false); 
       return;
     }
     if (!formData.registration_number) {
-      toast('لطفاًشماره ثبت را وارد کنیدویکتا باشد');
+      toast('لطفاً شماره ثبت را وارد کنید و یکتا باشد');
+      setLoading(false);
       return;
     }
 
     if (!validateCompanyName(formData.company_name)) {
       setErrorMessage('نام شرکت باید فقط شامل حروف باشد.');
+      setLoading(false);  
       return;
     }
 
@@ -286,18 +273,15 @@ function Form({ cardSelected }) {
         });
 
         setAttachments({
-          financial_report_thisyear: null,
           financial_report_lastyear: null,
           financial_report_yearold: null,
-          audit_report_thisyear: null,
           audit_report_lastyear: null,
           audit_report_yearold: null,
           statement_thisyear: null,
           statement_lastyear: null,
           statement_yearold: null,
           alignment_6columns_thisyear: null,
-          alignment_6columns_lastyear: null,
-          alignment_6columns_yearold: null,
+       
         });
       } else {
         console.error('ارسال اطلاعات با خطا مواجه شد:', response.statusText);
@@ -313,8 +297,11 @@ function Form({ cardSelected }) {
         console.error('خطا در ارتباط با سرور:', error);
         toast.error('خطا در ارتباط با سرور.');
       }
+    } finally {
+      setLoading(false); 
     }
   };
+
   useEffect(() => {
     const fetchCards = async () => {
       try {
@@ -325,11 +312,11 @@ function Form({ cardSelected }) {
               Authorization: `Bearer ${access}`,
             },
           });
-          setFormData(response.data.cart)
-          setAttachments(response.data.cart)
-          console.log(response.data)
+          setFormData(response.data.cart);
+          setAttachments(response.data.cart);
+          console.log('pivast',response.data.attachment)
           if (response.data.cart) {
-            setCards(response.data.cart);
+            setFormData(response.data.cart);
           }
         }
       } catch (error) {
@@ -382,23 +369,6 @@ function Form({ cardSelected }) {
             ))}
           </select>
         </div>
-
-        {/* <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-medium mb-2">وضعیت:</label>
-          <select
-            name="status"
-            value={formData.status}
-            onChange={handleInputChange}
-            className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
-          >
-            <option value="">انتخاب کنید</option>
-            {statuses.map((statusObj, index) => (
-              <option key={index} value={statusObj.type}>
-                {statusObj.title}
-              </option>
-            ))}
-          </select>
-        </div> */}
 
         <div className="mb-6">
           <label className="block text-gray-700 text-sm font-medium mb-2">شماره شناسه:</label>
@@ -513,9 +483,12 @@ function Form({ cardSelected }) {
       <div className="flex justify-center mt-8">
         <button
           type="submit"
-          className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full shadow-lg focus:outline-none focus:ring focus:ring-blue-300"
+          disabled={loading} 
+          className={`bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full shadow-lg focus:outline-none focus:ring focus:ring-blue-300 ${
+            loading ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
         >
-          درخواست بررسی اولیه
+          {loading ? 'لطفا منتظر بمانید...' : 'درخواست بررسی اولیه'}
         </button>
       </div>
 

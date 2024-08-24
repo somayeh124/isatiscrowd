@@ -7,7 +7,7 @@ import CardList from './ListCard';
 
 const Sterpercrowd = () => {
   const [activeStep, setActiveStep] = useState(0);
-  const [cardSelected,setCardSelected] = useState(null);
+  const [cardSelected, setCardSelected] = useState(null);
 
   const steps = ['مرحله اول', 'مرحله دوم', 'مرحله سوم'];
 
@@ -16,7 +16,7 @@ const Sterpercrowd = () => {
       // چک کنید که تمام چک‌باکس‌ها تیک خورده‌اند
       const checkedContracts = JSON.parse(localStorage.getItem('checkedContracts')) || {};
       const allChecked = Object.values(checkedContracts).every(Boolean);
-      
+
       if (!allChecked) {
         toast.error('لطفاً همه قراردادها را مطالعه کنید.');
         return;
@@ -39,11 +39,11 @@ const Sterpercrowd = () => {
       case 0:
         return <div> <CardList setCardSelected={setCardSelected} handleNext={handleNext}/> </div>;
       case 1:
-        return <div><Form cardSelected={cardSelected}/></div>  ;
+        return <div><Form cardSelected={cardSelected}/></div>;
       // case 2:
       //   return <div><TrackingCard/></div>;
       default:
-        return <div className='flex items-center justify-center self-center mt-8 text-lg'>  منتظر بررسی اطلاعات باشید</div>;
+        return <div className='flex items-center justify-center self-center mt-8 text-lg'>منتظر بررسی اطلاعات باشید</div>;
     }
   };
 
@@ -56,16 +56,13 @@ const Sterpercrowd = () => {
           </Step>
         ))}
       </Stepper>
-      <div>
-        {renderStepContent(activeStep)}
-      </div>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
         <Button
           disabled={activeStep === 0}
           onClick={handleBack}
           sx={{
             '&:hover': {
-              backgroundColor: '#90caf9',     
+              backgroundColor: '#90caf9',
             }
           }}
         >
@@ -75,12 +72,15 @@ const Sterpercrowd = () => {
           onClick={handleNext}
           sx={{
             '&:hover': {
-              backgroundColor: '#90caf9',   
+              backgroundColor: '#90caf9',
             }
           }}
         >
           {activeStep === steps.length - 1 ? 'اتمام' : 'بعدی'}
         </Button>
+      </div>
+      <div>
+        {renderStepContent(activeStep)}
       </div>
       <ToastContainer />
     </div>

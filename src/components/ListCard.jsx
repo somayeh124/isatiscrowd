@@ -4,6 +4,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { OnRun } from 'src/api/OnRun';
+import { GiEmptyHourglass } from "react-icons/gi";
 import { getCookie } from 'src/api/cookie';
 import { FaCheckCircle, FaClock, FaPlus } from 'react-icons/fa'; // آیکون پلاس اضافه کردن
 
@@ -89,7 +90,7 @@ const CardList = ({ setCardSelected, handleNext }) => {
                 <h2 className="text-xl font-bold mb-2">{card.company_name}</h2>
                 <p className="flex items-center">
                   {card.status === 'waiting' ? (
-                    <FaClock className="text-yellow-500 mr-2" />
+                    <GiEmptyHourglass className="text-yellow-500 mr-2" />
                   ) : (
                     <FaCheckCircle className="text-green-500 mr-2" />
                   )}
@@ -98,12 +99,20 @@ const CardList = ({ setCardSelected, handleNext }) => {
               </div>
 
               {/* دکمه حذف */}
-              <button
-                className="mt-2  bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
-                onClick={() => handleDeleteCard(card.id)}
-              >
-                حذف
-              </button>
+              <div className='flex'>
+                <button
+                  className="mt-2  bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
+                  onClick={() => handleDeleteCard(card.id)}
+                >
+                  حذف
+                </button>
+                <button
+                  className="mt-2  bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition"
+                  onClick={() => handleDeleteCard(card.id)}
+                >
+                  ویرایش
+                </button>
+              </div>
             </div>
           ))
         ) : (
