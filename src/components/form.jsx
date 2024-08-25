@@ -11,13 +11,16 @@ import 'react-toastify/dist/ReactToastify.css';
 
 // تابع Attachment
 function Attachment({ title, onFileChange, onAttach, attachments, onRemove }) {
+  console.log('====================================');
+  console.log(attachments);
+  console.log('====================================');
   const handleFileChange = (type, e) => {
     const file = e.target.files[0];
     if (file) {
-      const newAttachment = { 
-        file, 
-        name: file.name, 
-        url: `${OnRun}/attachments/${attachments.name}` 
+      const newAttachment = {
+        file,
+        name: file.name,
+        url: `${OnRun}/${file.name}`,  
       };
       onAttach(type, newAttachment);
       onFileChange(e);
@@ -49,7 +52,7 @@ function Attachment({ title, onFileChange, onAttach, attachments, onRemove }) {
                 حذف
               </button>
               <a
-                href={attachment.url} 
+                href={attachment.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-green-600 hover:text-green-800 text-sm font-medium"
@@ -67,8 +70,8 @@ function Attachment({ title, onFileChange, onAttach, attachments, onRemove }) {
     <div className="flex flex-col items-center justify-center mb-8">
       <label className="block text-gray-700 text-xl font-bold mb-8 mt-4 text-center">{title}</label>
       <p>حداکثر حجم فایل می تواند 20 مگابایت باشد</p>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">    
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
         <div className="bg-white shadow-lg rounded-lg mt-4">
           <h2 className="flex flex-col text-center mt-2 text-gray-700 text-xl font-bold">
             گزارشات و مستندات منتهی به سال 1401
@@ -88,7 +91,7 @@ function Attachment({ title, onFileChange, onAttach, attachments, onRemove }) {
             'اظهارنامه',
             attachments.statement_lastyear
           )}
-         
+
         </div>
         <div className="bg-white shadow-lg rounded-lg mt-4">
           <h2 className="flex flex-col text-center mt-2 text-gray-700 text-xl font-bold">
@@ -108,15 +111,15 @@ function Attachment({ title, onFileChange, onAttach, attachments, onRemove }) {
         </div>
       </div>
       <div className="bg-white shadow-lg rounded-lg mt-4">
-          <h2 className="flex flex-col text-center mt-2 text-gray-700 text-xl font-bold">
-            گزارشات و مستندات به روز
-          </h2>
-          {renderAttachmentSection(
-            'alignment_6columns_thisyear',
-            'تراز 6ستونی',
-            attachments.alignment_6columns_thisyear
-          )}
-        </div>
+        <h2 className="flex flex-col text-center mt-2 text-gray-700 text-xl font-bold">
+          گزارشات و مستندات به روز
+        </h2>
+        {renderAttachmentSection(
+          'alignment_6columns_thisyear',
+          'تراز 6ستونی',
+          attachments.alignment_6columns_thisyear
+        )}
+      </div>
     </div>
   );
 }
@@ -146,11 +149,11 @@ function Form({ cardSelected }) {
     statement_lastyear: null,
     statement_yearold: null,
     alignment_6columns_thisyear: null,
- 
+
   });
 
   const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);  
+  const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
   const companyTypes = [
@@ -186,6 +189,7 @@ function Form({ cardSelected }) {
   };
 
   const handleAttach = (type, newAttachment) => {
+    console.log('Attachment URL:', newAttachment.url); // اضافه کردن این خط برای لاگ گرفتن از URL پیوست‌ها
     setAttachments((prevAttachments) => ({
       ...prevAttachments,
       [type]: newAttachment,
@@ -201,16 +205,16 @@ function Form({ cardSelected }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true); 
+    setLoading(true);
 
     if (!formData.company_name) {
       setErrorMessage('لطفاً  فیلد را وارد کنید.');
-      setLoading(false); 
+      setLoading(false);
       return;
     }
     if (!formData.nationalid) {
       toast('لطفاً شماره شناسه را وارد کنید و یکتا باشد.');
-      setLoading(false); 
+      setLoading(false);
       return;
     }
     if (!formData.registration_number) {
@@ -221,7 +225,7 @@ function Form({ cardSelected }) {
 
     if (!validateCompanyName(formData.company_name)) {
       setErrorMessage('نام شرکت باید فقط شامل حروف باشد.');
-      setLoading(false);  
+      setLoading(false);
       return;
     }
 
@@ -281,7 +285,7 @@ function Form({ cardSelected }) {
           statement_lastyear: null,
           statement_yearold: null,
           alignment_6columns_thisyear: null,
-       
+
         });
       } else {
         console.error('ارسال اطلاعات با خطا مواجه شد:', response.statusText);
@@ -298,7 +302,7 @@ function Form({ cardSelected }) {
         toast.error('خطا در ارتباط با سرور.');
       }
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
@@ -314,7 +318,7 @@ function Form({ cardSelected }) {
           });
           setFormData(response.data.cart);
           setAttachments(response.data.cart);
-          console.log('pivast',response.data.attachment)
+          console.log('pivast', response.data.attachment)
           if (response.data.cart) {
             setFormData(response.data.cart);
           }
@@ -472,7 +476,7 @@ function Form({ cardSelected }) {
 
       <Attachment
         title="افزودن پیوست‌ها"
-        onFileChange={() => {}}
+        onFileChange={() => { }}
         onAttach={handleAttach}
         attachments={attachments}
         onRemove={handleRemove}
@@ -483,10 +487,9 @@ function Form({ cardSelected }) {
       <div className="flex justify-center mt-8">
         <button
           type="submit"
-          disabled={loading} 
-          className={`bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full shadow-lg focus:outline-none focus:ring focus:ring-blue-300 ${
-            loading ? 'opacity-50 cursor-not-allowed' : ''
-          }`}
+          disabled={loading}
+          className={`bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full shadow-lg focus:outline-none focus:ring focus:ring-blue-300 ${loading ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
         >
           {loading ? 'لطفا منتظر بمانید...' : 'درخواست بررسی اولیه'}
         </button>
