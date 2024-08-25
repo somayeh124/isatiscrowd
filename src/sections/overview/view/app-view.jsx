@@ -35,17 +35,6 @@ export default function AppView() {
 
   return (
     <Container maxWidth="xl">
-      <Grid container spacing={3}>
-        {profileData && profileData.acc && profileData.acc.private_person && (
-          <Grid item xs={12} sm={6} md={3}>
-            <div className="flex">
-              <Typography variant="h6">{profileData.acc.private_person[0].firstName}</Typography>
-              <Typography variant="h6" sx={{ ml: 1 }}>{profileData.acc.private_person[0].lastName}</Typography>
-            </div>
-            خوش آمدید 👋
-          </Grid>
-        )}
-      </Grid>
       <Sterpercrowd />
     </Container>
   );
