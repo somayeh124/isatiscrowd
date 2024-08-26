@@ -1,8 +1,10 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/interactive-supports-focus */
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { OnRun } from 'src/api/OnRun';
 import { getCookie } from 'src/api/cookie';
-import { FaCheckCircle, FaClock, FaQuestionCircle } from 'react-icons/fa';
+import { FaCheckCircle, FaClock, FaQuestionCircle, FaPlus } from 'react-icons/fa';
 import PropTypes from 'prop-types';
 import { Button, Chip, Tooltip } from '@mui/material';
 import ConfirmDeleteModal from './ConfirmDeleteModal';
@@ -116,15 +118,31 @@ const CardList = ({ setCardSelected, handleNext }) => {
     }
   };
 
+  const handleNewCardClick = () => {
+    setCardSelected(null);
+    handleNext();
+  };
+
   return (
     <div className="p-8 bg-gray-50 min-h-screen">
       <h1 className="text-4xl font-extrabold text-gray-800 mb-12 text-center">لیست کارت‌ها</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
+        {/* کارت جدید به عنوان اولین کارت */}
+        <div
+          className="bg-white shadow-lg rounded-xl p-6 flex flex-col justify-center items-center cursor-pointer transition-transform transform hover:scale-105 hover:shadow-2xl hover:bg-gray-100 min-w-[280px] max-w-[320px] h-[350px]"
+          onClick={handleNewCardClick}
+          role="button"
+          aria-label="افزودن کارت جدید"
+        >
+          <FaPlus className="text-4xl text-blue-500 mb-4" />
+          <h2 className="text-xl font-bold text-gray-800">کارت جدید</h2>
+        </div>
+
         {cards.length > 0 ? (
           cards.map((card) => (
             <div
               key={card.id}
-              className={`bg-white shadow-lg rounded-xl p-6 flex flex-col justify-between items-center max-w-sm cursor-pointer transition-transform transform hover:scale-105 hover:shadow-2xl hover:bg-gray-100 ${
+              className={`bg-white shadow-lg rounded-xl p-6 flex flex-col justify-between items-center cursor-pointer transition-transform transform hover:scale-105 hover:shadow-2xl hover:bg-gray-100 min-w-[280px] max-w-[320px] h-[350px] ${
                 selectedCardId === card.id ? 'border-4 border-blue-600' : ''
               }`}
               tabIndex={0}
