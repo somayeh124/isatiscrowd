@@ -1,16 +1,17 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable react/button-has-type */
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { OnRun } from 'src/api/OnRun';
+import { GiEmptyHourglass } from "react-icons/gi";
 import { getCookie } from 'src/api/cookie';
-import { FaCheckCircle, FaClock, FaQuestionCircle } from 'react-icons/fa';
+import { FaCheckCircle, FaPlus } from 'react-icons/fa';     
+
 import PropTypes from 'prop-types';
-import { Button, Chip, Tooltip } from '@mui/material';
-import ConfirmDeleteModal from './ConfirmDeleteModal';
 
 const CardList = ({ setCardSelected, handleNext }) => {
   const [cards, setCards] = useState([]);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [selectedCardId, setSelectedCardId] = useState(null);
   const access = getCookie('access');
 
   useEffect(() => {
@@ -41,151 +42,90 @@ const CardList = ({ setCardSelected, handleNext }) => {
     handleNext();
   };
 
-  const openDeleteModal = (event, id) => {
-    event.stopPropagation();
-    setSelectedCardId(id);
-    setModalOpen(true);
+  const handleNewCardClick = () => {
+    setCardSelected(null);
+    handleNext();
   };
 
-  const handleDeleteClick = async () => {
-    if (selectedCardId === null) return;
+  const handleDeleteCard = async (id) => {
     try {
-      await axios.delete(`${OnRun}/api/cart/detail/${selectedCardId}/`, {
+      await axios.delete(`${OnRun}/api/cart/detail/${id}/`, {
         headers: {
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${access}`,
         },
       });
-      setCards((prevCards) => prevCards.filter((card) => card.id !== selectedCardId));
-      console.log(`Card with id: ${selectedCardId} deleted successfully.`);
+
+      // حذف کارت از لیست
+      setCards((prevCards) => prevCards.filter((card) => card.id !== id));
     } catch (error) {
       console.error('Error deleting card:', error);
-    } finally {
-      setModalOpen(false);
-      setSelectedCardId(null);
-    }
-  };
-
-  const handleModalClose = () => {
-    setModalOpen(false);
-    setSelectedCardId(null);
-  };
-
-  const getStatusChip = (status) => {
-    const iconStyle = { fontSize: '18px' };
-    switch (status) {
-      case 'waiting':
-        return (
-          <Chip
-            icon={<FaClock style={iconStyle} />}
-            label="در انتظار"
-            color="warning"
-            variant="outlined"
-            style={{ borderRadius: '20px', fontWeight: 'bold', margin: '2px', padding: '4px 8px' }}
-          />
-        );
-      case 'confirmed':
-        return (
-          <Chip
-            icon={<FaCheckCircle style={iconStyle} />}
-            label="مشخص شده"
-            color="success"
-            variant="outlined"
-            style={{ borderRadius: '20px', fontWeight: 'bold', margin: '2px', padding: '4px 8px' }}
-          />
-        );
-      case 'unknown':
-        return (
-          <Chip
-            icon={<FaQuestionCircle style={iconStyle} />}
-            label="نامشخص"
-            color="default"
-            variant="outlined"
-            style={{ borderRadius: '20px', fontWeight: 'bold', margin: '2px', padding: '4px 8px' }}
-          />
-        );
-      default:
-        return (
-          <Chip
-            icon={<FaQuestionCircle style={iconStyle} />}
-            label="نامشخص"
-            color="default"
-            variant="outlined"
-            style={{ borderRadius: '20px', fontWeight: 'bold', margin: '2px', padding: '4px 8px' }}
-          />
-        );
     }
   };
 
   return (
-    <div className="p-8 bg-gray-50 min-h-screen">
-      <h1 className="text-4xl font-extrabold text-gray-800 mb-12 text-center">لیست کارت‌ها</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
+    <div className="p-8">
+      <h1 className="text-2xl font-bold mb-4">لیست کارت‌ها</h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {/* کارت جدید به عنوان اولین کارت */}
+        <div
+          className="p-4 gap-8 shadow rounded-lg cursor-pointer hover:shadow-lg transition flex items-center justify-center"
+          onClick={handleNewCardClick} // تغییر داده شد به handleNewCardClick
+        >
+          <FaPlus className="text-2xl mr-2" />
+          <h2 className="text-xl font-bold">کارت جدید</h2>
+        </div>
+
+        {/* لیست کارت‌ها */}
         {cards.length > 0 ? (
           cards.map((card) => (
             <div
               key={card.id}
-              className={`bg-white shadow-lg rounded-xl p-6 flex flex-col justify-between items-center max-w-sm cursor-pointer transition-transform transform hover:scale-105 hover:shadow-2xl hover:bg-gray-100 ${
-                selectedCardId === card.id ? 'border-4 border-blue-600' : ''
-              }`}
-              tabIndex={0}
-              role="button"
-              aria-label={`View card ${card.company_name}`}
+              className="p-4 bg-white shadow rounded-lg transition flex flex-col justify-between relative"
             >
-              <div className="flex flex-col items-center flex-grow space-y-4">
-                <div className="flex justify-center items-center">
-                  <h2 className="text-2xl font-bold text-gray-800">{card.company_name}</h2>
-                </div>
-                <div className="flex flex-col justify-center items-center space-y-2">
-                  <p className="text-base font-medium text-gray-700">شناسه: {card.nationalid}</p>
-                  <p className="text-base font-medium text-gray-700">
-                    سرمایه: {card.registered_capital}
-                  </p>
-                  <p className="text-base font-medium text-gray-700">
-                    شماره ثبت: {card.registration_number}
-                  </p>
-                </div>
-                <div className="flex items-center">{getStatusChip(card.status)}</div>
+              <div
+                className="cursor-pointer hover:shadow-lg"
+                onClick={() => handleCardClick(card.id)}
+              >
+                <h2 className="text-xl font-bold mb-2">{card.company_name}</h2>
+                <p className="flex items-center">
+                  {card.status === 'waiting' ? (
+                    <GiEmptyHourglass className="text-yellow-500 mr-2" />
+                  ) : (
+                    <FaCheckCircle className="text-green-500 mr-2" />
+                  )}
+                  وضعیت: {card.status === 'waiting' ? 'در انتظار' : 'مشخص شده'}
+                </p>
               </div>
-              <div className="flex justify-center gap-4 mt-6">
-                <Tooltip title="مشاهده و ویرایش">
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => handleCardClick(card.id)}
-                    style={{ textTransform: 'none', padding: '8px 16px', fontSize: '16px' }}
-                  >
-                    مشاهده و ویرایش
-                  </Button>
-                </Tooltip>
-                <Tooltip title="حذف کارت">
-                  <Button
-                    variant="outlined"
-                    color="error"
-                    onClick={(event) => openDeleteModal(event, card.id)}
-                    style={{ textTransform: 'none', padding: '8px 16px', fontSize: '16px' }}
-                  >
-                    حذف
-                  </Button>
-                </Tooltip>
+
+              {/* دکمه حذف */}
+              <div className='flex'>
+                <button
+                  className="mt-2  bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
+                  onClick={() => handleDeleteCard(card.id)}
+                >
+                  حذف
+                </button>
+                <button
+                  className="mt-2  bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition"
+                  onClick={() => handleDeleteCard(card.id)}
+                >
+                  ویرایش
+                </button>
               </div>
             </div>
           ))
         ) : (
-          <p className="text-center text-gray-600 text-xl">هیچ کارتی موجود نیست</p>
+          <p className="text-center text-gray-500">هیچ کارتی موجود نیست</p>
         )}
       </div>
-      <ConfirmDeleteModal
-        open={modalOpen}
-        onClose={handleModalClose}
-        onConfirm={handleDeleteClick}
-      />
     </div>
   );
 };
+
+export default CardList;
 
 CardList.propTypes = {
   setCardSelected: PropTypes.func.isRequired,
   handleNext: PropTypes.func.isRequired,
 };
-
-export default CardList;

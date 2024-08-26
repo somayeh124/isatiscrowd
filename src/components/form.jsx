@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 /* eslint-disable react/prop-types */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable jsx-a11y/label-has-associated-control */
@@ -27,13 +26,13 @@ export default function Form({ cardSelected, handleNext }) {
   });
 
   const [attachments, setAttachments] = useState([
-    { type: 'financial_report_lastyear', label: 'صورت مالی 1401', file: null },
-    { type: 'audit_report_lastyear', label: 'گزارش حسابرسی 1401', file: null },
-    { type: 'statement_lastyear', label: 'اظهارنامه 1401', file: null },
-    { type: 'financial_report_yearold', label: 'صورت مالی 1402', file: null },
-    { type: 'audit_report_yearold', label: 'گزارش حسابرسی 1402', file: null },
-    { type: 'statement_yearold', label: 'اظهارنامه 1402', file: null },
-    { type: 'alignment_6columns_thisyear', label: 'تراز 6ستونی 1403', file: null },
+    { type: 'financial_report_lastyear', label: 'صورت مالی 1401', file: null, url: null, disabled: formData.Lock_financial_report_lastyear },
+    { type: 'audit_report_lastyear', label: 'گزارش حسابرسی 1401', file: null, url: null, disabled: formData.Lock_audit_report_lastyear },
+    { type: 'statement_lastyear', label: 'اظهارنامه 1401', file: null, url: null, disabled: formData.Lock_statement_lastyear },
+    { type: 'financial_report_yearold', label: 'صورت مالی 1402', file: null, url: null, disabled: formData.Lock_financial_report_yearold },
+    { type: 'audit_report_yearold', label: 'گزارش حسابرسی 1402', file: null, url: null, disabled: formData.Lock_audit_report_yearold },
+    { type: 'statement_yearold', label: 'اظهارنامه 1402', file: null, url: null, disabled: formData.statement_yearold },
+    { type: 'alignment_6columns_thisyear', label: 'تراز 6ستونی به روز', file: null, url: null, disabled: formData.Lock_alignment_6columns_thisyear },
   ]);
 
   const [loading, setLoading] = useState(false);
@@ -67,10 +66,9 @@ export default function Form({ cardSelected, handleNext }) {
 
   const handleFileChange = (type, e) => {
     const file = e.target.files[0];
-    
+
     if (file) {
-      const url = URL.createObjectURL(file);  // URL برای فایل ایجاد می‌شود
-      
+      const url = URL.createObjectURL(file);
       setAttachments((prevAttachments) =>
         prevAttachments.map((attachment) =>
           attachment.type === type ? { ...attachment, file, url } : attachment
@@ -78,11 +76,11 @@ export default function Form({ cardSelected, handleNext }) {
       );
     }
   };
-  
+
   const handleRemove = (type) => {
     setAttachments((prevAttachments) =>
       prevAttachments.map((attachment) =>
-        attachment.type === type ? { ...attachment, file: null } : attachment
+        attachment.type === type ? { ...attachment, file: null, url: null } : attachment
       )
     );
   };
@@ -92,7 +90,7 @@ export default function Form({ cardSelected, handleNext }) {
     setLoading(true);
 
     if (!formData.company_name) {
-      setErrorMessage('لطفاً  فیلد را وارد کنید.');
+      setErrorMessage('لطفاً فیلد را وارد کنید.');
       setLoading(false);
       return;
     }
@@ -133,8 +131,12 @@ export default function Form({ cardSelected, handleNext }) {
       });
 
       if (response.status === 200 || response.status === 201) {
-        toast.success('اطلاعات با موفقیت ارسال شد.');
-        handleNext();
+        toast.success('اطلاعات ارسال شد');
+
+        setTimeout(() => {
+          handleNext();
+        }, 3000);
+
         setFormData({
           company_name: '',
           company_kind: '',
@@ -149,7 +151,7 @@ export default function Form({ cardSelected, handleNext }) {
           status: '',
         });
 
-        setAttachments(attachments.map((attachment) => ({ ...attachment, file: null })));
+        setAttachments(attachments.map((attachment) => ({ ...attachment, file: null, url: null })));
       } else {
         console.error('ارسال اطلاعات با خطا مواجه شد:', response.statusText);
         toast.error('ارسال اطلاعات با خطا مواجه شد.');
@@ -179,11 +181,10 @@ export default function Form({ cardSelected, handleNext }) {
               Authorization: `Bearer ${access}`,
             },
           });
-          setFormData(response.data.cart);
-          setAttachments(response.data.cart);
-          console.log('pivast', response.data.cart);
-          if (response.data.cart) {
-            setFormData(response.data.cart);
+          const cardData = response.data.cart;
+          setFormData(cardData);
+          if (cardData.attachments) {
+            setAttachments(cardData.attachments.map(att => ({ ...att, file: null, url: null })));
           }
         }
       } catch (error) {
@@ -193,27 +194,6 @@ export default function Form({ cardSelected, handleNext }) {
 
     if (access) {
       fetchCards();
-    }
-  }, [cardSelected]);
-
-  useEffect(() => {
-    const updatecard = async () => {
-      try {
-        if (cardSelected) {
-          await axios.patch(`${OnRun}/api/cart/detail/${cardSelected}/`, {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${access}`,
-            },
-          });
-        }
-      } catch (error) {
-        console.error('Error fetching cards:', error);
-      }
-    };
-
-    if (access) {
-      updatecard();
     }
   }, [cardSelected]);
 
@@ -236,6 +216,7 @@ export default function Form({ cardSelected, handleNext }) {
             value={formData.company_name}
             onChange={handleInputChange}
             onKeyDown={handleCompanyNameKeyDown}
+            disabled={formData.Lock_company_name}
             required
             className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
           />
@@ -246,6 +227,7 @@ export default function Form({ cardSelected, handleNext }) {
           <select
             name="company_kind"
             value={formData.company_kind}
+            disabled={formData.Lock_company_kind}
             onChange={handleInputChange}
             className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
           >
@@ -264,6 +246,7 @@ export default function Form({ cardSelected, handleNext }) {
             type="text"
             name="nationalid"
             value={NumberFormat(formData.nationalid)}
+            disabled={formData.Lock_nationalid}
             onChange={handleInputChange}
             maxLength={14}
             className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
@@ -275,6 +258,7 @@ export default function Form({ cardSelected, handleNext }) {
             type="text"
             name="registration_number"
             value={NumberFormat(formData.registration_number)}
+            disabled={formData.Lock_registration_number}
             onChange={handleInputChange}
             maxLength={12}
             className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
@@ -289,6 +273,7 @@ export default function Form({ cardSelected, handleNext }) {
             type="text"
             name="registered_capital"
             value={formatNumber(formData.registered_capital)}
+            disabled={formData.Lock_registered_capital}
             onChange={handleInputChange}
             className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
           />
@@ -300,6 +285,7 @@ export default function Form({ cardSelected, handleNext }) {
             type="number"
             name="personnel"
             value={formData.personnel}
+            disabled={formData.Lock_personnel}
             onChange={handleInputChange}
             className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
           />
@@ -310,6 +296,7 @@ export default function Form({ cardSelected, handleNext }) {
           <input
             type="text"
             name="company_address"
+            disabled={formData.Lock_address}
             value={formData.company_address}
             onChange={handleInputChange}
             className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
@@ -322,6 +309,7 @@ export default function Form({ cardSelected, handleNext }) {
             type="email"
             name="company_email"
             value={formData.company_email}
+            disabled={formData.Lock_email}
             onChange={handleInputChange}
             className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
           />
@@ -331,6 +319,7 @@ export default function Form({ cardSelected, handleNext }) {
           <label className="block text-gray-700 text-sm font-medium mb-2">موضوع فعالیت شرکت:</label>
           <input
             name="activity_industry"
+            disabled={formData.Lock_activity_industry}
             value={formData.activity_industry}
             onChange={handleInputChange}
             className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
@@ -348,6 +337,7 @@ export default function Form({ cardSelected, handleNext }) {
           min={10000000000}
           max={250000000000}
           step={10000000000}
+          disabled={formData.Lock_amount_of_request}
           value={formData.amount_of_request}
           onChange={handleInputChange}
           className="w-full"
@@ -373,29 +363,28 @@ export default function Form({ cardSelected, handleNext }) {
                 />
               </div>
               {attachment.file && (
-             <div className="mt-4 space-y-2">
-             <div className="py-2 px-4 bg-gray-50 rounded-md shadow-sm">
-               <span className="text-gray-700 block mb-2">{attachment.file.name}</span>
-               <div className="flex gap-2">
-                 <a
-                   href={attachment.url}
-                   target="_blank"
-                   rel="noopener noreferrer"
-                   className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-                 >
-                   فایل
-                 </a>
-                 <button
-                   type="button"
-                   onClick={() => handleRemove(attachment.type)}
-                   className="text-red-600 hover:text-red-800 text-sm font-medium"
-                 >
-                   حذف
-                 </button>
-               </div>
-             </div>
-           </div>
-           
+                <div className="mt-4 space-y-2">
+                  <div className="py-2 px-4 bg-gray-50 rounded-md shadow-sm">
+                    <span className="text-gray-700 block mb-2">{attachment.file.name}</span>
+                    <div className="flex gap-2">
+                      <a
+                        href={attachment.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                      >
+                        فایل
+                      </a>
+                      <button
+                        type="button"
+                        onClick={() => handleRemove(attachment.type)}
+                        className="text-red-600 hover:text-red-800 text-sm font-medium"
+                      >
+                        حذف
+                      </button>
+                    </div>
+                  </div>
+                </div>
               )}
             </div>
           ))}
