@@ -1,4 +1,5 @@
-/* eslint-disable perfectionist/sort-imports */
+/* eslint-disable no-unused-vars */
+/* eslint-disable unused-imports/no-unused-imports */
 import 'src/global.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { createTheme } from '@mui/material/styles';
