@@ -9,7 +9,7 @@ import { getCookie } from 'src/api/cookie';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-// تابع Attachment
+
 function Attachment({ title, onFileChange, onAttach, attachments, onRemove }) {
   console.log('====================================');
   console.log(attachments);
@@ -22,6 +22,7 @@ function Attachment({ title, onFileChange, onAttach, attachments, onRemove }) {
         name: file.name,
         url: `${OnRun}/${file.name}`,  
       };
+      console.log("new",newAttachment.url)
       onAttach(type, newAttachment);
       onFileChange(e);
     }
@@ -43,7 +44,7 @@ function Attachment({ title, onFileChange, onAttach, attachments, onRemove }) {
         <div className="mt-4 space-y-2">
           <div className="flex justify-between items-center py-2 px-4 bg-gray-50 rounded-md shadow-sm">
             <span className="text-gray-700">{attachment.name}</span>
-            <div className="flex space-x-4">
+            <div className="flex gap-4">
               <button
                 type="button"
                 onClick={() => handleRemove(type)}
@@ -55,9 +56,9 @@ function Attachment({ title, onFileChange, onAttach, attachments, onRemove }) {
                 href={attachment.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-green-600 hover:text-green-800 text-sm font-medium"
+                className="text-blue-600 hover:text-blue-800 text-sm font-medium"
               >
-                مشاهده
+                فایل
               </a>
             </div>
           </div>
@@ -69,7 +70,7 @@ function Attachment({ title, onFileChange, onAttach, attachments, onRemove }) {
   return (
     <div className="flex flex-col items-center justify-center mb-8">
       <label className="block text-gray-700 text-xl font-bold mb-8 mt-4 text-center">{title}</label>
-      <p>حداکثر حجم فایل می تواند 20 مگابایت باشد</p>
+      <p className='text-xl text-red-600 mb-4'>حداکثر حجم فایل می تواند 20 مگابایت باشد</p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
         <div className="bg-white shadow-lg rounded-lg mt-4">
@@ -110,7 +111,7 @@ function Attachment({ title, onFileChange, onAttach, attachments, onRemove }) {
           {renderAttachmentSection('statement_yearold', 'اظهارنامه', attachments.statement_yearold)}
         </div>
       </div>
-      <div className="bg-white shadow-lg rounded-lg mt-4">
+      <div className="bg-white w-full shadow-lg rounded-lg mt-4">
         <h2 className="flex flex-col text-center mt-2 text-gray-700 text-xl font-bold">
           گزارشات و مستندات به روز
         </h2>
@@ -343,7 +344,7 @@ function Form({ cardSelected }) {
       <div className="flex justify-center mb-8">
         <h1 className="text-4xl font-bold text-gray-900">اطلاعات شرکت</h1>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-5 gap-6">
         <div className="mb-6">
           <label className="block text-gray-700 text-sm font-medium mb-2">نام شرکت:</label>
           <input
