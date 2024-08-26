@@ -7,7 +7,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { OnRun } from 'src/api/OnRun';
 import { getCookie } from 'src/api/cookie';
-import { Divider } from '@mui/material';
+
 
 const Profile = () => {
   const access = getCookie('access');

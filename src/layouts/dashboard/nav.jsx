@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
@@ -15,18 +16,19 @@ import SvgColor from 'src/components/svg-color';
 import { OnRun } from 'src/api/OnRun';
 import axios from 'axios';
 import { Grid, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import navConfig from './config-navigation';
 import { NAV } from './config-layout';
 
 export default function Nav({ openNav, onCloseNav }) {
-  const router = useRouter();
-  const cookie = getCookie('sym');
-
-  const exit = () => {
-    router.push('/login');
-    setCookie('phu', '', 0);
-  };
+  const navigate = useNavigate(); // Initialize useNavigate
   const access = getCookie('access');
+
+
+  const handleLogout = () => {
+    setCookie('access', '', { expires: new Date(0) }); // کوکی را با تاریخ انقضا گذشته پاک می‌کند
+    navigate('/login'); // کاربر را به صفحه ورود هدایت می‌کند
+  };
 
   const [profileData, setProfileData] = useState(null);
 
@@ -44,7 +46,7 @@ export default function Nav({ openNav, onCloseNav }) {
   };
 
   useEffect(() => {
-    if (access) {
+    if (access && !profileData) {
       getProfile();
     }
   }, [access]);
@@ -58,19 +60,31 @@ export default function Nav({ openNav, onCloseNav }) {
     }
   }, [pathname]);
 
-  const renderAccount = <div />;
+  const renderAccount = (
+    <Box sx={{ p: 2, textAlign: 'center' }}>
+      <img className='w-28 h-28 mx-auto' src="/assets/crowdlogo.png" alt="Logo" />
+      <Box className='bg-white text-black p-4 m-4 rounded-md'>
+        <Grid item xs={12}>
+          {profileData && profileData.acc && profileData.acc.private_person && profileData.acc.private_person.length > 0 ? (
+            <div className="flex justify-center">
+              <Typography variant="h6">{profileData.acc.private_person[0].firstName}</Typography>
+              <Typography variant="h6" sx={{ ml: 1 }}>{profileData.acc.private_person[0].lastName}</Typography>
+            </div>
+          ) : (
+            <Typography variant="h6">در حال بارگذاری...</Typography>
+          )}
+          خوش آمدید 👋
+        </Grid>
+      </Box>
+    </Box>
+  );
 
   const renderMenu = (
     <Stack component="nav" spacing={0.5} sx={{ px: 2, color: 'white' }}>
-      {navConfig.map((item) =>
-        cookie === 'fevisa' ? (
-          <NavItem key={item.title} item={item} />
-        ) : (
-          item.title !== 'پیشرفت پروژه' && <NavItem key={item.title} item={item} />
-        )
-      )}
+      {navConfig.map((item) => (
+        <NavItem key={item.title} item={item} />
+      ))}
       <ListItemButton
-        onClick={exit}
         sx={{
           minHeight: 44,
           borderRadius: 0.75,
@@ -84,9 +98,9 @@ export default function Nav({ openNav, onCloseNav }) {
         }}
       >
         <Box component="span" sx={{ width: 24, height: 24, mr: 2 }}>
-          <SvgColor src="/assets/icons/navbar/ic_exit.svg" sx={{ width: 1, height: 1, color: 'white' }} />
+          <SvgColor src="/assets/icons/navbar/ic_exit.svg" sx={{ width: 1, height: 1, color: 'red' }} />
         </Box>
-        <Box component="span">خروج</Box>
+        <Box onClick={handleLogout} sx={{  color: 'red' }} component="span">خروج</Box>
       </ListItemButton>
     </Stack>
   );
@@ -102,26 +116,8 @@ export default function Nav({ openNav, onCloseNav }) {
         },
       }}
     >
-      <img className='w-28 h-28' src="/assets/crowdlogo.png" alt="Logo" />
-
-      <div className='bg-white text-black p-4 m-4 rounded-md'>
-        <Grid item xs={12} sm={6} md={3}>
-          {profileData && profileData.acc && profileData.acc.private_person && profileData.acc.private_person.length > 0 ? (
-            <div className="flex">
-              <Typography variant="h6">{profileData.acc.private_person[0].firstName}</Typography>
-              <Typography variant="h6" sx={{ ml: 1 }}>{profileData.acc.private_person[0].lastName}</Typography>
-            </div>
-          ) : (
-            <Typography variant="h6">Loading...</Typography>
-          )}
-          خوش آمدید 👋
-        </Grid>
-      </div>
-
       {renderAccount}
-
       {renderMenu}
-
       <Box sx={{ flexGrow: 1 }} />
     </Scrollbar>
   );
@@ -200,7 +196,7 @@ function NavItem({ item }) {
       <Box component="span" sx={{ width: 24, height: 24, mr: 2, color: 'white' }}>
         {item.icon}
       </Box>
-      <Box component="span">{item.title}</Box>
+      <Typography component="span">{item.title}</Typography>
     </ListItemButton>
   );
 }

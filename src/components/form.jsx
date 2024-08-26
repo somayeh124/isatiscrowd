@@ -8,12 +8,12 @@ import { OnRun } from 'src/api/OnRun';
 import { getCookie } from 'src/api/cookie';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import PropTypes from 'prop-types';
+
 
 
 function Attachment({ title, onFileChange, onAttach, attachments, onRemove }) {
-  console.log('====================================');
-  console.log(attachments);
-  console.log('====================================');
+
   const handleFileChange = (type, e) => {
     const file = e.target.files[0];
     if (file) {
@@ -22,7 +22,6 @@ function Attachment({ title, onFileChange, onAttach, attachments, onRemove }) {
         name: file.name,
         url: `${OnRun}/${file.name}`,  
       };
-      console.log("new",newAttachment.url)
       onAttach(type, newAttachment);
       onFileChange(e);
     }
@@ -70,7 +69,7 @@ function Attachment({ title, onFileChange, onAttach, attachments, onRemove }) {
   return (
     <div className="flex flex-col items-center justify-center mb-8">
       <label className="block text-gray-700 text-xl font-bold mb-8 mt-4 text-center">{title}</label>
-      <p className='text-xl text-red-600 mb-4'>حداکثر حجم فایل می تواند 20 مگابایت باشد</p>
+      <p className='text-xl text-red-600 mb-4'> حجم فایل می تواند 20 مگابایت باشد</p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
         <div className="bg-white shadow-lg rounded-lg mt-4">
@@ -125,7 +124,8 @@ function Attachment({ title, onFileChange, onAttach, attachments, onRemove }) {
   );
 }
 
-function Form({ cardSelected }) {
+
+export default function Form({ cardSelected, handleNext }) {
   const access = getCookie('access');
   const [formData, setFormData] = useState({
     company_name: '',
@@ -150,10 +150,8 @@ function Form({ cardSelected }) {
     statement_lastyear: null,
     statement_yearold: null,
     alignment_6columns_thisyear: null,
-
   });
 
-  const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -190,7 +188,6 @@ function Form({ cardSelected }) {
   };
 
   const handleAttach = (type, newAttachment) => {
-    console.log('Attachment URL:', newAttachment.url); // اضافه کردن این خط برای لاگ گرفتن از URL پیوست‌ها
     setAttachments((prevAttachments) => ({
       ...prevAttachments,
       [type]: newAttachment,
@@ -210,16 +207,6 @@ function Form({ cardSelected }) {
 
     if (!formData.company_name) {
       setErrorMessage('لطفاً  فیلد را وارد کنید.');
-      setLoading(false);
-      return;
-    }
-    if (!formData.nationalid) {
-      toast('لطفاً شماره شناسه را وارد کنید و یکتا باشد.');
-      setLoading(false);
-      return;
-    }
-    if (!formData.registration_number) {
-      toast('لطفاً شماره ثبت را وارد کنید و یکتا باشد');
       setLoading(false);
       return;
     }
@@ -260,9 +247,8 @@ function Form({ cardSelected }) {
       });
 
       if (response.status === 200 || response.status === 201) {
-        setSubmitted(true);
         toast.success('اطلاعات با موفقیت ارسال شد.');
-
+        handleNext();
         setFormData({
           company_name: '',
           company_kind: '',
@@ -286,7 +272,6 @@ function Form({ cardSelected }) {
           statement_lastyear: null,
           statement_yearold: null,
           alignment_6columns_thisyear: null,
-
         });
       } else {
         console.error('ارسال اطلاعات با خطا مواجه شد:', response.statusText);
@@ -319,7 +304,7 @@ function Form({ cardSelected }) {
           });
           setFormData(response.data.cart);
           setAttachments(response.data.cart);
-          console.log('pivast', response.data.attachment)
+          console.log('pivast', response.data.attachment);
           if (response.data.cart) {
             setFormData(response.data.cart);
           }
@@ -333,6 +318,27 @@ function Form({ cardSelected }) {
       fetchCards();
     }
   }, [cardSelected]);
+  // useEffect(() => {
+  //   const updatecard = async () => {
+  //     try {
+  //       if (cardSelected) {
+  //         const response = await axios.patch(`${OnRun}/api/cart/detail/${cardSelected}/`, {
+  //           headers: {
+  //             'Content-Type': 'application/json',
+  //             Authorization: `Bearer ${access}`,
+  //           },
+  //         });
+        
+  //       }
+  //     } catch (error) {
+  //       console.error('Error fetching cards:', error);
+  //     }
+  //   };
+
+  //   if (access) {
+  //     updatecard();
+  //   }
+  // }, [cardSelected]);
 
   return (
     <form
@@ -495,14 +501,10 @@ function Form({ cardSelected }) {
           {loading ? 'لطفا منتظر بمانید...' : 'درخواست بررسی اولیه'}
         </button>
       </div>
-
-      {submitted && (
-        <div className="mt-16 text-green-500 text-xl font-semibold text-center">
-          اطلاعات ارسال شد
-        </div>
-      )}
     </form>
   );
 }
 
-export default Form;
+Form.propTypes = {
+  handleNext: PropTypes.func,
+};

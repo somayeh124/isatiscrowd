@@ -6,7 +6,7 @@ import axios from 'axios';
 import { OnRun } from 'src/api/OnRun';
 import { GiEmptyHourglass } from "react-icons/gi";
 import { getCookie } from 'src/api/cookie';
-import { FaCheckCircle, FaClock, FaPlus } from 'react-icons/fa'; // آیکون پلاس اضافه کردن
+import { FaCheckCircle, FaPlus } from 'react-icons/fa';     
 
 import PropTypes from 'prop-types';
 
