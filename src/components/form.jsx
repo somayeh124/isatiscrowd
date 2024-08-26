@@ -10,121 +10,6 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import PropTypes from 'prop-types';
 
-
-
-function Attachment({ title, onFileChange, onAttach, attachments, onRemove }) {
-
-  const handleFileChange = (type, e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const newAttachment = {
-        file,
-        name: file.name,
-        url: `${OnRun}/${file.name}`,  
-      };
-      onAttach(type, newAttachment);
-      onFileChange(e);
-    }
-  };
-
-  const handleRemove = (type) => onRemove(type);
-
-  const renderAttachmentSection = (type, label, attachment) => (
-    <div className="p-4 bg-white rounded-lg">
-      <h3 className="text-base font-semibold text-gray-800 mb-4">{label}</h3>
-      <div className="mb-4">
-        <input
-          type="file"
-          onChange={(e) => handleFileChange(type, e)}
-          className="block w-full text-sm text-gray-600 border border-gray-300 rounded-lg cursor-pointer focus:outline-none focus:ring focus:ring-indigo-200 mt-2"
-        />
-      </div>
-      {attachment && (
-        <div className="mt-4 space-y-2">
-          <div className="flex justify-between items-center py-2 px-4 bg-gray-50 rounded-md shadow-sm">
-            <span className="text-gray-700">{attachment.name}</span>
-            <div className="flex gap-4">
-              <button
-                type="button"
-                onClick={() => handleRemove(type)}
-                className="text-red-600 hover:text-red-800 text-sm font-medium"
-              >
-                حذف
-              </button>
-              <a
-                href={attachment.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-              >
-                فایل
-              </a>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-
-  return (
-    <div className="flex flex-col items-center justify-center mb-8">
-      <label className="block text-gray-700 text-xl font-bold mb-8 mt-4 text-center">{title}</label>
-      <p className='text-xl text-red-600 mb-4'> حجم فایل می تواند 20 مگابایت باشد</p>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-        <div className="bg-white shadow-lg rounded-lg mt-4">
-          <h2 className="flex flex-col text-center mt-2 text-gray-700 text-xl font-bold">
-            گزارشات و مستندات منتهی به سال 1401
-          </h2>
-          {renderAttachmentSection(
-            'financial_report_lastyear',
-            'صورت مالی',
-            attachments.financial_report_lastyear
-          )}
-          {renderAttachmentSection(
-            'audit_report_lastyear',
-            'گزارش حسابرسی',
-            attachments.audit_report_lastyear
-          )}
-          {renderAttachmentSection(
-            'statement_lastyear',
-            'اظهارنامه',
-            attachments.statement_lastyear
-          )}
-
-        </div>
-        <div className="bg-white shadow-lg rounded-lg mt-4">
-          <h2 className="flex flex-col text-center mt-2 text-gray-700 text-xl font-bold">
-            گزارشات و مستندات منتهی به سال 1402
-          </h2>
-          {renderAttachmentSection(
-            'financial_report_yearold',
-            'صورت مالی',
-            attachments.financial_report_yearold
-          )}
-          {renderAttachmentSection(
-            'audit_report_yearold',
-            'گزارش حسابرسی',
-            attachments.audit_report_yearold
-          )}
-          {renderAttachmentSection('statement_yearold', 'اظهارنامه', attachments.statement_yearold)}
-        </div>
-      </div>
-      <div className="bg-white w-full shadow-lg rounded-lg mt-4">
-        <h2 className="flex flex-col text-center mt-2 text-gray-700 text-xl font-bold">
-          گزارشات و مستندات به روز
-        </h2>
-        {renderAttachmentSection(
-          'alignment_6columns_thisyear',
-          'تراز 6ستونی',
-          attachments.alignment_6columns_thisyear
-        )}
-      </div>
-    </div>
-  );
-}
-
-
 export default function Form({ cardSelected, handleNext }) {
   const access = getCookie('access');
   const [formData, setFormData] = useState({
@@ -141,16 +26,15 @@ export default function Form({ cardSelected, handleNext }) {
     status: '',
   });
 
-  const [attachments, setAttachments] = useState({
-    financial_report_lastyear: null,
-    financial_report_yearold: null,
-    audit_report_thisyear: null,
-    audit_report_lastyear: null,
-    audit_report_yearold: null,
-    statement_lastyear: null,
-    statement_yearold: null,
-    alignment_6columns_thisyear: null,
-  });
+  const [attachments, setAttachments] = useState([
+    { type: 'financial_report_lastyear', label: 'صورت مالی 1401', file: null },
+    { type: 'audit_report_lastyear', label: 'گزارش حسابرسی 1401', file: null },
+    { type: 'statement_lastyear', label: 'اظهارنامه 1401', file: null },
+    { type: 'financial_report_yearold', label: 'صورت مالی 1402', file: null },
+    { type: 'audit_report_yearold', label: 'گزارش حسابرسی 1402', file: null },
+    { type: 'statement_yearold', label: 'اظهارنامه 1402', file: null },
+    { type: 'alignment_6columns_thisyear', label: 'تراز 6ستونی 1403', file: null },
+  ]);
 
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -170,12 +54,6 @@ export default function Form({ cardSelected, handleNext }) {
     setFormData({ ...formData, [name]: cleanedValue });
   };
 
-  const handleFormattedInputChange = (e) => {
-    const { name, value } = e.target;
-    const cleanedValue = cleanNumber(value);
-    setFormData({ ...formData, [name]: cleanedValue });
-  };
-
   const validateCompanyName = (name) => {
     const lettersOnly = /^[A-Za-z\u0600-\u06FF\s]+$/;
     return lettersOnly.test(name);
@@ -187,18 +65,26 @@ export default function Form({ cardSelected, handleNext }) {
     }
   };
 
-  const handleAttach = (type, newAttachment) => {
-    setAttachments((prevAttachments) => ({
-      ...prevAttachments,
-      [type]: newAttachment,
-    }));
+  const handleFileChange = (type, e) => {
+    const file = e.target.files[0];
+    
+    if (file) {
+      const url = URL.createObjectURL(file);  // URL برای فایل ایجاد می‌شود
+      
+      setAttachments((prevAttachments) =>
+        prevAttachments.map((attachment) =>
+          attachment.type === type ? { ...attachment, file, url } : attachment
+        )
+      );
+    }
   };
-
+  
   const handleRemove = (type) => {
-    setAttachments((prevAttachments) => ({
-      ...prevAttachments,
-      [type]: null,
-    }));
+    setAttachments((prevAttachments) =>
+      prevAttachments.map((attachment) =>
+        attachment.type === type ? { ...attachment, file: null } : attachment
+      )
+    );
   };
 
   const handleSubmit = async (e) => {
@@ -232,9 +118,9 @@ export default function Form({ cardSelected, handleNext }) {
     dataToPost.append('address', formData.company_address);
     dataToPost.append('email', formData.company_email);
 
-    Object.keys(attachments).forEach((key) => {
-      if (attachments[key] && attachments[key].file) {
-        dataToPost.append(key, attachments[key].file);
+    attachments.forEach((attachment) => {
+      if (attachment.file) {
+        dataToPost.append(attachment.type, attachment.file);
       }
     });
 
@@ -263,16 +149,7 @@ export default function Form({ cardSelected, handleNext }) {
           status: '',
         });
 
-        setAttachments({
-          financial_report_lastyear: null,
-          financial_report_yearold: null,
-          audit_report_lastyear: null,
-          audit_report_yearold: null,
-          statement_thisyear: null,
-          statement_lastyear: null,
-          statement_yearold: null,
-          alignment_6columns_thisyear: null,
-        });
+        setAttachments(attachments.map((attachment) => ({ ...attachment, file: null })));
       } else {
         console.error('ارسال اطلاعات با خطا مواجه شد:', response.statusText);
         toast.error('ارسال اطلاعات با خطا مواجه شد.');
@@ -304,7 +181,7 @@ export default function Form({ cardSelected, handleNext }) {
           });
           setFormData(response.data.cart);
           setAttachments(response.data.cart);
-          console.log('pivast', response.data.attachment);
+          console.log('pivast', response.data.cart);
           if (response.data.cart) {
             setFormData(response.data.cart);
           }
@@ -318,27 +195,27 @@ export default function Form({ cardSelected, handleNext }) {
       fetchCards();
     }
   }, [cardSelected]);
-  // useEffect(() => {
-  //   const updatecard = async () => {
-  //     try {
-  //       if (cardSelected) {
-  //         const response = await axios.patch(`${OnRun}/api/cart/detail/${cardSelected}/`, {
-  //           headers: {
-  //             'Content-Type': 'application/json',
-  //             Authorization: `Bearer ${access}`,
-  //           },
-  //         });
-        
-  //       }
-  //     } catch (error) {
-  //       console.error('Error fetching cards:', error);
-  //     }
-  //   };
 
-  //   if (access) {
-  //     updatecard();
-  //   }
-  // }, [cardSelected]);
+  useEffect(() => {
+    const updatecard = async () => {
+      try {
+        if (cardSelected) {
+          await axios.patch(`${OnRun}/api/cart/detail/${cardSelected}/`, {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${access}`,
+            },
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching cards:', error);
+      }
+    };
+
+    if (access) {
+      updatecard();
+    }
+  }, [cardSelected]);
 
   return (
     <form
@@ -387,19 +264,18 @@ export default function Form({ cardSelected, handleNext }) {
             type="text"
             name="nationalid"
             value={NumberFormat(formData.nationalid)}
-            onChange={handleFormattedInputChange}
+            onChange={handleInputChange}
             maxLength={14}
             className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
           />
         </div>
-
         <div className="mb-6">
           <label className="block text-gray-700 text-sm font-medium mb-2">شماره ثبت:</label>
           <input
             type="text"
             name="registration_number"
             value={NumberFormat(formData.registration_number)}
-            onChange={handleFormattedInputChange}
+            onChange={handleInputChange}
             maxLength={12}
             className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
           />
@@ -413,7 +289,7 @@ export default function Form({ cardSelected, handleNext }) {
             type="text"
             name="registered_capital"
             value={formatNumber(formData.registered_capital)}
-            onChange={handleFormattedInputChange}
+            onChange={handleInputChange}
             className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
           />
         </div>
@@ -481,13 +357,50 @@ export default function Form({ cardSelected, handleNext }) {
         </span>
       </div>
 
-      <Attachment
-        title="افزودن پیوست‌ها"
-        onFileChange={() => { }}
-        onAttach={handleAttach}
-        attachments={attachments}
-        onRemove={handleRemove}
-      />
+      <div className="flex flex-col items-center justify-center mb-8">
+        <label className="block text-gray-700 text-xl font-bold mb-8 mt-4 text-center">افزودن پیوست‌ها</label>
+        <p className='text-xl text-red-600 mb-4'>حجم فایل می تواند 20 مگابایت باشد</p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+          {attachments.map((attachment) => (
+            <div key={attachment.type} className="bg-white shadow-lg rounded-lg mt-4 p-4">
+              <h3 className="text-base font-semibold text-gray-800 mb-4">{attachment.label}</h3>
+              <div className="mb-4">
+                <input
+                  type="file"
+                  onChange={(e) => handleFileChange(attachment.type, e)}
+                  className="block w-full text-sm text-gray-600 border border-gray-300 rounded-lg cursor-pointer focus:outline-none focus:ring focus:ring-indigo-200 mt-2"
+                />
+              </div>
+              {attachment.file && (
+             <div className="mt-4 space-y-2">
+             <div className="py-2 px-4 bg-gray-50 rounded-md shadow-sm">
+               <span className="text-gray-700 block mb-2">{attachment.file.name}</span>
+               <div className="flex gap-2">
+                 <a
+                   href={attachment.url}
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                 >
+                   فایل
+                 </a>
+                 <button
+                   type="button"
+                   onClick={() => handleRemove(attachment.type)}
+                   className="text-red-600 hover:text-red-800 text-sm font-medium"
+                 >
+                   حذف
+                 </button>
+               </div>
+             </div>
+           </div>
+           
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
 
       {errorMessage && <div className="text-red-500 text-sm mb-6 text-center">{errorMessage}</div>}
 
@@ -495,8 +408,7 @@ export default function Form({ cardSelected, handleNext }) {
         <button
           type="submit"
           disabled={loading}
-          className={`bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full shadow-lg focus:outline-none focus:ring focus:ring-blue-300 ${loading ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
+          className={`bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-full shadow-lg focus:outline-none focus:ring focus:ring-blue-300 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
           {loading ? 'لطفا منتظر بمانید...' : 'درخواست بررسی اولیه'}
         </button>
