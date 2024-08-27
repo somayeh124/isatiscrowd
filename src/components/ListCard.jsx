@@ -1,17 +1,18 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react/button-has-type */
+/* eslint-disable jsx-a11y/interactive-supports-focus */
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { OnRun } from 'src/api/OnRun';
 import { GiEmptyHourglass } from "react-icons/gi";
 import { getCookie } from 'src/api/cookie';
-import { FaCheckCircle, FaPlus } from 'react-icons/fa';     
-
+import { FaCheckCircle, FaPlus } from 'react-icons/fa';
 import PropTypes from 'prop-types';
 
 const CardList = ({ setCardSelected, handleNext }) => {
   const [cards, setCards] = useState([]);
+  const [selectedCardId, setSelectedCardId] = useState(null);
   const access = getCookie('access');
 
   useEffect(() => {
@@ -38,11 +39,13 @@ const CardList = ({ setCardSelected, handleNext }) => {
   }, [access]);
 
   const handleCardClick = (id) => {
+    setSelectedCardId(id); // Set the selected card ID
     setCardSelected(id);
     handleNext();
   };
 
   const handleNewCardClick = () => {
+    setSelectedCardId(null);
     setCardSelected(null);
     handleNext();
   };
@@ -70,7 +73,10 @@ const CardList = ({ setCardSelected, handleNext }) => {
         {/* کارت جدید به عنوان اولین کارت */}
         <div
           className="p-4 gap-8 shadow rounded-lg cursor-pointer hover:shadow-lg transition flex items-center justify-center"
-          onClick={handleNewCardClick} // تغییر داده شد به handleNewCardClick
+          onClick={handleNewCardClick}
+          role="button"
+          tabIndex={0}
+          onKeyPress={(e) => e.key === 'Enter' && handleNewCardClick()} 
         >
           <FaPlus className="text-2xl mr-2" />
           <h2 className="text-xl font-bold">کارت جدید</h2>
@@ -81,12 +87,16 @@ const CardList = ({ setCardSelected, handleNext }) => {
           cards.map((card) => (
             <div
               key={card.id}
-              className="p-4 bg-white shadow rounded-lg transition flex flex-col justify-between relative"
+              className={`bg-white shadow-lg rounded-xl p-6 flex flex-col justify-between items-center cursor-pointer transition-transform transform hover:scale-105 hover:shadow-2xl hover:bg-gray-100 min-w-[280px] max-w-[320px] h-[350px] ${
+                selectedCardId === card.id ? 'border-4 border-blue-600' : ''
+              }`}
+              tabIndex={0}
+              role="button"
+              aria-label={`View card ${card.company_name}`}
+              onClick={() => handleCardClick(card.id)}
+              onKeyPress={(e) => e.key === 'Enter' && handleCardClick(card.id)}
             >
-              <div
-                className="cursor-pointer hover:shadow-lg"
-                onClick={() => handleCardClick(card.id)}
-              >
+              <div>
                 <h2 className="text-xl font-bold mb-2">{card.company_name}</h2>
                 <p className="flex items-center">
                   {card.status === 'waiting' ? (
@@ -108,7 +118,7 @@ const CardList = ({ setCardSelected, handleNext }) => {
                 </button>
                 <button
                   className="mt-2  bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition"
-                  onClick={() => handleDeleteCard(card.id)}
+                  onClick={() => handleCardClick(card.id)}
                 >
                   ویرایش
                 </button>
