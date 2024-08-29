@@ -4,8 +4,12 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { getCookie } from 'src/api/cookie';
-import Form from './form';
 import CardList from './ListCard';
+import Form from './form';
+import Step3 from './step3';
+
+
+
 
 const Sterpercrowd = () => {
   const [activeStep, setActiveStep] = useState(0);
@@ -36,7 +40,7 @@ const Sterpercrowd = () => {
     }
 
     if (activeStep === steps.length - 1) {
-      alert('اتمام');
+      setActiveStep(0);  
     } else {
       setActiveStep((prevActiveStep) => prevActiveStep + 1);
     }
@@ -52,18 +56,19 @@ const Sterpercrowd = () => {
         return <CardList setCardSelected={setCardSelected} handleNext={handleNext} />;
       case 1:
         return <Form cardSelected={cardSelected} handleNext={handleNext} />;
-      // case 2:
-      //   return <div><TrackingCard/></div>;
+      case 2:
+        return <Step3 cardSelected={cardSelected}/>;
       default:
-        return <div className='flex items-center justify-center self-center mt-8 text-lg'>منتظر بررسی اطلاعات باشید</div>;
+        return <div>{null}</div>
     }
   };
 
   if (isCheckingAuth) {
-    return null; // در حالی که در حال بررسی احراز هویت هستید، هیچ محتوایی را رندر نکنید
+    return null;
   }
 
   return (
+    
     <div>
       <Stepper activeStep={activeStep}>
         {steps.map((label, index) => (

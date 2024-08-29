@@ -17,7 +17,7 @@ const navConfig = [
     icon:icon('ic_blog'),
   },
   {
-    title: 'ایجاد درخواست',
+    title: 'ایجاد و پیگیری درخواست',
     path: '/',
     icon: icon('ic_analytics'),
   },

@@ -217,7 +217,7 @@ export default function LoginView() {
             variant="h6"
           >
             {' '}
-            درگاه ورودایساتیس کراد{' '}
+            درگاه ورود ایساتیس کراد{' '}
           </Typography>
           <Divider sx={{ my: 3 }}>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>

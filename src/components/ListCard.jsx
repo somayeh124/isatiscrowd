@@ -198,6 +198,8 @@ const CardList = ({ setCardSelected, handleNext }) => {
         onConfirm={handleDeleteClick}
       />
     </div>
+
+
   );
 };
 
