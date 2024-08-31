@@ -297,19 +297,34 @@ export default function Form({ cardSelected, handleNext }) {
             <div className="mb-6">
               <label className="block text-gray-700 text-sm font-medium mb-2">حسابرسی گزارش:</label>
               {typeof localData.audit_report_lastyear === 'string' ? (
-                <div className="flex gap-8">
+                  <div className="flex gap-8">
                   <a
-                    href={`${OnRun}/${localData.audit_report_lastyear}`}
+                    href={
+                      localData.Lock_financial_report_yearold
+                        ? null
+                        : `${OnRun}/${localData.financial_report_yearold}`
+                    }
+                    onClick={(e) => {
+                      if (localData.Lock_financial_report_yearold) {
+                        e.preventDefault(); 
+                      }
+                    }}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                    className={`text-sm font-medium ${
+                      localData.Lock_financial_report_yearold
+                        ? 'text-gray-400 '
+                        : 'text-blue-600 hover:text-blue-800'
+                    }`}
                   >
-                    1402 گزارش حسابرسی
-                  </a>
+                    فایل                     1402 گزارش حسابرسی
+
+                    </a>
                   <button
                     type="button"
-                    className="text-red-400"
-                    onClick={() => handleFileRemove('audit_report_lastyear')}
+                    className="text-red-400 disabled:text-gray-200 "
+                    onClick={() => handleFileRemove('financial_report_yearold')}
+                    disabled={localData.Lock_financial_report_yearold}
                   >
                     حذف
                   </button>
@@ -330,22 +345,36 @@ export default function Form({ cardSelected, handleNext }) {
               <label className="block text-gray-700 text-sm font-medium mb-2">اظهارنامه:</label>
               {typeof localData.statement_lastyear === 'string' ? (
                 <div className="flex gap-8">
-                  <a
-                    href={`${OnRun}/${localData.statement_lastyear}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-                  >
-                    1402 اظهارنامه
-                  </a>
-                  <button
-                    type="button"
-                    className="text-red-400"
-                    onClick={() => handleFileRemove('statement_lastyear')}
-                  >
-                    حذف
-                  </button>
-                </div>
+                <a
+                  href={
+                    localData.Lock_financial_report_yearold
+                      ? null
+                      : `${OnRun}/${localData.financial_report_yearold}`
+                  }
+                  onClick={(e) => {
+                    if (localData.Lock_financial_report_yearold) {
+                      e.preventDefault(); 
+                    }
+                  }}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`text-sm font-medium ${
+                    localData.Lock_financial_report_yearold
+                      ? 'text-gray-400 '
+                      : 'text-blue-600 hover:text-blue-800'
+                  }`}
+                >
+                                     1401 فایل صورت مالی
+                 </a>
+                <button
+                  type="button"
+                  className="text-red-400 disabled:text-gray-200 "
+                  onClick={() => handleFileRemove('financial_report_yearold')}
+                  disabled={localData.Lock_financial_report_yearold}
+                >
+                  حذف
+                </button>
+              </div>
               ) : (
                 <input
                   name="statement_lastyear"
@@ -366,23 +395,37 @@ export default function Form({ cardSelected, handleNext }) {
             <div className="mb-6">
               <label className="block text-gray-700 text-sm font-medium mb-2">صورت مالی:</label>
               {typeof localData.financial_report_yearold === 'string' ? (
-                <div className="flex gap-8">
-                  <a
-                    href={`${OnRun}/${localData.financial_report_yearold}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-                  >
-                    1401 فایل صورت مالی
-                  </a>
-                  <button
-                    type="button"
-                    className="text-red-400"
-                    onClick={() => handleFileRemove('financial_report_yearold')}
-                  >
-                    حذف
-                  </button>
-                </div>
+               <div className="flex gap-8">
+               <a
+                 href={
+                   localData.Lock_financial_report_yearold
+                     ? null
+                     : `${OnRun}/${localData.financial_report_yearold}`
+                 }
+                 onClick={(e) => {
+                   if (localData.Lock_financial_report_yearold) {
+                     e.preventDefault(); 
+                   }
+                 }}
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 className={`text-sm font-medium ${
+                   localData.Lock_financial_report_yearold
+                     ? 'text-gray-400 '
+                     : 'text-blue-600 hover:text-blue-800'
+                 }`}
+               >
+                                    1401 فایل صورت مالی
+                                    </a>
+               <button
+                 type="button"
+                 className="text-red-400 disabled:text-gray-200 "
+                 onClick={() => handleFileRemove('financial_report_yearold')}
+                 disabled={localData.Lock_financial_report_yearold}
+               >
+                 حذف
+               </button>
+             </div>
               ) : (
                 <input
                   name="financial_report_yearold"
@@ -400,22 +443,37 @@ export default function Form({ cardSelected, handleNext }) {
               <label className="block text-gray-700 text-sm font-medium mb-2">حسابرسی گزارش:</label>
               {typeof localData.audit_report_yearold === 'string' ? (
                 <div className="flex gap-8">
-                  <a
-                    href={`${OnRun}/${localData.audit_report_yearold}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-                  >
-                    1401 فایل گزارش حسابرسی
-                  </a>
-                  <button
-                    type="button"
-                    className="text-red-400"
-                    onClick={() => handleFileRemove('audit_report_yearold')}
-                  >
-                    حذف
-                  </button>
-                </div>
+                <a
+                  href={
+                    localData.Lock_audit_report_yearold
+                      ? null
+                      : `${OnRun}/${localData.audit_report_yearold}`
+                  }
+                  onClick={(e) => {
+                    if (localData.Lock_audit_report_yearold) {
+                      e.preventDefault(); 
+                    }
+                  }}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`text-sm font-medium ${
+                    localData.Lock_audit_report_yearold
+                      ? 'text-gray-400 '
+                      : 'text-blue-600 hover:text-blue-800'
+                  }`}
+                >
+            1401 فایل گزارش حسابرسی
+
+               </a>
+                <button
+                  type="button"
+                  className="text-red-400 disabled:text-gray-200 "
+                  onClick={() => handleFileRemove('audit_report_yearold')}
+                  disabled={localData.Lock_audit_report_yearold}
+                >
+                  حذف
+                </button>
+              </div>
               ) : (
                 <input
                   name="audit_report_yearold"
@@ -432,26 +490,36 @@ export default function Form({ cardSelected, handleNext }) {
               <label className="block text-gray-700 text-sm font-medium mb-2">اظهارنامه:</label>
               {typeof localData.statement_yearold === 'string' ? (
                 <div className="flex gap-8">
-                  <a
-                    href={`${OnRun}/${localData.statement_yearold}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`text-sm font-medium ${
-                      localData.statement_yearold
-                        ? 'text-gray-400 '
-                        : 'text-blue-600 hover:text-blue-800'
-                    }`}
-                  >
-                    1401 فایل اظهارنامه
+                <a
+                  href={
+                    localData.Lock_statement_yearold
+                      ? null
+                      : `${OnRun}/${localData.statement_yearold}`
+                  }
+                  onClick={(e) => {
+                    if (localData.Lock_statement_yearold) {
+                      e.preventDefault(); 
+                    }
+                  }}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`text-sm font-medium ${
+                    localData.Lock_statement_yearold
+                      ? 'text-gray-400 '
+                      : 'text-blue-600 hover:text-blue-800'
+                  }`}
+                >
+                  1401 فایل اظهارنامه
                   </a>
-                  <button
-                    type="button"
-                    className="text-red-400"
-                    onClick={() => handleFileRemove('statement_yearold')}
-                  >
-                    حذف
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  className="text-red-400 disabled:text-gray-200 "
+                  onClick={() => handleFileRemove('statement_yearold')}
+                  disabled={localData.Lock_statement_yearold}
+                >
+                  حذف
+                </button>
+              </div>
               ) : (
                 <input
                   name="statement_yearold"
