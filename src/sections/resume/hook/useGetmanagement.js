@@ -16,3 +16,4 @@ const useGetManagement = (id) => {
 };
 
 export default useGetManagement;
+// ...............
