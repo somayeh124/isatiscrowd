@@ -1,13 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable import/no-unresolved */
+/* eslint-disable import/order */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import useGetManagement from '../hook/useGetmanagement';
+import Row from '../component/row';
 import { getCookie } from 'src/api/cookie'; // اطمینان حاصل کنید که این ماژول را به درستی وارد کرده‌اید
 import api from 'src/api/api'; // اطمینان حاصل کنید که این ماژول را به درستی وارد کرده‌اید
 import toast from 'react-toastify'; // اطمینان حاصل کنید که این ماژول را به درستی وارد کرده‌اید
-import useGetManagement from '../hook/useGetmanagement';
-import Row from '../component/row';
 
 const Attachement = ({ id }) => {
   const { data } = useGetManagement(id);
