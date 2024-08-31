@@ -1,3 +1,4 @@
+/* eslint-disable no-duplicate-case */
 import React, { useState, useEffect } from 'react';
 import { Stepper, Step, StepLabel, Button } from '@mui/material';
 import { toast, ToastContainer } from 'react-toastify';
@@ -8,25 +9,26 @@ import ResumePage from 'src/sections/resume/Page/ResumePage';
 import CardList from './ListCard';
 import Form from './form';
 import Step3 from './step3';
-
+// import Step5 from './Step5';
+import FileSharehold from './fildesharehold';
 
 
 const Sterpercrowd = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [cardSelected, setCardSelected] = useState(null);
-  const [isCheckingAuth, setIsCheckingAuth] = useState(true); // اضافه کردن حالت برای بررسی احراز هویت
-  const navigate = useNavigate(); // Initialize useNavigate
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  const navigate = useNavigate(); 
   const access = getCookie('access');
 
   useEffect(() => {
     if (!access) {
-      navigate('/login'); // Redirect to login page if no access token
+      navigate('/login'); 
     } else {
-      setIsCheckingAuth(false); // اگر توکن وجود دارد، بررسی احراز هویت تمام شده است
+      setIsCheckingAuth(false); 
     }
-  }, [access, navigate]); // Run this effect when access or navigate changes
+  }, [access, navigate]); 
 
-  const steps = ['مرحله اول', 'مرحله دوم', 'مرحله سوم','مرحله چهارم'];
+  const steps = ['مرحله اول', 'مرحله دوم', 'مرحله سوم','مرحله چهارم','مرحله پنجم'];
 
   const handleNext = () => {
     if (activeStep === 1) {
@@ -63,6 +65,8 @@ const Sterpercrowd = () => {
         return <Step3 cardSelected={cardSelected}/>;
         case 3:
           return <ResumePage id={cardSelected} />;
+          case 3:
+        return <FileSharehold/>;
       default:
         return <div>{null}</div>
     }

@@ -8,19 +8,20 @@ import { useQuery } from '@tanstack/react-query';
 import { getCookie } from 'src/api/cookie';
 import { OnRun } from 'src/api/OnRun';
 import axios from 'axios';
-import Fildemnager from './fildemaneger';
+import FileSharehold from './fildesharehold';
 
-const Step3 = ({ cardSelected }) => {
+
+const Step5 = ({ cardSelected }) => {
   const { data, error, isLoading } = useQuery({
     queryKey: ['fetchMessage', cardSelected],
     queryFn: () => fetchManager(cardSelected),
   });
   
-  
+  console.log("sharehold")
   const fetchManager = async (cardSelected) => {
     const access = await getCookie('access');
     if (cardSelected) {
-      const response = await axios.get(`${OnRun}/api/manager/${cardSelected}/`, {
+      const response = await axios.get(`${OnRun}/api/shareholder/${cardSelected}/`, {
         headers: {
           Authorization: `Bearer ${access}`,
         },
@@ -32,13 +33,9 @@ const Step3 = ({ cardSelected }) => {
   };
   const singleFile = {
     name: '',
-    position: '',
     national_code: '',
     national_id: '',
-    phone: '',
-    representative: '',
-    is_legal: false,
-    is_obliged: false,
+
   };
 
   const [field, setField] = useState([singleFile]);
@@ -62,7 +59,7 @@ const Step3 = ({ cardSelected }) => {
     const access = await getCookie('access');
 
     try {
-      const response = await axios.post(`${OnRun}/api/manager/${cardSelected}/`, { managers:field }, {
+      const response = await axios.post(`${OnRun}/api/shareholder/${cardSelected}/`, { managers:field }, {
         headers: {
           Authorization: `Bearer ${access}`,
           'Content-Type': 'application/json',
@@ -81,7 +78,7 @@ const Step3 = ({ cardSelected }) => {
     <div className="flex flex-col justify-center items-center self-center">
       {field.map((item, index) => (
         <>
-          <Fildemnager index={index} field={field} setField={setField} />
+          <FileSharehold index={index} field={field} setField={setField} />
           <Divider style={{ backgroundColor: 'gray', width: '100%' }} />
         </>
       ))}
@@ -103,4 +100,4 @@ const Step3 = ({ cardSelected }) => {
   );
 };
 
-export default Step3;
+export default Step5;
