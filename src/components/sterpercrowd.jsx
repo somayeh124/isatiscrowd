@@ -4,10 +4,10 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { getCookie } from 'src/api/cookie';
+import ResumePage from 'src/sections/resume/Page/ResumePage';
 import CardList from './ListCard';
 import Form from './form';
 import Step3 from './step3';
-
 
 
 
@@ -26,7 +26,7 @@ const Sterpercrowd = () => {
     }
   }, [access, navigate]); // Run this effect when access or navigate changes
 
-  const steps = ['مرحله اول', 'مرحله دوم', 'مرحله سوم'];
+  const steps = ['مرحله اول', 'مرحله دوم', 'مرحله سوم','مرحله چهارم'];
 
   const handleNext = () => {
     if (activeStep === 1) {
@@ -49,6 +49,9 @@ const Sterpercrowd = () => {
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
+  
+  console.log(cardSelected);
+  
 
   const renderStepContent = (step) => {
     switch (step) {
@@ -58,6 +61,8 @@ const Sterpercrowd = () => {
         return <Form cardSelected={cardSelected} handleNext={handleNext} />;
       case 2:
         return <Step3 cardSelected={cardSelected}/>;
+        case 3:
+          return <ResumePage id={cardSelected} />;
       default:
         return <div>{null}</div>
     }

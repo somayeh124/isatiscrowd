@@ -10,7 +10,7 @@ import { getStep1, createCart, updateCart } from 'src/api/step1';
 import { Message } from './massage';
 
 export default function Form({ cardSelected, handleNext }) {
-  const { data, error, isLoading, isPending, isError, isSuccess } = useQuery({
+  const { data, error, isLoading,  isError, isSuccess } = useQuery({
     queryKey: ['cartDetail', cardSelected],
     queryFn: () => getStep1(cardSelected),
   });
@@ -265,19 +265,33 @@ export default function Form({ cardSelected, handleNext }) {
             <div className="mb-6">
               <label className="block text-gray-700 text-sm font-medium mb-2">صورت مالی:</label>
               {typeof localData.financial_report_lastyear === 'string' ? (
-                <div className="flex gap-8">
+                  <div className="flex gap-8">
                   <a
-                    href={`${OnRun}/${localData.financial_report_lastyear}`}
+                    href={
+                      localData.Lock_financial_report_lastyear
+                        ? null
+                        : `${OnRun}/${localData.financial_report_lastyear}`
+                    }
+                    onClick={(e) => {
+                      if (localData.Lock_financial_report_lastyear) {
+                        e.preventDefault(); 
+                      }
+                    }}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                    className={`text-sm font-medium ${
+                      localData.Lock_financial_report_lastyear
+                        ? 'text-gray-400 '
+                        : 'text-blue-600 hover:text-blue-800'
+                    }`}
                   >
-                    1402 صورت مالی فایل
-                  </a>
+                                       1402 فایل صورت مالی
+                   </a>
                   <button
                     type="button"
-                    className="text-red-400"
+                    className="text-red-400 disabled:text-gray-200 "
                     onClick={() => handleFileRemove('financial_report_lastyear')}
+                    disabled={localData.Lock_financial_report_lastyear}
                   >
                     حذف
                   </button>
@@ -347,30 +361,30 @@ export default function Form({ cardSelected, handleNext }) {
                 <div className="flex gap-8">
                 <a
                   href={
-                    localData.Lock_financial_report_yearold
+                    localData.Lock_statement_lastyear
                       ? null
-                      : `${OnRun}/${localData.financial_report_yearold}`
+                      : `${OnRun}/${localData.statement_lastyear}`
                   }
                   onClick={(e) => {
-                    if (localData.Lock_financial_report_yearold) {
+                    if (localData.Lock_statement_lastyear) {
                       e.preventDefault(); 
                     }
                   }}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={`text-sm font-medium ${
-                    localData.Lock_financial_report_yearold
+                    localData.Lock_statement_lastyear
                       ? 'text-gray-400 '
                       : 'text-blue-600 hover:text-blue-800'
                   }`}
                 >
-                                     1401 فایل صورت مالی
+                                     1402  فایل اظهارنامه
                  </a>
                 <button
                   type="button"
                   className="text-red-400 disabled:text-gray-200 "
-                  onClick={() => handleFileRemove('financial_report_yearold')}
-                  disabled={localData.Lock_financial_report_yearold}
+                  onClick={() => handleFileRemove('statement_lastyear')}
+                  disabled={localData.Lock_statement_lastyear}
                 >
                   حذف
                 </button>

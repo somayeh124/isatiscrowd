@@ -59,7 +59,7 @@ const Fildemnager = ({index,field,setField}) => {
             <label className="block text-gray-700 text-sm font-medium mb-2">موظف :</label>
             <select
               value={field[index].is_obliged}
-
+              onChange={(e)=>handleChange('is_obliged',e.target.value)}
               name="is_obliged"
               className="shadow appearance-none border rounded w-full py-3 px-4 text-black disabled:bg-slate-200 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
             >
@@ -76,7 +76,7 @@ const Fildemnager = ({index,field,setField}) => {
             <label className="block text-gray-700 text-sm font-medium mb-2">سمت :</label>
             <input
               value={field[index].position}
-
+              onChange={(e)=>handleChange('position',e.target.value)}
               type="text"
               name="position"
               className="shadow appearance-none border rounded w-full py-3 px-4 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
@@ -89,7 +89,7 @@ const Fildemnager = ({index,field,setField}) => {
               type="text"
               name="national_code"
               value={field[index].national_code}
-
+              onChange={(e)=>handleChange('national_code',e.target.value)}
               maxLength={10}
               onInput={(e) => e.target.value = e.target.value.replace(/[^0-9]/g, '')}
               required
@@ -103,7 +103,7 @@ const Fildemnager = ({index,field,setField}) => {
               type="text"
               required
               value={field[index].national_id}
-
+              onChange={(e)=>handleChange('national_id',e.target.value)}
               onInput={(e) => e.target.value = e.target.value.replace(/[^0-9]/g, '')}
               name="national_id"
               className="shadow appearance-none border rounded w-full py-3 px-4 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
@@ -118,7 +118,7 @@ const Fildemnager = ({index,field,setField}) => {
               required
               maxLength={11}
               value={field[index].phone}
-
+              onChange={(e)=>handleChange('phone',e.target.value)}
               name="phone"
               className="shadow appearance-none border rounded w-full py-3 px-4 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
             />
@@ -130,6 +130,7 @@ const Fildemnager = ({index,field,setField}) => {
               type="text"
               required
               value={field[index].representative}
+              onChange={(e)=>handleChange('representative',e.target.value)}
               name="representative"
               className="shadow appearance-none border rounded w-full py-3 px-4 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
             />
