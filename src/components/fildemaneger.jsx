@@ -102,7 +102,7 @@ const Fildemnager = ({index,field,setField}) => {
           </div>
 
           <div className="mb-6">
-            <label className="block text-gray-700 text-sm font-medium mb-2">کد شناسه:</label>
+            <label className="block text-gray-700 text-sm font-medium mb-2">شناسه ملی:</label>
             <input
               type="text"
               required
