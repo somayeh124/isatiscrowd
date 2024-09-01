@@ -102,16 +102,16 @@ const Fildemnager = ({index,field,setField}) => {
           </div>
 
           <div className="mb-6">
-            <label className="block text-gray-700 text-sm font-medium mb-2">شناسه ملی:</label>
+            <label className={`block text-gray-700 text-sm font-medium mb-2 ${!field[index].is_legal && 'opacity-50'}`}>شناسه ملی:</label>
             <input
               type="text"
-              required
-              disabled={field[index].lock}
+              disabled={!field[index].is_legal || field[index].lock}
               value={field[index].national_id}
-              onChange={(e)=>handleChange('national_id',e.target.value)}
-              onInput={(e) => e.target.value = e.target.value.replace(/[^0-9]/g, '')}
+              onChange={(e) => handleChange('national_id', e.target.value)}
+              onInput={(e) => (e.target.value = e.target.value.replace(/[^0-9]/g, ''))}
               name="national_id"
               className="shadow appearance-none border disabled:bg-gray-200 text-black rounded w-full py-3 px-4 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
+              required={field[index].is_legal}
             />
           </div>
 
@@ -129,17 +129,16 @@ const Fildemnager = ({index,field,setField}) => {
               className="shadow appearance-none border disabled:bg-gray-200 text-black rounded w-full py-3 px-4 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
             />
           </div>
-
           <div className="mb-6">
-            <label className="block text-gray-700 text-sm font-medium mb-2">نماینده :</label>
+            <label className={`block text-gray-700 text-sm font-medium mb-2 ${!field[index].is_legal && 'opacity-50'}`}>نماینده :</label>
             <input
               type="text"
-              required
               value={field[index].representative}
-              disabled={field[index].lock}
-              onChange={(e)=>handleChange('representative',e.target.value)}
+              disabled={!field[index].is_legal || field[index].lock}
+              onChange={(e) => handleChange('representative', e.target.value)}
               name="representative"
               className="shadow appearance-none disabled:bg-gray-200 text-black border rounded w-full py-3 px-4 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
+              required={field[index].is_legal}
             />
           </div>
         </div>
