@@ -15,7 +15,7 @@ const FileSharehold = ({ index, validite, setValidite }) => {
   return (
     <div className="flex justify-center items-center ">
       <form className="mt-8 max-w-5xl">
-        <div className="grid grid-cols-1 md:grid-cols-3  gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-4  gap-6">
           <div className="mb-6">
             <label className="block text-gray-700 text-sm font-medium mb-2">
               نام و نام خانوادگی :
@@ -62,6 +62,20 @@ const FileSharehold = ({ index, validite, setValidite }) => {
               max={100}
               min={10}
               className="shadow appearance-none border disabled:bg-gray-200 text-black  rounded w-full py-3 px-4 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
+            />
+          </div>
+          <div className="mb-6">
+            <label className="block text-gray-700 text-sm font-medium mb-2">شماره تلفن :</label>
+            <input
+              type="text"
+              onInput={(e) => e.target.value = e.target.value.replace(/[^0-9]/g, '')}
+              required
+              maxLength={11}
+              disabled={validite[index].lock}
+              value={validite[index].phone}
+              onChange={(e)=>handleChange('phone',e.target.value)}
+              name="phone"
+              className="shadow appearance-none border disabled:bg-gray-200 text-black rounded w-full py-3 px-4 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
             />
           </div>
         </div>
