@@ -77,25 +77,27 @@ const Step5 = ({ cardSelected }) => {
 
   return (
     <div className="flex flex-col justify-center items-center self-center">
-      {validite.map((item, index) => (
-        <>
-          <FileSharehold index={index} validite={validite} setValidite={setValidite} />
-          <Divider style={{ backgroundColor: 'gray', width: '100%' }} />
-        </>
-      ))}
-      <div className='flex gap-8'>
-        <button onClick={handleAdd} style={{ display: 'flex', alignItems: 'center', marginTop: '10px' }}>
+      <div>
+      <button
+      className='flex items-center py-2 px-6 bg-[#4CAF50] text-lg font-bold text-white rounded-md' onClick={handleAdd} >
           <FaPlus style={{ marginLeft: '5px' }} />
           افزودن
         </button>
-        <button onClick={handleRemove} style={{ display: 'flex', alignItems: 'center', marginTop: '10px' }}>
-          <FaMinus style={{ marginRight: '5px' }} />
-          حذف
-        </button>
-        <button onClick={handlePost} style={{ display: 'flex', alignItems: 'center', marginTop: '10px' }}>
+      </div>
+      <button onClick={handlePost} style={{ display: 'flex', alignItems: 'center', marginTop: '10px' }}>
           ارسال
         </button>
-      </div>
+      {validite.map((item, index) => (
+        <>
+          <button
+          onClick={handleRemove}
+          className='bg-red-500 flex items-center px-1 py-2 text-white rounded-md text-lg font-semibold'  >
+          حذف
+        </button>
+          <FileSharehold index={index} validite={validite} setValidite={setValidite} />
+          <Divider style={{ backgroundColor: 'gray', width: '100%' }} />      
+        </>
+      ))}
       {message && <p style={{ marginTop: '20px', color: 'green' }}>{message}</p>}  
     </div>
   );

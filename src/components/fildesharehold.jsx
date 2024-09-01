@@ -15,7 +15,7 @@ const FileSharehold = ({ index, validite, setValidite }) => {
   return (
     <div className="flex justify-center items-center ">
       <form className="mt-8 max-w-5xl">
-        <div className="grid grid-cols-1 md:grid-cols-4  gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="mb-6">
             <label className="block text-gray-700 text-sm font-medium mb-2">
               نام و نام خانوادگی :

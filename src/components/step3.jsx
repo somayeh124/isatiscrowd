@@ -125,7 +125,7 @@ const Step3 = ({ cardSelected }) => {
           style={{
             display: 'flex',
             alignItems: 'center',
-            padding: '10px 20px',
+            padding: '5px 10px',
             color: 'white',
             borderRadius: '5px',
             fontSize: '16px',

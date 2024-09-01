@@ -13,7 +13,7 @@ import { OnRun } from 'src/api/OnRun';
 
 const Attachement = ({ id }) => {
   const [resumeList, setResumeList] = useState([]);
-
+  const [message, setMessage] = useState('');
   const fetchManagerData = async () => {
     try {
       const access = await getCookie('access');
@@ -53,38 +53,55 @@ const Attachement = ({ id }) => {
         maxBodyLength: Infinity,
       });
 
-      if (response.status === 200 || response.status === 201) {
-        toast.success('اطلاعات با موفقیت ارسال شد.');
-      }
-    } catch (error) {
-      console.error('خطا در ارسال اطلاعات:', error);
-      toast.error('خطا در ارسال اطلاعات.');
+      setMessage('اطلاعات با موفقیت ارسال شد!');
+      
+    }catch (error) {
+      console.error('خطا :', error);
+      setMessage('خطا در ارسال اطلاعات.');
     }
   };
 
   useEffect(() => {
-    fetchManagerData(); 
+    fetchManagerData();
   }, []);
 
   return (
-    <>
+    <div>
+       <div className='flex flex-col justify-center items-center self-center'>
+        <button
+          onClick={handleSubmit}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            padding: '10px 20px',
+            backgroundColor: '#2196F3',
+            color: 'white',
+            borderRadius: '5px',
+            fontSize: '18px',
+            fontWeight: 'bold',
+          }}
+        >
+          ارسال
+        </button></div>
       {resumeList && resumeList.map((item, index) => (
         <div key={index}>
           <Row
             index={index}
             list={resumeList}
             item={item}
-            setList={setResumeList} 
+            setList={setResumeList}
           />
           <Divider style={{ backgroundColor: 'gray', width: '100%', marginTop: '20px' }} />
         </div>
       ))}
-      <div>    
-        <button onClick={handleSubmit} style={{ display: 'flex', alignItems: 'center', marginTop: '10px' }}>
-          ارسال
-        </button>
+      <div>
+        {message && (
+        <p style={{ marginTop: '20px', color: message.includes('خطا') ? 'red' : 'green' }}>
+          {message}
+        </p>
+      )}
       </div>
-    </>
+    </div>
   );
 };
 
