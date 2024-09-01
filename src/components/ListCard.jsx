@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import { Button, Chip, Tooltip } from '@mui/material';
 import ConfirmDeleteModal from './ConfirmDeleteModal';
 
-const CardList = ({ setCardSelected, handleNext }) => {
+const CardList = ({setStatusCart,statusCart, setCardSelected, handleNext }) => {
   const [cards, setCards] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedCardId, setSelectedCardId] = useState(null);
@@ -38,8 +38,9 @@ const CardList = ({ setCardSelected, handleNext }) => {
     }
   }, [access]);
 
-  const handleCardClick = (id) => {
+  const handleCardClick = (id,status) => {
     setCardSelected(id);
+    setStatusCart(status)
     handleNext();
   };
 
@@ -58,7 +59,6 @@ const CardList = ({ setCardSelected, handleNext }) => {
         },
       });
       setCards((prevCards) => prevCards.filter((card) => card.id !== selectedCardId));
-      console.log(`Card with id: ${selectedCardId} deleted successfully.`);
     } catch (error) {
       console.error('Error deleting card:', error);
     } finally {
@@ -75,41 +75,61 @@ const CardList = ({ setCardSelected, handleNext }) => {
   const getStatusChip = (status) => {
     const iconStyle = { fontSize: '18px' };
     switch (status) {
-      case 'waiting':
+      case '1':
         return (
           <Chip
             icon={<FaClock style={iconStyle} />}
-            label="در انتظار"
+            label="بررسی شرکت"
             color="warning"
             variant="outlined"
             style={{ borderRadius: '20px', fontWeight: 'bold', margin: '2px', padding: '4px 8px' }}
           />
         );
-      case 'confirmed':
+      case '2':
         return (
           <Chip
             icon={<FaCheckCircle style={iconStyle} />}
-            label="مشخص شده"
-            color="success"
+            label="بررسی مدیران"
+       color="warning"
             variant="outlined"
             style={{ borderRadius: '20px', fontWeight: 'bold', margin: '2px', padding: '4px 8px' }}
           />
         );
-      case 'unknown':
+      case '3':
         return (
           <Chip
             icon={<FaQuestionCircle style={iconStyle} />}
-            label="نامشخص"
-            color="default"
+            label="بررسی  مدیران"
+            color="warning"
             variant="outlined"
             style={{ borderRadius: '20px', fontWeight: 'bold', margin: '2px', padding: '4px 8px' }}
           />
         );
+        case '4':
+          return (
+            <Chip
+              icon={<FaQuestionCircle style={iconStyle} />}
+              label="بررسی سهامداران"
+            color="warning"
+            variant="outlined"
+              style={{ borderRadius: '20px', fontWeight: 'bold', margin: '2px', padding: '4px 8px' }}
+            />
+          );
+          case '5':
+          return (
+            <Chip
+              icon={<FaQuestionCircle style={iconStyle} />}
+              label="بررسی اعتبارسنجی"
+            color="warning"
+            variant="outlined"
+              style={{ borderRadius: '20px', fontWeight: 'bold', margin: '2px', padding: '4px 8px' }}
+            />
+          );
       default:
         return (
           <Chip
             icon={<FaQuestionCircle style={iconStyle} />}
-            label="نامشخص"
+            label="نامشخص "
             color="default"
             variant="outlined"
             style={{ borderRadius: '20px', fontWeight: 'bold', margin: '2px', padding: '4px 8px' }}
@@ -127,7 +147,6 @@ const CardList = ({ setCardSelected, handleNext }) => {
     <div className="p-8 bg-gray-50 min-h-screen">
       <h1 className="text-4xl font-extrabold text-gray-800 mb-12 text-center">لیست کارت‌ها</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
-        {/* کارت جدید به عنوان اولین کارت */}
         <div
           className="bg-white shadow-lg rounded-xl p-6 flex flex-col justify-center items-center cursor-pointer transition-transform transform hover:scale-105 hover:shadow-2xl hover:bg-gray-100 min-w-[280px] max-w-[320px] h-[350px]"
           onClick={handleNewCardClick}
@@ -169,7 +188,7 @@ const CardList = ({ setCardSelected, handleNext }) => {
                   <Button
                     variant="contained"
                     color="primary"
-                    onClick={() => handleCardClick(card.id)}
+                    onClick={() => handleCardClick(card.id, card.status)}
                     style={{ textTransform: 'none', padding: '8px 16px', fontSize: '16px' }}
                   >
                     مشاهده و ویرایش
@@ -206,6 +225,8 @@ const CardList = ({ setCardSelected, handleNext }) => {
 CardList.propTypes = {
   setCardSelected: PropTypes.func.isRequired,
   handleNext: PropTypes.func.isRequired,
+  setStatusCart:PropTypes.func.isRequired,
+  statusCart:PropTypes.func.isRequired,
 };
 
 export default CardList;

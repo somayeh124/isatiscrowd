@@ -9,11 +9,11 @@ import ResumePage from 'src/sections/resume/Page/ResumePage';
 import CardList from './ListCard';
 import Form from './form';
 import Step3 from './step3';
-// import Step5 from './Step5';
-import FileSharehold from './fildesharehold';
+import Step5 from './Step5';
 
 
 const Sterpercrowd = () => {
+  const [statusCart, setStatusCart]=useState(1)
   const [activeStep, setActiveStep] = useState(0);
   const [cardSelected, setCardSelected] = useState(null);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
@@ -28,19 +28,10 @@ const Sterpercrowd = () => {
     }
   }, [access, navigate]); 
 
-  const steps = ['مرحله اول', 'مرحله دوم', 'مرحله سوم','مرحله چهارم','مرحله پنجم'];
+  const steps = [' انتخاب کارت', 'اطلاعات شرکت ', ' اطلاعات مدیران',' رزومه مدیران','سهامدارن'];
 
   const handleNext = () => {
-    if (activeStep === 1) {
-      const checkedContracts = JSON.parse(localStorage.getItem('checkedContracts')) || {};
-      const allChecked = Object.values(checkedContracts).every(Boolean);
-
-      if (!allChecked) {
-        toast.error('لطفاً همه قراردادها را مطالعه کنید.');
-        return;
-      }
-    }
-
+ 
     if (activeStep === steps.length - 1) {
       setActiveStep(0);  
     } else {
@@ -52,26 +43,50 @@ const Sterpercrowd = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
   
-  console.log(cardSelected);
-  
-
+  // const renderStepContent = (step) => {
+  //   switch (step) {
+  //     case 0:
+  //       return <CardList setStatusCart={setStatusCart} setCardSelected={setCardSelected} handleNext={handleNext} />;
+  //     case 1:
+  //       return statusCart ==='2'?<Form cardSelected={cardSelected} handleNext={handleNext} />
+  //       :<p>
+  //        درحال بررسی اطلاعات شما (لطفا شکیبا باشید)    
+  //       </p>
+  //     case 2:
+  //       return statusCart==="3"? <Step3 cardSelected={cardSelected}/>
+  //       :<p>
+  //       درحال بررسی اطلاعات شما (لطفا شکیبا باشید)    
+  //      </p>    
+  //       case 3:
+  //       return  statusCart==="4"? <ResumePage id={cardSelected} />
+  //       :<p>
+  //       درحال بررسی اطلاعات شما (لطفا شکیبا باشید)    
+  //      </p>  
+  //         case 4:
+  //       return statusCart==="5"? <Step5 cardSelected={cardSelected}/>
+  //       :<p>
+  //       درحال بررسی اطلاعات شما (لطفا شکیبا باشید)    
+  //      </p>  
+  //     default:
+  //       return <div>{null}</div>
+  //   }
+  // };
   const renderStepContent = (step) => {
-    switch (step) {
-      case 0:
-        return <CardList setCardSelected={setCardSelected} handleNext={handleNext} />;
-      case 1:
-        return <Form cardSelected={cardSelected} handleNext={handleNext} />;
-      case 2:
-        return <Step3 cardSelected={cardSelected}/>;
-        case 3:
-          return <ResumePage id={cardSelected} />;
+      switch (step) {
+        case 0:
+          return <CardList setStatusCart={setStatusCart} setCardSelected={setCardSelected} handleNext={handleNext} />;
+        case 1:
+          return <Form cardSelected={cardSelected} handleNext={handleNext} />
+        case 2:
+          return  <Step3 cardSelected={cardSelected}/>   
           case 3:
-        return <FileSharehold/>;
-      default:
-        return <div>{null}</div>
-    }
-  };
-
+          return  <ResumePage id={cardSelected} />
+            case 4:
+          return  <Step5 cardSelected={cardSelected}/>  
+        default:
+          return <div>{null}</div>
+      }
+    };
   if (isCheckingAuth) {
     return null;
   }
@@ -91,6 +106,7 @@ const Sterpercrowd = () => {
           disabled={activeStep === 0}
           onClick={handleBack}
           sx={{
+            backgroundColor: '#42a5f5',  color: 'white',
             '&:hover': {
               backgroundColor: '#90caf9',
             }
@@ -100,7 +116,7 @@ const Sterpercrowd = () => {
         </Button>
         <Button
           onClick={handleNext}
-          sx={{
+          sx={{ backgroundColor: '#42a5f5', color: 'white',
             '&:hover': {
               backgroundColor: '#90caf9',
             }

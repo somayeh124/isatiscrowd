@@ -87,7 +87,7 @@ export const getStep1 = async (id) => {
   formData.append('company_kind', data.company_kind || "");
   formData.append('amount_of_request', data.amount_of_request || "");
   formData.append('address', data.address || "");
-  formData.append('email', data.company_email || "");
+  formData.append('email', data.email || "");
 
   if (data.alignment_6columns_thisyear) {
     formData.append('alignment_6columns_thisyear', data.alignment_6columns_thisyear);

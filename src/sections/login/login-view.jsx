@@ -37,7 +37,7 @@ export default function LoginView() {
         setCaptchaImage(response.data.captcha.image);
       })
       .catch((err) => {
-        console.log('error captcha', err);
+        console.error('error captcha', err);
       });
   };
 

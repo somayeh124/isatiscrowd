@@ -26,7 +26,9 @@ const Step5 = ({ cardSelected }) => {
           Authorization: `Bearer ${access}`,
         },
       });
-      setField(response.data.data)
+      if (response.data.data && response.data.data.length > 0){
+      setValidite(response.data.data)
+      }
       return response.data;
     }
     return null;
@@ -38,28 +40,27 @@ const Step5 = ({ cardSelected }) => {
 
   };
 
-  const [field, setField] = useState([singleFile]);
+  const [validite, setValidite] = useState([singleFile]);
   const [message, setMessage] = useState(''); 
 
   const handleAdd = () => {
-    const perve = [...field];
+    const perve = [...validite];
     perve.push(singleFile);
-    setField(perve);
+    setValidite(perve);
   };
 
   const handleRemove = () => {
-    if (field.length > 1) {
-      const perve = [...field];
+    if (validite.length > 1) {
+      const perve = [...validite];
       perve.pop(singleFile);
-      setField(perve);
+      setValidite(perve);
     }
   };
 
   const handlePost = async () => {
     const access = await getCookie('access');
-
     try {
-      const response = await axios.post(`${OnRun}/api/shareholder/${cardSelected}/`, { managers:field }, {
+      const response = await axios.post(`${OnRun}/api/shareholder/${cardSelected}/`, {shareholder:validite}, {
         headers: {
           Authorization: `Bearer ${access}`,
           'Content-Type': 'application/json',
@@ -76,9 +77,9 @@ const Step5 = ({ cardSelected }) => {
 
   return (
     <div className="flex flex-col justify-center items-center self-center">
-      {field.map((item, index) => (
+      {validite.map((item, index) => (
         <>
-          <FileSharehold index={index} field={field} setField={setField} />
+          <FileSharehold index={index} validite={validite} setValidite={setValidite} />
           <Divider style={{ backgroundColor: 'gray', width: '100%' }} />
         </>
       ))}

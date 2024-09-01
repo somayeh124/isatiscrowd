@@ -4,7 +4,6 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import useGetManagement from '../hook/useGetmanagement';
 import Row from '../component/row';
 import { toast } from 'react-toastify';
 import { getCookie } from 'src/api/cookie';
@@ -13,20 +12,25 @@ import { Divider } from '@mui/material';
 import { OnRun } from 'src/api/OnRun';
 
 const Attachement = ({ id }) => {
-  const { data } = useGetManagement(id);
   const [resumeList, setResumeList] = useState([]);
 
-  useEffect(() => {
-    console.log('Data from useGetManagement:', data);
-    if (data) {
-      const updatedList = data.map(item => ({
-        national_code: item.national_code,
-      }));
-      setResumeList(updatedList);
-    } else {
-      console.log('No data found for this id');
+  const fetchManagerData = async () => {
+    try {
+      const access = await getCookie('access');
+      const response = await axios.get(`${OnRun}/api/resume/${id}/`, {
+        headers: {
+          Authorization: `Bearer ${access}`,
+        },
+      });
+
+      if (response.data && response.data.manager) {
+        setResumeList(response.data.manager);
+      }
+    } catch (error) {
+      console.error('خطا در دریافت اطلاعات:', error);
+      toast.error('خطا در دریافت اطلاعات.');
     }
-  }, [data]);
+  };
 
   const handleSubmit = async () => {
     try {
@@ -35,21 +39,20 @@ const Attachement = ({ id }) => {
         const element = resumeList[index];
         console.log('Data:', element);
         if (element.file) {
-          
           formData.append(element.national_code, element.file);
         }
       }
 
-        console.log(`/api/resume/${id}/`)
+      console.log(`/api/resume/${id}/`);
       const access = await getCookie('access');
       const response = await axios.post(`${OnRun}/api/resume/${id}/`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${access}`,
         },
-        maxBodyLength: Infinity
+        maxBodyLength: Infinity,
       });
-      
+
       if (response.status === 200 || response.status === 201) {
         toast.success('اطلاعات با موفقیت ارسال شد.');
       }
@@ -60,23 +63,23 @@ const Attachement = ({ id }) => {
   };
 
   useEffect(() => {
-    if (data) {
-      handleSubmit();
-    }
-  }, [data]);
-  
+    fetchManagerData(); 
+  }, []);
+
   return (
     <>
-      {data && data.map((item, index) => (
-        <><Row
-          key={index}
-          index={index}
-          list={resumeList}
-          item={item}
-          setList={setResumeList} />
-          <Divider style={{ backgroundColor: 'gray', width: '100%', marginTop:"20px" }} /></>
+      {resumeList && resumeList.map((item, index) => (
+        <div key={index}>
+          <Row
+            index={index}
+            list={resumeList}
+            item={item}
+            setList={setResumeList} 
+          />
+          <Divider style={{ backgroundColor: 'gray', width: '100%', marginTop: '20px' }} />
+        </div>
       ))}
-      <div >    
+      <div>    
         <button onClick={handleSubmit} style={{ display: 'flex', alignItems: 'center', marginTop: '10px' }}>
           ارسال
         </button>

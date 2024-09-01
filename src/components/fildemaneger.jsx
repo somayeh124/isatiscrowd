@@ -25,16 +25,17 @@ const Fildemnager = ({index,field,setField}) => {
   return (
     <div>
       <form className='mt-8 max-w-5xl'>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-6 ">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 ">
           <div className="mb-6">
             <label className="block text-gray-700 text-sm font-medium mb-2">نام و نام خانوادگی :</label>
             <input
               type="text"
               name="name"
+              disabled={field[index].lock}
               value={field[index].name}
               onChange={(e)=>handleChange('name',e.target.value)}
               required
-              className="shadow appearance-none border rounded w-full py-3 px-4 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
+              className="shadow appearance-none border rounded disabled:bg-gray-200 text-black w-full py-3 px-4 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
             />
           </div>
 
@@ -43,9 +44,9 @@ const Fildemnager = ({index,field,setField}) => {
             <select
               value={field[index].is_legal}
               onChange={(e)=>handleChange('is_legal',e.target.value)}
-
+              disabled={field[index].lock}
               name="is_legal"
-              className="shadow appearance-none border rounded w-full py-3 px-4 text-black disabled:bg-slate-200 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
+              className="shadow appearance-none border rounded w-full py-3 px-4 text-black disabled:bg-slate-300 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
             >
               
               {types.map((typeObj, i) => (
@@ -60,8 +61,9 @@ const Fildemnager = ({index,field,setField}) => {
             <select
               value={field[index].is_obliged}
               onChange={(e)=>handleChange('is_obliged',e.target.value)}
+              disabled={field[index].lock}
               name="is_obliged"
-              className="shadow appearance-none border rounded w-full py-3 px-4 text-black disabled:bg-slate-200 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
+              className="shadow appearance-none border rounded  w-full py-3 px-4 text-black disabled:bg-slate-200 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
             >
               
               {obliged.map((typeObj, i) => (
@@ -78,8 +80,9 @@ const Fildemnager = ({index,field,setField}) => {
               value={field[index].position}
               onChange={(e)=>handleChange('position',e.target.value)}
               type="text"
+              disabled={field[index].lock}
               name="position"
-              className="shadow appearance-none border rounded w-full py-3 px-4 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
+              className="shadow appearance-none border rounded disabled:bg-gray-200 text-black w-full py-3 px-4 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
             />
           </div>
 
@@ -91,9 +94,10 @@ const Fildemnager = ({index,field,setField}) => {
               value={field[index].national_code}
               onChange={(e)=>handleChange('national_code',e.target.value)}
               maxLength={10}
+              disabled={field[index].lock}
               onInput={(e) => e.target.value = e.target.value.replace(/[^0-9]/g, '')}
               required
-              className="shadow appearance-none border rounded w-full py-3 px-4 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
+              className="shadow appearance-none border disabled:bg-gray-200 text-black rounded w-full py-3 px-4 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
             />
           </div>
 
@@ -102,11 +106,12 @@ const Fildemnager = ({index,field,setField}) => {
             <input
               type="text"
               required
+              disabled={field[index].lock}
               value={field[index].national_id}
               onChange={(e)=>handleChange('national_id',e.target.value)}
               onInput={(e) => e.target.value = e.target.value.replace(/[^0-9]/g, '')}
               name="national_id"
-              className="shadow appearance-none border rounded w-full py-3 px-4 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
+              className="shadow appearance-none border disabled:bg-gray-200 text-black rounded w-full py-3 px-4 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
             />
           </div>
 
@@ -117,10 +122,11 @@ const Fildemnager = ({index,field,setField}) => {
               onInput={(e) => e.target.value = e.target.value.replace(/[^0-9]/g, '')}
               required
               maxLength={11}
+              disabled={field[index].lock}
               value={field[index].phone}
               onChange={(e)=>handleChange('phone',e.target.value)}
               name="phone"
-              className="shadow appearance-none border rounded w-full py-3 px-4 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
+              className="shadow appearance-none border disabled:bg-gray-200 text-black rounded w-full py-3 px-4 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
             />
           </div>
 
@@ -130,9 +136,10 @@ const Fildemnager = ({index,field,setField}) => {
               type="text"
               required
               value={field[index].representative}
+              disabled={field[index].lock}
               onChange={(e)=>handleChange('representative',e.target.value)}
               name="representative"
-              className="shadow appearance-none border rounded w-full py-3 px-4 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
+              className="shadow appearance-none disabled:bg-gray-200 text-black border rounded w-full py-3 px-4 leading-tight focus:outline-none focus:ring focus:ring-indigo-200"
             />
           </div>
         </div>

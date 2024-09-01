@@ -15,8 +15,7 @@ const Step3 = ({ cardSelected }) => {
     queryKey: ['fetchMessage', cardSelected],
     queryFn: () => fetchManager(cardSelected),
   });
-  
-  
+
   const fetchManager = async (cardSelected) => {
     const access = await getCookie('access');
     if (cardSelected) {
@@ -25,7 +24,9 @@ const Step3 = ({ cardSelected }) => {
           Authorization: `Bearer ${access}`,
         },
       });
-      setField(response.data.data)
+      if (response.data.data && response.data.data.length > 0) {
+        setField(response.data.data);
+      }
       return response.data;
     }
     return null;
@@ -42,7 +43,7 @@ const Step3 = ({ cardSelected }) => {
   };
 
   const [field, setField] = useState([singleFile]);
-  const [message, setMessage] = useState(''); 
+  const [message, setMessage] = useState('');
 
   const handleAdd = () => {
     const perve = [...field];
@@ -62,43 +63,89 @@ const Step3 = ({ cardSelected }) => {
     const access = await getCookie('access');
 
     try {
-      const response = await axios.post(`${OnRun}/api/manager/${cardSelected}/`, { managers:field }, {
-        headers: {
-          Authorization: `Bearer ${access}`,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      console.log("res",response.data);
-      setMessage('اطلاعات با موفقیت ارسال شد!'); 
+      const response = await axios.post(
+        `${OnRun}/api/manager/${cardSelected}/`,
+        { managers: field },
+        {
+          headers: {
+            Authorization: `Bearer ${access}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      setMessage('اطلاعات با موفقیت ارسال شد!');
     } catch (error) {
       console.error('خطا :', error);
-      setMessage('خطا در ارسال اطلاعات.'); 
+      setMessage('خطا در ارسال اطلاعات.');
     }
   };
 
   return (
     <div className="flex flex-col justify-center items-center self-center">
-      {field.map((item, index) => (
-        <>
-          <Fildemnager index={index} field={field} setField={setField} />
-          <Divider style={{ backgroundColor: 'gray', width: '100%' }} />
-        </>
-      ))}
-      <div className='flex gap-8'>
-        <button onClick={handleAdd} style={{ display: 'flex', alignItems: 'center', marginTop: '10px' }}>
+      <div className="flex gap-8 mt-4">
+        <button
+          onClick={handleAdd}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            padding: '10px 20px',
+            backgroundColor: '#4CAF50',
+            color: 'white',
+            borderRadius: '5px',
+            fontSize: '16px',
+            fontWeight: 'bold',
+          }}
+        >
           <FaPlus style={{ marginLeft: '5px' }} />
           افزودن
         </button>
-        <button onClick={handleRemove} style={{ display: 'flex', alignItems: 'center', marginTop: '10px' }}>
-          <FaMinus style={{ marginRight: '5px' }} />
-          حذف
-        </button>
-        <button onClick={handlePost} style={{ display: 'flex', alignItems: 'center', marginTop: '10px' }}>
+        <button
+          onClick={handlePost}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            padding: '10px 20px',
+            backgroundColor: '#2196F3',
+            color: 'white',
+            borderRadius: '5px',
+            fontSize: '18px',
+            fontWeight: 'bold',
+          }}
+        >
           ارسال
         </button>
       </div>
-      {message && <p style={{ marginTop: '20px', color: 'green' }}>{message}</p>}  
+      {field.map((item, index) => (
+        <div className='flex'>
+        <div>
+        <div className='mt-8'>
+          <button
+          onClick={handleRemove}
+          className='bg-red-500'
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            padding: '10px 20px',
+            color: 'white',
+            borderRadius: '5px',
+            fontSize: '16px',
+            fontWeight: 'bold',
+          }}
+        >
+          حذف
+        </button>
+          </div>
+            <Fildemnager index={index} field={field} setField={setField} />
+            <Divider style={{ backgroundColor: 'gray', width: '100%' }} />        
+          </div>
+        </div>
+      ))}
+
+      {message && (
+        <p style={{ marginTop: '20px', color: message.includes('خطا') ? 'red' : 'green' }}>
+          {message}
+        </p>
+      )}
     </div>
   );
 };
